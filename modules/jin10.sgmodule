@@ -1,0 +1,21 @@
+#!name=金十数据去广告（强力版）
+#!desc=移除金十数据开屏、弹窗、广告列表及搜索推广词；不影响行情、快讯和账户服务
+#!author=Havoc
+#!homepage=https://github.com/Havoooc/surge-rules
+#!openUrl=https://apps.apple.com/app/id901284508
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/1c/ca/32/1cca328b-f72e-51a2-ac88-de743f942c5c/AppIcon_lgd-0-0-1x_U007epad-0-11-0-0-sRGB-85-220.png/512x512bb.jpg
+#!date=2026-08-07
+
+[Rule]
+
+# 金十独立广告服务：覆盖旧版 /ad、新版广告列表及后续路径变化
+DOMAIN,jad-api.jin10.com,REJECT
+
+[Body Rewrite]
+
+# 清空搜索页推广热词，保留接口 JSON 结构，避免搜索功能异常
+http-response-jq ^https?:\/\/search-open-api\.jin10\.com\/search\/getHotWords(?:\?.*)?$ '.data.list=[]'
+
+[MITM]
+
+hostname = %APPEND% search-open-api.jin10.com
