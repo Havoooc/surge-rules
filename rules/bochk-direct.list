@@ -1,0 +1,30 @@
+# 中银香港（BOCHK）中国内地直连规则
+# 适用于 Surge；通过 RULE-SET 引用并指定 DIRECT 策略
+# 整理来源：中银香港官网、公开 BOCHK 客户端日志及社区规则交叉核对
+# 更新时间：2026-08-09
+
+# 中银香港官网、手机银行、网上银行、企业银行及 API
+DOMAIN-SUFFIX,bochk.com
+DOMAIN-SUFFIX,bochkonline.com
+DOMAIN-SUFFIX,bankofchina.com.hk
+
+# BoC Pay+ 与中银信用卡
+DOMAIN-SUFFIX,bocpay.com.hk
+DOMAIN-SUFFIX,boccc.com.hk
+
+# 中银香港集团相关金融服务
+DOMAIN-SUFFIX,boclife.com.hk
+DOMAIN-SUFFIX,bocgins.com
+DOMAIN-SUFFIX,bocim.com
+
+# 中银香港 App 使用的第三方行情数据主机
+# 使用精确主机，避免让这些数据商的其他客户一并直连
+DOMAIN,bochk01.etnet.com.hk
+DOMAIN,bochk02.etnet.com.hk
+DOMAIN,bochkapp01.etnet.com.hk
+DOMAIN,bochk.yundzh.com
+DOMAIN,saaszhhk.yundzh.com
+DOMAIN,mds1a.trkd-hs.com
+
+# 兜底：捕获主机名中明确包含 BOCHK 的新增服务
+DOMAIN-KEYWORD,bochk
