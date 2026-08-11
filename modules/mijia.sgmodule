@@ -1,0 +1,24 @@
+#!name=米家去广告（稳定版）
+#!desc=移除米家开屏、首页轮播及“我的”页面推广；仅匹配明确广告接口，不影响设备控制
+#!author=Havoc
+#!homepage=https://github.com/Havoooc/surge-rules
+#!openUrl=https://apps.apple.com/app/id957323480
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/0f/d2/a7/0fd2a748-426f-2ca4-a4dc-ccb314525ab1/AppIcon-0-0-1x_U007emarketing-0-8-0-sRGB-0-85-220.png/512x512bb.jpg
+#!date=2026-08-07
+
+[Rule]
+
+# 小米广告 SDK 配置服务
+DOMAIN,sdkconfig.ad.xiaomi.com,REJECT
+
+[Map Local]
+
+# 首页推荐横幅、轮播、“我的”推广及开屏配置
+^https?:\/\/home\.mi\.com\/cgi-op\/api\/v\d+\/recommendation\/(?:banner|carousel\/banners|myTab|openingBanner)(?:\?.*)?$ data-type=text data="{}" status-code=200
+
+# 实时开屏资源
+^https?:\/\/home\.mi\.com\/cgi-op\/api\/v\d+\/resource\/realtime\/openingBanner(?:\?.*)?$ data-type=text data="{}" status-code=200
+
+[MITM]
+
+hostname = %APPEND% home.mi.com
