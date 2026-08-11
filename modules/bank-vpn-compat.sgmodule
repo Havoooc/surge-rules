@@ -1,0 +1,26 @@
+#!name=国内银行 VPN 兼容（稳定版）
+#!desc=兼容农行、建行/建行生活、中行、交行、邮储，并改善招行和平安银行的 Fake-IP 兼容；不解密银行流量
+#!author=Havoc
+#!homepage=https://github.com/Havoooc/surge-rules
+#!date=2026-08-07
+
+[General]
+
+# 多个国内 App 共用的网络连通性检测；包括中行缤纷生活、光大及部分地方银行场景
+# 建行、中国银行和交通银行使用公开配置中反复出现的银行域名后缀
+skip-proxy = %APPEND% www.baidu.com, yunbusiness.ccb.com, www.abchina.com.cn, login-service.mobile-bank.psbc.com, mobile-bank.psbc.com, mbank.psbc.com, *.bankcomm.com, *.ccb.com, *.boc.cn
+
+# 避免运营商登录及部分金融 App 域名受到 Fake-IP 影响
+# 平安和招商银行仅加入 always-real-ip，不跳过规则策略，也不拦截业务接口
+always-real-ip = %APPEND% easy-login.10099.com.cn, id6.me, open.e.189.cn, *.pingan.com.cn, *.cmbchina.com
+
+[Rule]
+
+# 农业银行已公开验证的代理环境探测接口
+DOMAIN,msmp.abchina.com.cn,REJECT
+
+# 说明：
+# 1. 本插件不配置 MITM，也不读取、修改或解密银行业务数据。
+# 2. 对直接读取 iOS VPN 状态的 App（部分新版光大、民生等），域名规则无法稳定绕过。
+# 3. 浦发公开案例显示：仅加入域名不能解决其系统代理检测，因此未加入未经验证的广泛后缀。
+# 4. 若某银行仍提示 VPN，优先使用 iOS 自动化：打开该 App 时关闭 Surge，退出后重新开启。
