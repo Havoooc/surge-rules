@@ -1,0 +1,37 @@
+#!name=东方财富去广告（强力版）
+#!desc=强制拦截东方财富 App 开屏、信息流、活动图片及广告追踪；更新后请清缓存并冷启动
+#!author=Havoc
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/80/c7/51/80c75169-8b9d-602a-7c4d-c356bf456282/AppIcon-0-0-1x_U007ephone-0-11-0-0-sRGB-85-220.png/512x512bb.jpg?v=eastmoney-20260807
+#!date=2026-08-07
+
+[Rule]
+
+# 广告配置服务器：直接拒绝，避免不同 App 版本 JSON 字段变化导致替换失效
+DOMAIN,emdcadvertise.eastmoney.com,REJECT
+DOMAIN,emdcadvertisepj.eastmoney.com,REJECT
+DOMAIN,emdcadvise.eastmoney.com,REJECT
+
+# 已被多套公开规则收录的广告、推广和统计域名
+DOMAIN,bduserlog.eastmoney.com,REJECT
+DOMAIN,js4.eastmoney.com,REJECT
+DOMAIN,same.eastmoney.com,REJECT
+DOMAIN,cp2.eastmoney.com,REJECT
+
+[Map Local]
+
+# 主广告素材目录返回空对象，避免 App 因连接失败重复请求
+^https?:\/\/swdlcdn\.eastmoney\.com\/app\/adimg\/ data-type=text data="{}" status-code=200
+
+# 常见活动广告素材目录
+^https?:\/\/swdlcdn\.eastmoney\.com\/(?:app\/)?(?:advert|advertise|advertisement)\/ data-type=tiny-gif status-code=200
+
+# Choice 组件启动广告
+^https?:\/\/choicegw2\.eastmoney\.com\/ads\/userauth\/api\/Ad\/GetLaunchAd(?:\?.*)?$ data-type=text data="{}" status-code=200
+
+# 客户端下发的启动页及活动图片
+^https?:\/\/j5\.dfcfw\.com\/WG\/(?:appconf|conf)\/202[0-9]{5}\/.*\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
+
+[MITM]
+
+hostname = %APPEND% swdlcdn.eastmoney.com, choicegw2.eastmoney.com, j5.dfcfw.com
