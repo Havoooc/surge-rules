@@ -1,0 +1,95 @@
+#!name=微信小程序去广告（稳定版）
+#!desc=精选常用小程序的明确广告接口；移除金融/支付 MITM、整站及宽泛静态资源拦截，不依赖外部脚本
+#!author=可莉🅥, Havoc（稳定性整理）
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/WeixinMiniPrograms.png
+#!date=2026-08-07
+#!requirement=SYSTEM = 'iOS' || SYSTEM = 'tvOS'
+
+[Rule]
+
+# 微信小程序广告素材；拦截后激励广告不会播放，也通常不会发放奖励
+DOMAIN,wxsnsdy.wxs.qq.com,REJECT
+DOMAIN,wxsmsdy.video.qq.com,REJECT
+DOMAIN,wxsnsdythumb.wxs.qq.com,REJECT
+
+# 明确的第三方广告主机
+DOMAIN,ads-shopping.shouqianba.com,REJECT
+DOMAIN,ad.maoyan.com,REJECT
+
+[Body Rewrite]
+
+# 汇付天下：热门推广和广告策略（保留响应结构）
+http-response-jq ^https:\/\/mcsp\.cloudpnr\.com\/api\/miniapp\/popular\/T_MINIAPP$ 'del(.data)'
+http-response-jq ^https:\/\/saas-ad\.cloudpnr\.com\/huifuad-base-api\/api\/tactics\/ad$ 'del(.data[0], .data[1], .data[2])'
+
+# 美团小程序弹窗
+http-response-jq ^https:\/\/rms\.meituan\.com\/api\/v1\/rmsmina\/c\/queryShopPortalInfo\? 'del(.data.popUpWindows)'
+
+# 企迈点单系统
+[Map Local]
+^https:\/\/webapi\.qmai\.cn\/web\/catering\/advertising\/ data-type=text data="{}" status-code=200
+^https:\/\/webapi\.qmai\.cn\/web\/cmk-center\/marketing\/canvas\/advert-reach data-type=text data="{}" status-code=200
+
+# 丰巢
+^https:\/\/dsp\.fcbox\.com\/adSearch\/ data-type=text data="{}" status-code=200
+^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/api\/v2\/clientPage\/getHomeLiveInfo$ data-type=text data="{}" status-code=200
+^https:\/\/webchatapp\.fcbox\.com\/fcboxactivityweb\/marketingEntrance\/(?:v2\/)?info(?:WithItems)?$ data-type=text data="{}" status-code=200
+
+# 中石油、中石化
+^https:\/\/app\.95504\.net\/app\/json\/page_ad\/initPageAd\? data-type=text data="{}" status-code=200
+^https:\/\/minipro\.95504\.net\/app\/json\/ad\/(?:getPopAdData|getIndexAdData) data-type=text data="{}" status-code=200
+^https:\/\/ne\.gdsz\.sinopec\.com\/gateway\/api\/omp\/mt\/appAdvertising data-type=text data="{}" status-code=200
+
+# 商超和餐饮
+^https:\/\/flow\.dmall\.com\/app\/home\/pops data-type=text data="{}" status-code=200
+^https:\/\/(?:api|activity)\.yonghuivip\.com\/api\/(?:app\/)?fp\/homepage\/pop data-type=text data="{}" status-code=200
+^https:\/\/activity\.yonghuivip\.com\/api\/web\/shensuan\/ad data-type=text data="{}" status-code=200
+^https:\/\/3pp\.starbucks\.com\.cn\/wxmem\/(?:popup|index\/banner) data-type=text data="{}" status-code=200
+^https:\/\/api\.mcd\.cn\/bff\/portal\/home\/hotActivity data-type=text data="{}" status-code=200
+^https:\/\/mxsa\.mxbc\.net\/api\/v1\/adinfo\/adplace\/query data-type=text data="{}" status-code=200
+^https:\/\/tm-api\.pin-dao\.cn\/home\/api\/(?:index\/activeConfig\/v2|resource\/config\/homeBannerNodes) data-type=text data="{}" status-code=200
+
+# 快递和出行：仅处理明确广告接口
+^https:\/\/ads\.ishansong\.com\/advert data-type=text data="{}" status-code=200
+^https:\/\/ump\.ems\.com\.cn\/mailAd$ data-type=text data="{}" status-code=200
+^https:\/\/minicap\.caocaokeji\.cn\/advert-bss\/pullAdvert data-type=text data="{}" status-code=200
+^https:\/\/r2\.gzyct\.com\/qrcode\/advert data-type=text data="{}" status-code=200
+^https:\/\/api\.kuaidihelp\.com\/g_order_core\/v2\/mina\/User\/getBannerList data-type=text data="{}" status-code=200
+^https:\/\/supplier-api\.imdada\.cn\/fe\/public\/ad\/spot\?forwardServiceName=growth-activity data-type=text data="{}" status-code=200
+^https:\/\/hdgateway\.zto\.com\/(?:getAdInfo|listJumperShow) data-type=text data="{}" status-code=200
+^https:\/\/qapi\.huolala\.cn\/ads data-type=text data="{}" status-code=200
+^https:\/\/gw-passenger-wap\.01zhuanche\.com\/gw-passenger-wap\/zhuanche-passenger-token\/commonSkipToken\/common\/getAdList data-type=text data="{}" status-code=200
+^https:\/\/passengerapi\.saicmobility\.com\/ad\/requestAd data-type=text data="{}" status-code=200
+^https:\/\/passenger\.t3go\.cn\/passenger-activity-api\/notoken\/api\/v1\/resource\/getSource data-type=text data="{}" status-code=200
+^https:\/\/as\.xiaojukeji\.com\/ep\/as\/conf\?ns=daijia-front&name= data-type=text data="{}" status-code=200
+
+# 充电与共享设备
+^https:\/\/wxs-weixin\.sd\.zhumanggroup\.com\/api\/v2\/ad data-type=text data="{}" status-code=200
+^https:\/\/s\.jiediankeji\.com\/adv data-type=text data="{}" status-code=200
+^https:\/\/aag\.enmonster\.com\/apa\/index\/advert\/skin data-type=text data="{}" status-code=200
+^https:\/\/ad\.xiaotucc\.com\/advert data-type=text data="{}" status-code=200
+^https:\/\/api-marketing\.zhinengxiyifang\.cn\/api\/v2\/cloudcode\/wechat\/bid data-type=text data="{}" status-code=200
+
+# 酒店、旅游和电影
+^https:\/\/api-fouth-mem\.huazhu\.com\/api\/rights\/bannerList data-type=text data="{}" status-code=200
+^https:\/\/wxapp\.bestwehotel\.com\/gw3\/app-mini\/trip-hotel-banner\/activity\/getActivityInfo data-type=text data="{}" status-code=200
+^https:\/\/wx\.bthhotels\.com\/miniapp\/weixin\/v1\/home\/index_banner data-type=text data="{}" status-code=200
+^https:\/\/m\.ctrip\.com\/restapi\/soa2\/(?:13916\/tripAds|12673\/queryWeChatHotEvent) data-type=text data="{}" status-code=200
+^https:\/\/ad\.maoyan\.com\/api\/position\/detail data-type=text data="{}" status-code=200
+^https:\/\/wx\.maoyan\.com\/maoyansh\/myshow\/ajax\/ad\/detail data-type=text data="{}" status-code=200
+^https:\/\/api\.hengdianfilm\.com\/cinema\/queryAvailableBannerInfo\/(?:2|4)\? data-type=text data="{}" status-code=200
+^https:\/\/mkt-gateway\.tuhu\.cn\/mkt-scene-marketing-service\/api\/scene\/queryScheme data-type=text data="{}" status-code=200
+
+# 12306 小程序：仅广告和宣传内容
+^https:\/\/mobile\.12306\.cn\/wxxcx\/openplatform-inner\/miniprogram\/wifiapps\/appFrontEnd\/v2\/lounge\/open-smooth-common\/qrCode\/getAdvInfo$ data-type=text data="{}" status-code=200
+^https:\/\/mobile\.12306\.cn\/wxxcx\/openplatform-inner\/miniprogram\/wifiapps\/appFrontEnd\/v2\/lounge\/open-smooth-common\/carService\/getCivilzedSlogan data-type=text data="{}" status-code=200
+
+[MITM]
+
+hostname = %APPEND% mcsp.cloudpnr.com, saas-ad.cloudpnr.com, rms.meituan.com, webapi.qmai.cn, dsp.fcbox.com, webchatapp.fcbox.com, app.95504.net, minipro.95504.net, ne.gdsz.sinopec.com, flow.dmall.com, api.yonghuivip.com, activity.yonghuivip.com, 3pp.starbucks.com.cn, api.mcd.cn, mxsa.mxbc.net, tm-api.pin-dao.cn, ads.ishansong.com, ump.ems.com.cn, minicap.caocaokeji.cn, r2.gzyct.com, api.kuaidihelp.com, supplier-api.imdada.cn, hdgateway.zto.com, qapi.huolala.cn, gw-passenger-wap.01zhuanche.com, passengerapi.saicmobility.com, passenger.t3go.cn, as.xiaojukeji.com, wxs-weixin.sd.zhumanggroup.com, s.jiediankeji.com, aag.enmonster.com, ad.xiaotucc.com, api-marketing.zhinengxiyifang.cn, api-fouth-mem.huazhu.com, wxapp.bestwehotel.com, wx.bthhotels.com, m.ctrip.com, ad.maoyan.com, wx.maoyan.com, api.hengdianfilm.com, mkt-gateway.tuhu.cn, mobile.12306.cn
+
+# 来源与说明：
+# 基于可莉“微信小程序去广告”公开规则整理，保留原作者署名。
+# 稳定版删除了银行、财付通、充值和支付主机的 MITM，以及整站/宽泛图片目录拦截。
+# 不保证覆盖所有小程序；小程序接口变化后，个别规则可能失效。
