@@ -1,0 +1,14 @@
+# TikTok Surge Rule Set
+# Source: https://kelee.one/Tool/Loon/Lsr/TikTok.lsr
+# Converted from an accessible mirror of the user-provided Loon rule.
+
+DOMAIN-SUFFIX,byteoversea.com
+DOMAIN-SUFFIX,ibytedtos.com
+DOMAIN-SUFFIX,muscdn.com
+DOMAIN-SUFFIX,musical.ly
+DOMAIN-SUFFIX,tiktok.com
+DOMAIN-SUFFIX,tik-tokapi.com
+DOMAIN-SUFFIX,tiktokcdn.com
+DOMAIN-SUFFIX,tiktokv.com
+DOMAIN-SUFFIX,ttwstatic.com
+DOMAIN-KEYWORD,tiktokcdn-
