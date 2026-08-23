@@ -35,6 +35,13 @@ function formatTime(timestamp) {
   return `${value.year}-${value.month}-${value.day} ${value.hour}:${value.minute}`;
 }
 
+function headerValue(headers, expectedName) {
+  const key = Object.keys(headers).find(
+    (name) => name.toLowerCase() === expectedName.toLowerCase()
+  );
+  return key ? headers[key] : "";
+}
+
 function finishError(message) {
   $done({
     title,
@@ -53,11 +60,13 @@ if (!url) {
       return;
     }
 
+    if (response.status && (response.status < 200 || response.status >= 300)) {
+      finishError(`更新失败：HTTP ${response.status}`);
+      return;
+    }
+
     const headers = response.headers || {};
-    const key = Object.keys(headers).find(
-      (name) => name.toLowerCase() === "subscription-userinfo"
-    );
-    const raw = key ? headers[key] : "";
+    const raw = headerValue(headers, "subscription-userinfo");
     const values = Object.fromEntries(
       raw
         .split(";")
@@ -72,6 +81,9 @@ if (!url) {
     const used = upload + download;
     const remaining = Math.max(total - used, 0);
     const percent = total > 0 ? (used / total) * 100 : 0;
+    const remainingPercent = total > 0 ? Math.max(100 - percent, 0) : 0;
+    const metering = headerValue(headers, "x-traffic-metering");
+    const updatedAt = Number(headerValue(headers, "x-traffic-updated-at"));
 
     if (![upload, download, total].every(Number.isFinite)) {
       finishError("订阅未返回流量信息");
@@ -81,12 +93,18 @@ if (!url) {
     $done({
       title,
       content: [
-        `剩余：${formatSize(remaining)}`,
+        `剩余：${formatSize(remaining)} (${remainingPercent.toFixed(2)}%)`,
         `已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
         `上传：${formatSize(upload)}  下载：${formatSize(download)}`,
         `总量：${formatSize(total)}`,
         `重置：${formatTime(expire)}`,
-      ].join("\n"),
+        metering.includes("estimated")
+          ? "计量：代理入口统计（本周期含迁移前估算）"
+          : "计量：代理入口统计",
+        Number.isFinite(updatedAt) && updatedAt > 0
+          ? `数据更新：${formatTime(updatedAt)}`
+          : "",
+      ].filter(Boolean).join("\n"),
       icon: "chart.pie.fill",
       "icon-color": remaining / total < 0.2 ? "#FF3B30" : "#34C759",
     });
