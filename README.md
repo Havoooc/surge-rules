@@ -40,6 +40,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 米家去广告
 - 航旅纵横去广告
 - 微信小程序去广告
+- 雪球去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock.sgmodule>
 
 ## 注意事项
 

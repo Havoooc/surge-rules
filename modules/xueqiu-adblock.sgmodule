@@ -1,0 +1,28 @@
+#!name=雪球去广告（稳定版）
+#!desc=移除启动页、活动横幅、直播及推广卡位；不拦截行情、正文、搜索和交易相关接口
+#!author=Havoc
+#!homepage=https://github.com/Havoooc/surge-rules
+#!date=2026-08-24
+
+[Map Local]
+
+# 启动页与新用户活动
+^https:\/\/api\.xueqiu\.com\/snowpard\/launch_strategy\/query\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/api\.xueqiu\.com\/lightsnow\/launch\/plan\/bee\/query\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*home_visitor_relation_config data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# 自选、首页及热门活动的推广入口
+^https:\/\/api\.xueqiu\.com\/lightsnow\/optional\/banner\/query\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/api\.xueqiu\.com\/snowflake-theme\/query\/v1\/hot_event\/rich_tag_new\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/api\.xueqiu\.com\/query\/v1\/hot_event\/tag\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*cube_detail_bottom_operation_trade_button data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# 明确的推荐卡片与直播推广位
+^https:\/\/api\.xueqiu\.com\/recommend-proxy\/card\/zj_card\.json\?feed_id=207(?:&.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/api\.xueqiu\.com\/recommend-proxy\/card\/portfolio_tab_symbol\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/stock\.xueqiu\.com\/v5\/stock\/group\/recommend\/default\/list\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/api\.xueqiu\.com\/livestream\/structure\/live\/hotCard\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[MITM]
+
+hostname = %APPEND% api.xueqiu.com, open.xueqiu.com, stock.xueqiu.com
