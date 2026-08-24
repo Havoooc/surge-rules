@@ -1,19 +1,21 @@
 #!name=雪球去广告（激进版）
-#!desc=在稳定版基础上额外移除推广配置、AI 搜索推荐、金融产品推广和弹窗；可能造成部分页面留白，请勿与稳定版同时启用
+#!desc=删除首页推广配置整体 data 并拦截用户资料接口，额外移除 AI 搜索推荐、金融产品推广和弹窗；可能导致头像、昵称、个人页或部分页面空白，请勿与稳定版同时启用
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules
 #!date=2026-08-24
 
 [Body Rewrite]
 
-# 仅移除配置中的推广字段，保留其余 data 内容，避免破坏首页正常配置
-http-response-jq ^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*timeline_tab_name 'del(.data.im_notice_show, .data.request_notice_show, .data.timeline_tab_name, .data.profileMenuConfig_anonymous_V12, .data.trade_open_account_promotion_url, .data.trade_unify_open_account_list, .data.community_ad_download_msg, .data.home_tab_dynamic, .data.home_tab_dynamic_before, .data.home_tab_dynamic_after, .data.open_wechat_mini_app_config, .data.user_guide_contact_config, .data.brokers_router_config, .data.my_page_right_items)'
+# 按用户要求删除整段首页推广配置；代价是该配置下的正常组件也会消失
+http-response-jq ^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*timeline_tab_name 'del(.data)'
 
 [Map Local]
 
 # 启动页、新用户活动及应用内推广配置
 ^https:\/\/api\.xueqiu\.com\/snowpard\/launch_strategy\/query\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/api\.xueqiu\.com\/lightsnow\/launch\/plan\/bee\/query\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+# 按用户要求拦截用户资料接口；可能导致头像、昵称及个人主页信息缺失
+^https:\/\/api\.xueqiu\.com\/ucprofile\/api\/user\/batchGetUserBasicInfo\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*home_visitor_relation_config data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/api\.xueqiu\.com\/snowpard\/ad_strategy(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/api\.xueqiu\.com\/promotion\/display_ad_batch\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
