@@ -4,6 +4,11 @@
 #!homepage=https://github.com/Havoooc/surge-rules
 #!date=2026-08-24
 
+[Body Rewrite]
+
+# 仅移除配置中的推广字段，保留其余 data 内容，避免破坏首页正常配置
+http-response-jq ^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*timeline_tab_name 'del(.data.im_notice_show, .data.request_notice_show, .data.timeline_tab_name, .data.profileMenuConfig_anonymous_V12, .data.trade_open_account_promotion_url, .data.trade_unify_open_account_list, .data.community_ad_download_msg, .data.home_tab_dynamic, .data.home_tab_dynamic_before, .data.home_tab_dynamic_after, .data.open_wechat_mini_app_config, .data.user_guide_contact_config, .data.brokers_router_config, .data.my_page_right_items)'
+
 [Map Local]
 
 # 启动页、新用户活动及应用内推广配置
@@ -28,6 +33,7 @@
 ^https:\/\/api\.xueqiu\.com\/query\/search\/ai\/v[0-9]+\/recommend_search\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/api\.xueqiu\.com\/analysis\/status\/v[0-9]+\/underlying_product\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/fund\.xueqiu\.com\/fundx\/activity\/x\/web\/djUser\/getBeeMaterial(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/fund\.xueqiu\.com\/fundx\/activity\/x\/web\/c\/index\/dataByCode(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
 [MITM]
 
