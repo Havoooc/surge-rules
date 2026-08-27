@@ -1,14 +1,17 @@
-#!name=YouTube 推荐去广告
-#!desc=移除首页瀑布流与播放页推荐列表中的推广内容；不处理视频贴片广告。
-#!author=Havoooc（基于 app2smile 规则优化）
+#!name=YouTube 增强
+#!desc=过滤推荐推广，并提供画中画、后台播放、界面精简与字幕翻译功能。
+#!author=Havoooc（整合 app2smile、Maasea 规则）
 #!category=去广告
 #!tag=YouTube,去广告
 #!homepage=https://github.com/Havoooc/surge-rules
+#!arguments=屏蔽上传按钮:true,屏蔽选段按钮:true,屏蔽Shorts按钮:false,字幕翻译语言:off,启用调试模式:false
+#!arguments-desc=- 屏蔽参数：[true, false] \n- 翻译参数：[语言代码, off] \n\n1. 字幕翻译语言采用 Google Translate 语言代码；设为 off 即关闭。\n2. 调试模式仅用于排错，平时保持关闭。
 
 [MITM]
-hostname = %APPEND% youtubei.googleapis.com
+hostname = %APPEND% *.googlevideo.com, youtubei.googleapis.com
 
 [Script]
-# 仅匹配首页和播放页推荐数据，不匹配 player、Shorts 或视频流接口。
-# 需要 iOS/iPadOS 15 或更高版本，并在对应设备信任 Surge CA。
-youtube-feed-adblock = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:browse|next)(?:\?.*)?$,requires-body=1,binary-body-mode=1,max-size=2097152,timeout=20,script-update-interval=86400,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/youtube.js
+# Maasea 脚本已覆盖 browse / next，因此替换原推荐去广告脚本，避免重复改写同一响应。
+youtube-enhance-response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch|log_event|config))(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{\"captionLang\":\"{{{字幕翻译语言}}}\",\"blockUpload\":{{{屏蔽上传按钮}}},\"blockImmersive\":{{{屏蔽选段按钮}}},\"blockShorts\":{{{屏蔽Shorts按钮}}},\"debug\":{{{启用调试模式}}}}"
+youtube-enhance-initplayback = type=http-request,pattern=^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&ack.*,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js,argument="{\"captionLang\":\"{{{字幕翻译语言}}}\"}"
+youtube-enhance-log-event = type=http-request,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/log_event,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js
