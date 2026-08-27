@@ -1,0 +1,21 @@
+#!name=HTTPDNS 拦截（稳妥版）
+#!desc=阻止少量低风险 HTTPDNS 请求，使其回退至 Surge DNS；不拦截微信、支付宝、滴滴、美团、流媒体及小米服务。
+#!author=Havoooc（参考可莉、VirgilClyne 规则）
+#!category=网络优化
+#!tag=DNS,分流
+#!homepage=https://github.com/Havoooc/surge-rules
+
+[Rule]
+# 仅保留与核心支付、出行、通讯及流媒体无关的独立 HTTPDNS 端点。
+# 这些规则不需要 MITM；被拦截的 App 会使用系统或 Surge 的 DNS 解析。
+DOMAIN,dns2.q2cdn.com,REJECT
+DOMAIN,httpdns.kg.qq.com,REJECT
+DOMAIN,httpdns.zybang.com,REJECT
+DOMAIN,httpdns.calorietech.com,REJECT
+
+# 以下高风险服务刻意不拦截：
+# 微信：dns.weixin.qq.com、aedns.weixin.qq.com
+# 支付及阿里生态：amdc.alipay.com、httpdns.alicdn.com、203.107.1.0/24
+# 出行与本地服务：hd.xiaojukeji.com、httpdns.meituan.com
+# 流媒体：httpdns.bilivideo.com、dns.iqiyi.com、httpdns.music.163.com
+# 智能家居：resolver.msg.xiaomi.net、httpdns.browser.miui.com
