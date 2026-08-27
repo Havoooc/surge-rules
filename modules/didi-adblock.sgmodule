@@ -1,5 +1,5 @@
 #!name=滴滴出行去广告（极简版）
-#!desc=最大化移除首页、拼车、城际、代驾、单车及个人中心的运营内容；可能隐藏非核心服务入口，不改动下单、支付、订单和行程接口
+#!desc=最大化移除首页、拼车、城际、代驾、单车及个人中心的运营内容；额外关闭代驾运营 TCP，可能影响代驾实时连接
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules
 #!openUrl=https://apps.apple.com/app/id554499054
@@ -11,6 +11,11 @@
 
 # 明确的广告下发域名
 DOMAIN,gwp.xiaojukeji.com,REJECT
+
+# 与 Kelee 极简版一致：拦截滴滴运营 TCP 通道
+AND,((IP-ASN,45090,no-resolve),(DEST-PORT,25641),(PROTOCOL,TCP)),REJECT
+AND,((IP-ASN,55990,no-resolve),(DEST-PORT,25641),(PROTOCOL,TCP)),REJECT
+AND,((IP-ASN,63646,no-resolve),(DEST-PORT,25641),(PROTOCOL,TCP)),REJECT
 
 [Body Rewrite]
 
@@ -35,6 +40,9 @@ http-response-jq ^https:\/\/api\.udache\.com\/intercity\/ticket\/api\/v1\/core\/
 http-response-jq ^https:\/\/daijia\.kuaidadi\.com(?::443)?\/gateway\? 'del(.data.variantInfo) | .data |= with_entries(select(.value.isAd != 1))'
 http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(?::443)?\/gateway\? 'del(.data."didi-bike-homepage-popup", .data.variantInfo)'
 
+# 与 Kelee 极简版一致：关闭代驾运营 TCP 相关开关
+http-response-jq ^https:\/\/as\.xiaojukeji\.com\/ep\/as\/toggles\? '.data |= map(if .name|IN("daijia_journey_new_tcp_switch", "daijia_tcp_init", "daijia_tcp_msg_encrypt", "daijia_tcp_site_info", "daijia_tcp_site_report") then .allow=false else . end)'
+
 [Map Local]
 
 # 活动弹窗、顶部活动提醒与回流福利
@@ -49,4 +57,4 @@ http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(?::443)?\/gateway\? 'del(.da
 
 [MITM]
 
-hostname = %APPEND% common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, poi.map.xiaojukeji.com, daijia.kuaidadi.com, htwkop.xiaojukeji.com
+hostname = %APPEND% as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, poi.map.xiaojukeji.com, daijia.kuaidadi.com, htwkop.xiaojukeji.com
