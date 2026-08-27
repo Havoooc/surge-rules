@@ -97,7 +97,7 @@ if (!url) {
         `已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
         `上传：${formatSize(upload)}  下载：${formatSize(download)}`,
         `总量：${formatSize(total)}`,
-        `重置：${formatTime(expire)}`,
+        `到期：${formatTime(expire)}`,
         metering.includes("estimated")
           ? "计量：代理入口统计（本周期含迁移前估算）"
           : "计量：代理入口统计",
