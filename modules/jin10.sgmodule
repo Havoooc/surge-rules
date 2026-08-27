@@ -1,21 +1,27 @@
 #!name=金十数据去广告（强力版）
-#!desc=移除金十数据开屏、弹窗、广告列表及搜索推广词；不影响行情、快讯和账户服务
+#!desc=移除开屏、侧滑页、消息、浮窗、横幅、信息流及弹窗广告；仅匹配明确广告接口
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules
 #!openUrl=https://apps.apple.com/app/id901284508
 #!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/1c/ca/32/1cca328b-f72e-51a2-ac88-de743f942c5c/AppIcon_lgd-0-0-1x_U007epad-0-11-0-0-sRGB-85-220.png/512x512bb.jpg
-#!date=2026-08-07
+#!date=2026-08-28
 
-[Rule]
+[Map Local]
 
-# 金十独立广告服务：覆盖旧版 /ad、新版广告列表及后续路径变化
-DOMAIN,jad-api.jin10.com,REJECT
+# 开屏广告及应用内广告卡片
+^https:\/\/jad-api\.jin10\.com\/ad[0-9]\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
-[Body Rewrite]
+# 侧滑页、横幅及浮窗广告配置
+^https:\/\/common-open-api\.jin10\.com\/configuration\/getById\?id=1493$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
-# 清空搜索页推广热词，保留接口 JSON 结构，避免搜索功能异常
-http-response-jq ^https?:\/\/search-open-api\.jin10\.com\/search\/getHotWords(?:\?.*)?$ '.data.list=[]'
+# 搜索与首页热榜中的推广内容
+^https:\/\/search-open-api\.jin10\.com\/search\/getHotWords(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/cdn\.jin10\.com\/json\/index\/hits_rank\.json\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/[0-9a-z]+\.z3c\.jin10\.com\/api\/home\/search\/hot(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# 未读消息区域的广告入口
+^https:\/\/jad-api\.jin10\.com\/mult\/list_unread\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
 [MITM]
 
-hostname = %APPEND% search-open-api.jin10.com
+hostname = %APPEND% jad-api.jin10.com, common-open-api.jin10.com, search-open-api.jin10.com, cdn.jin10.com, *.z3c.jin10.com
