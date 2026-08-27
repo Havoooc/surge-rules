@@ -15,8 +15,8 @@ const url = params.url;
 
 function formatSize(bytes) {
   if (!Number.isFinite(bytes)) return "未知";
-  if (bytes >= 1e12) return `${(bytes / 1e12).toFixed(2)} TB`;
-  return `${(bytes / 1e9).toFixed(2)} GB`;
+  if (bytes >= 1024 ** 4) return `${(bytes / 1024 ** 4).toFixed(2)} TB`;
+  return `${(bytes / 1024 ** 3).toFixed(2)} GB`;
 }
 
 function formatTime(timestamp) {
@@ -33,6 +33,28 @@ function formatTime(timestamp) {
   }).formatToParts(date);
   const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   return `${value.year}-${value.month}-${value.day} ${value.hour}:${value.minute}`;
+}
+
+function nextMonthlyReset(timestamp) {
+  const date = new Date(timestamp * 1000);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "numeric",
+  }).formatToParts(date);
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  let year = Number(value.year);
+  let month = Number(value.month);
+  let reset = Date.UTC(year, month - 1, 25, 7, 15) / 1000;
+  if (timestamp >= reset) {
+    month += 1;
+    if (month === 13) {
+      year += 1;
+      month = 1;
+    }
+    reset = Date.UTC(year, month - 1, 25, 7, 15) / 1000;
+  }
+  return reset;
 }
 
 function headerValue(headers, expectedName) {
@@ -84,6 +106,9 @@ if (!url) {
     const remainingPercent = total > 0 ? Math.max(100 - percent, 0) : 0;
     const metering = headerValue(headers, "x-traffic-metering");
     const updatedAt = Number(headerValue(headers, "x-traffic-updated-at"));
+    const referenceTime = Number.isFinite(updatedAt) && updatedAt > 0
+      ? updatedAt
+      : Math.floor(Date.now() / 1000);
 
     if (![upload, download, total].every(Number.isFinite)) {
       finishError("订阅未返回流量信息");
@@ -96,8 +121,9 @@ if (!url) {
         `剩余：${formatSize(remaining)} (${remainingPercent.toFixed(2)}%)`,
         `已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
         `上传：${formatSize(upload)}  下载：${formatSize(download)}`,
-        `总量：${formatSize(total)}`,
-        `到期：${formatTime(expire)}`,
+        `月总量：${formatSize(total)}`,
+        `下次重置：${formatTime(nextMonthlyReset(referenceTime))}`,
+        `服务到期：${formatTime(expire)}`,
         metering.includes("estimated")
           ? "计量：代理入口统计（本周期含迁移前估算）"
           : "计量：代理入口统计",
