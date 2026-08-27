@@ -46,6 +46,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 东方财富去广告
 - 滴滴出行去广告
 - 金十数据去广告
+- 京东去广告
 - 米家去广告
 - QQ 音乐去广告
 - 航旅纵横去广告
