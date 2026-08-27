@@ -1,0 +1,28 @@
+#!name=QQ 音乐去广告
+#!desc=拦截 QQ 音乐及全民 K 歌的广告、推广素材与广告上报；不影响登录、播放、下载、会员和支付。
+#!author=Havoooc（基于可莉规则优化）
+#!category=去广告
+#!tag=QQ音乐,去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+
+[Rule]
+# Tencent Music 专用广告服务
+DOMAIN,adstats.tencentmusic.com,REJECT
+DOMAIN,ad.tencentmusic.com,REJECT
+DOMAIN,adcdn.tencentmusic.com,REJECT
+DOMAIN,adcdn6.tencentmusic.com,REJECT
+DOMAIN,adexpo.tencentmusic.com,REJECT
+DOMAIN,adclick.tencentmusic.com,REJECT
+DOMAIN,mc.tencentmusic.com,REJECT
+
+# QQ 音乐 / 全民 K 歌广告分发与曝光上报
+DOMAIN,monitor.music.qq.com,REJECT
+DOMAIN,tmead.y.qq.com,REJECT
+DOMAIN,tmeadbak.y.qq.com,REJECT
+DOMAIN,tmeadquic.y.qq.com,REJECT
+DOMAIN,tmeadcomm.y.qq.com,REJECT
+DOMAIN,tmeadkg.y.qq.com,REJECT
+DOMAIN,tmeadkgquic.y.qq.com,REJECT
+
+# 不拦截 rmonitor.qq.com、stat.y.qq.com、stat6.y.qq.com 等腾讯通用服务，
+# 避免将 QQ、微信等其他应用的统计、稳定性和推送链路一并阻断。
