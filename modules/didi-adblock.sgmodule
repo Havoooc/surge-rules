@@ -1,0 +1,38 @@
+#!name=滴滴出行去广告（稳定版）
+#!desc=移除首页活动、横幅、营销卡片及“我的”页推广；不改动叫车、订单、支付、行程和安全接口
+#!author=Havoc
+#!homepage=https://github.com/Havoooc/surge-rules
+#!openUrl=https://apps.apple.com/app/id554499054
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DiDi.png
+#!date=2026-08-28
+#!requirement=SYSTEM = 'iOS'
+
+[Rule]
+
+# 明确的广告下发域名
+DOMAIN,gwp.xiaojukeji.com,REJECT
+
+[Body Rewrite]
+
+# 首页底栏仅保留首页和个人中心，移除活动类入口
+http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/core\? '.data.disorder_cards.bottom_nav_list.data |= map(select(.id == "home_page" or .id == "user_center"))'
+
+# 首页营销、车主推广、登录奖励、乘车码和横幅卡片
+http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/fast\? 'del(.data.disorder_cards.communicate_card, .data.disorder_cards.not_login_bottom_bar, .data.disorder_cards.riding_code_card, .data.order_cards.car_owner_widget_card, .data.order_cards.marketing_card, .data.order_cards.super_banner_card, .data.disorder_cards.car_icon.data.icon_info_new_agreement)'
+http-response-jq ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget\? 'del(.data.mult_home_banner)'
+
+# “我的”页仅移除营销卡片和推广组件，保留账户与订单信息
+http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout$ 'del(.data.instances.center_marketing_card, .data.instances.center_widget_list)'
+
+[Map Local]
+
+# 顶部活动提醒与回流福利
+^https:\/\/lion\.didialift\.com\/broker\/\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/slow\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# 拼车页的运营推荐流
+^https:\/\/ct\.xiaojukeji\.com\/agent\/v3\/feeds\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[MITM]
+
+hostname = %APPEND% common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, ct.xiaojukeji.com, res.xiaojukeji.com
