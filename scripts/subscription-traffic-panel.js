@@ -118,14 +118,14 @@ if (!url) {
     $done({
       title,
       content: [
-        `剩余：${formatSize(remaining)} (${remainingPercent.toFixed(2)}%)`,
-        `已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
-        `上传：${formatSize(upload)}  下载：${formatSize(download)}`,
-        `月总量：${formatSize(total)}`,
-        `下次重置：${formatTime(nextMonthlyReset(referenceTime))}`,
-        `服务到期：${formatTime(expire)}`,
+        `🟢 剩余：${formatSize(remaining)} (${remainingPercent.toFixed(2)}%)`,
+        `📊 已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
+        `⬆️ 上传：${formatSize(upload)}  ⬇️ 下载：${formatSize(download)}`,
+        `📦 月总量：${formatSize(total)}`,
+        `🔄 下次重置：${formatTime(nextMonthlyReset(referenceTime))}`,
+        `📅 服务到期：${formatTime(expire)}`,
         Number.isFinite(updatedAt) && updatedAt > 0
-          ? `数据更新：${formatTime(updatedAt)}`
+          ? `🕒 数据更新：${formatTime(updatedAt)}`
           : "",
       ].filter(Boolean).join("\n"),
       icon: "chart.pie.fill",
