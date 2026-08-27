@@ -1,5 +1,5 @@
-#!name=滴滴出行去广告（激进版）
-#!desc=深度移除首页活动、横幅、运营入口及“我的”页推广；可能隐藏部分服务入口，不改动下单、支付、订单和行程接口
+#!name=滴滴出行去广告（极简版）
+#!desc=最大化移除首页、拼车、城际、代驾、单车及个人中心的运营内容；可能隐藏非核心服务入口，不改动下单、支付、订单和行程接口
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules
 #!openUrl=https://apps.apple.com/app/id554499054
@@ -20,11 +20,20 @@ http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/core\? '.data
 # 首页营销、车主推广、登录奖励、乘车码和横幅卡片
 http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/fast\? 'del(.data.disorder_cards.communicate_card, .data.disorder_cards.not_login_bottom_bar, .data.disorder_cards.riding_code_card, .data.order_cards.car_owner_widget_card, .data.order_cards.marketing_card, .data.order_cards.super_banner_card, .data.disorder_cards.car_icon.data.icon_info_new_agreement)'
 
-# “我的”页移除营销卡片、推广组件和非核心钱包入口，保留订单与余额/卡券
-http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout$ 'del(.data.instances.center_marketing_card, .data.instances.center_widget_list) | .data.instances.center_wallet_finance_card.data.view_info |= map(select(.title == "优惠卡券" or .title == "余额" or .title == "福利金"))'
+# “我的”页仅保留账户、工具、钱包和订单四类核心卡片
+http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout$ '.data.instances |= (to_entries | map(select(.key as $item | ["center_base_info_card", "center_tool_card", "center_wallet_finance_card", "center_order_related_card"] | index($item))) | from_entries) | .data.instances.center_wallet_finance_card.data.view_info |= map(select(.title == "优惠卡券" or .title == "余额" or .title == "福利金"))'
 
 # 打车首页的运营协议及推广标记
 http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout\? 'del(.data.instances.car_icon_01.data.icon_info_new_agreement)'
+
+# 打车、拼车与城际页面仅保留核心行程卡片，去除会员、营销和推荐流
+http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout\? '.data.instances |= (to_entries | map(select(.key | test("feed_back_|dache_main_member|order_container_|dache_main_core_icon|dache_main_card_"))) | from_entries)'
+http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/pSFCHomePage\? '.data |= (if . == null then null else {hot_route_info, legal_info} end) | . as $response | .data.tab_list = ($response.data.tab_list | map(select(.tab_id == "passenger")))'
+http-response-jq ^https:\/\/api\.udache\.com\/intercity\/ticket\/api\/v1\/core\/getFullPageInfoLayout\? '.data.disorder_components |= map(select(.name == "history_order_card" or .name == "inprogress_order_card" or .name == "station_calendar" or .name == "main_card_v2" or .name == "user_history_order"))'
+
+# 代驾和单车的弹窗、广告标记与运营信息
+http-response-jq ^https:\/\/daijia\.kuaidadi\.com(?::443)?\/gateway\? 'del(.data.variantInfo) | .data |= with_entries(select(.value.isAd != 1))'
+http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(?::443)?\/gateway\? 'del(.data."didi-bike-homepage-popup", .data.variantInfo)'
 
 [Map Local]
 
@@ -40,4 +49,4 @@ http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_hom
 
 [MITM]
 
-hostname = %APPEND% common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, poi.map.xiaojukeji.com
+hostname = %APPEND% common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, poi.map.xiaojukeji.com, daijia.kuaidadi.com, htwkop.xiaojukeji.com
