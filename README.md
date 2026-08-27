@@ -24,6 +24,12 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/bochk-
 RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/futu-proxy.list,你的代理策略
 ```
 
+### 1Password 代理
+
+```ini
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/1password-proxy.list,你的代理策略
+```
+
 ## 模块安装
 
 在 Surge 的模块管理页面使用以下格式安装：
