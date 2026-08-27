@@ -45,14 +45,15 @@ function nextMonthlyReset(timestamp) {
   const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   let year = Number(value.year);
   let month = Number(value.month);
-  let reset = Date.UTC(year, month - 1, 25, 7, 15) / 1000;
+  // 25 日 00:00（Asia/Shanghai）等于前一日 16:00 UTC。
+  let reset = Date.UTC(year, month - 1, 24, 16, 0) / 1000;
   if (timestamp >= reset) {
     month += 1;
     if (month === 13) {
       year += 1;
       month = 1;
     }
-    reset = Date.UTC(year, month - 1, 25, 7, 15) / 1000;
+    reset = Date.UTC(year, month - 1, 24, 16, 0) / 1000;
   }
   return reset;
 }
