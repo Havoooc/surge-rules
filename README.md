@@ -52,6 +52,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 微信小程序去广告
 - 闲鱼去广告
 - 雪球去广告（激进版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
+- YouTube 推荐去广告（不含视频贴片广告）
 
 ## 注意事项
 

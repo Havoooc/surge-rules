@@ -1,0 +1,14 @@
+#!name=YouTube 推荐去广告
+#!desc=移除首页瀑布流与播放页推荐列表中的推广内容；不处理视频贴片广告。
+#!author=Havoooc（基于 app2smile 规则优化）
+#!category=去广告
+#!tag=YouTube,去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+
+[MITM]
+hostname = %APPEND% youtubei.googleapis.com
+
+[Script]
+# 仅匹配首页和播放页推荐数据，不匹配 player、Shorts 或视频流接口。
+# 需要 iOS/iPadOS 15 或更高版本，并在对应设备信任 Surge CA。
+youtube-feed-adblock = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:browse|next)(?:\?.*)?$,requires-body=1,binary-body-mode=1,max-size=2097152,timeout=20,script-update-interval=86400,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/youtube.js
