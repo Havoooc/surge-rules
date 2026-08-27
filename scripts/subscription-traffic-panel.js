@@ -124,9 +124,6 @@ if (!url) {
         `📦 月总量：${formatSize(total)}`,
         `🔄 下次重置：${formatTime(nextMonthlyReset(referenceTime))}`,
         `📅 服务到期：${formatTime(expire)}`,
-        Number.isFinite(updatedAt) && updatedAt > 0
-          ? `🕒 数据更新：${formatTime(updatedAt)}`
-          : "",
       ].filter(Boolean).join("\n"),
       icon: "chart.pie.fill",
       "icon-color": remaining / total < 0.2 ? "#FF3B30" : "#34C759",
