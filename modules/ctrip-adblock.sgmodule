@@ -2,7 +2,6 @@
 #!desc=拦截开屏与行程页广告；保留版本、图片、登录、下单与支付服务。
 #!author=Havoooc（基于奶思规则优化）
 #!category=去广告
-#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Ctrip.png
 #!homepage=https://github.com/Havoooc/surge-rules
 
 [URL Rewrite]
