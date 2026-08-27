@@ -105,7 +105,6 @@ if (!url) {
     const remaining = Math.max(total - used, 0);
     const percent = total > 0 ? (used / total) * 100 : 0;
     const remainingPercent = total > 0 ? Math.max(100 - percent, 0) : 0;
-    const metering = headerValue(headers, "x-traffic-metering");
     const updatedAt = Number(headerValue(headers, "x-traffic-updated-at"));
     const referenceTime = Number.isFinite(updatedAt) && updatedAt > 0
       ? updatedAt
@@ -125,9 +124,6 @@ if (!url) {
         `月总量：${formatSize(total)}`,
         `下次重置：${formatTime(nextMonthlyReset(referenceTime))}`,
         `服务到期：${formatTime(expire)}`,
-        metering.includes("estimated")
-          ? "计量：代理入口统计（本周期含迁移前估算）"
-          : "计量：代理入口统计",
         Number.isFinite(updatedAt) && updatedAt > 0
           ? `数据更新：${formatTime(updatedAt)}`
           : "",
