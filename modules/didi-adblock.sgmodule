@@ -1,5 +1,5 @@
-#!name=滴滴出行去广告（稳定版）
-#!desc=移除首页活动、横幅、营销卡片及“我的”页推广；不改动叫车、订单、支付、行程和安全接口
+#!name=滴滴出行去广告（激进版）
+#!desc=深度移除首页活动、横幅、运营入口及“我的”页推广；可能隐藏部分服务入口，不改动下单、支付、订单和行程接口
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules
 #!openUrl=https://apps.apple.com/app/id554499054
@@ -14,25 +14,30 @@ DOMAIN,gwp.xiaojukeji.com,REJECT
 
 [Body Rewrite]
 
-# 首页底栏仅保留首页和个人中心，移除活动类入口
-http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/core\? '.data.disorder_cards.bottom_nav_list.data |= map(select(.id == "home_page" or .id == "user_center"))'
+# 首页底栏和服务入口仅保留核心出行功能，移除活动类入口
+http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/core\? '.data.disorder_cards.bottom_nav_list.data |= map(select(.id == "home_page" or .id == "user_center")) | .data.order_cards.nav_list_card.data |= map(select(.nav_id == "dache_anycar" or .nav_id == "carmate" or .nav_id == "driverservice" or .nav_id == "zhandianbashi" or .nav_id == "yuancheng" or .nav_id == "pincheche" or .nav_id == "bike" or .nav_id == "special_ride" or .nav_id == "nav_more_v3"))'
 
 # 首页营销、车主推广、登录奖励、乘车码和横幅卡片
 http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/fast\? 'del(.data.disorder_cards.communicate_card, .data.disorder_cards.not_login_bottom_bar, .data.disorder_cards.riding_code_card, .data.order_cards.car_owner_widget_card, .data.order_cards.marketing_card, .data.order_cards.super_banner_card, .data.disorder_cards.car_icon.data.icon_info_new_agreement)'
-http-response-jq ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget\? 'del(.data.mult_home_banner)'
 
-# “我的”页仅移除营销卡片和推广组件，保留账户与订单信息
-http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout$ 'del(.data.instances.center_marketing_card, .data.instances.center_widget_list)'
+# “我的”页移除营销卡片、推广组件和非核心钱包入口，保留订单与余额/卡券
+http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout$ 'del(.data.instances.center_marketing_card, .data.instances.center_widget_list) | .data.instances.center_wallet_finance_card.data.view_info |= map(select(.title == "优惠卡券" or .title == "余额" or .title == "福利金"))'
+
+# 打车首页的运营协议及推广标记
+http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout\? 'del(.data.instances.car_icon_01.data.icon_info_new_agreement)'
 
 [Map Local]
 
-# 顶部活动提醒与回流福利
+# 活动弹窗、顶部活动提醒与回流福利
+^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/lion\.didialift\.com\/broker\/\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/slow\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
-# 拼车页的运营推荐流
+# 拼车页运营推荐流、首页动态运营配置及地点推荐
 ^https:\/\/ct\.xiaojukeji\.com\/agent\/v3\/feeds\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/conf\.diditaxi\.com\.cn\/dynamic\/conf(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/recommend\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
 [MITM]
 
-hostname = %APPEND% common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, ct.xiaojukeji.com, res.xiaojukeji.com
+hostname = %APPEND% common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, poi.map.xiaojukeji.com
