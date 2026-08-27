@@ -41,6 +41,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 当前包含：
 
 - 国内银行 VPN 兼容
+- 携程旅行去广告
 - 东方财富去广告
 - 滴滴出行去广告
 - 金十数据去广告

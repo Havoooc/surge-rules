@@ -1,0 +1,19 @@
+#!name=携程旅行去广告
+#!desc=拦截开屏与行程页广告；保留版本、图片、登录、下单与支付服务。
+#!author=Havoooc（基于奶思规则优化）
+#!category=去广告
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Ctrip.png
+#!homepage=https://github.com/Havoooc/surge-rules
+
+[URL Rewrite]
+# 开屏广告素材
+^https?:\/\/ma-adx\.ctrip\.com\/_ma\.gif(?:\?.*)?$ - reject
+
+# 携程 App 行程页/首页广告位；同时兼容 json 与 scjson 返回格式
+^https?:\/\/m\.ctrip\.com\/restapi\/soa2\/\d+\/(?:json|scjson)\/tripAds(?:\?.*)?$ - reject-dict
+
+# 分享落地页的百度广告请求
+^https?:\/\/mbd\.baidu\.com\/newspage\/api\/getmobads\?page=landingshare(?:&.*)?$ - reject
+
+[MITM]
+hostname = %APPEND% m.ctrip.com, ma-adx.ctrip.com, mbd.baidu.com
