@@ -1,11 +1,15 @@
 #!name=携程旅行去广告
-#!desc=拦截开屏与行程页广告；保留版本、图片、登录、下单与支付服务。
+#!desc=拦截开屏、弹窗推广、行程页广告与热门活动；保留版本、图片、登录、下单与支付服务。
 #!author=Havoooc（基于奶思规则优化）
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 
+[Rule]
+# 携程专用广告分发域名，规则层直接阻断，不依赖 MITM。
+DOMAIN,ma-adx.ctrip.com,REJECT
+
 [URL Rewrite]
-# 开屏广告素材
+# 开屏广告素材（保留路径规则，兼容已缓存的 URL Rewrite 配置）。
 ^https?:\/\/ma-adx\.ctrip\.com\/_ma\.gif(?:\?.*)?$ - reject
 
 # 携程 App 行程页/首页广告位；兼容 json、scjson 与后续同名接口路径
@@ -14,5 +18,9 @@
 # 分享落地页的百度广告请求
 ^https?:\/\/mbd\.baidu\.com\/newspage\/api\/getmobads\?page=landingshare(?:&.*)?$ - reject
 
+[Map Local]
+# 携程微信小程序的热门活动/运营推广位。
+^https?:\/\/m\.ctrip\.com\/restapi\/soa2\/12673\/(?:[A-Za-z0-9_-]+\/)*queryWeChatHotEvent(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
 [MITM]
-hostname = %APPEND% m.ctrip.com, ma-adx.ctrip.com, mbd.baidu.com
+hostname = %APPEND% m.ctrip.com, mbd.baidu.com
