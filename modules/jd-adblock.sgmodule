@@ -1,5 +1,5 @@
 #!name=京东去广告
-#!desc=移除开屏、首页运营推广与“我的”页面推广；不改写登录、订单、支付和京东金融接口。
+#!desc=移除开屏、首页运营推广与“我的”页面推广；订单页仅清理广告字段，不拦截登录、下单、支付和京东金融接口。
 #!author=Havoooc（基于 RuCu6、Maasea 规则优化）
 #!category=去广告
 #!tag=京东,去广告
@@ -10,6 +10,8 @@ URL-REGEX,^http:\/\/\w{32}\.jddebug\.com\/diagnose\?,REJECT
 
 [Body Rewrite]
 # 关闭京东 App 的 HTTPDNS 配置，使请求继续由 Surge DNS 与规则系统处理。
+http-response-jq ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig 'if getpath(["data","JDMessage","socketmonitor","isSocketEstablishedAhead"]) != null then setpath(["data","JDMessage","socketmonitor","isSocketEstablishedAhead"]; 0) else . end'
+http-response-jq ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig 'if getpath(["data","JDMessage","socketmonitor","isSocketReport"]) != null then setpath(["data","JDMessage","socketmonitor","isSocketReport"]; 0) else . end'
 http-response-jq ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig 'if getpath(["data","JDHttpToolKit","httpdns","httpdns"]) != null then setpath(["data","JDHttpToolKit","httpdns","httpdns"]; 0) else . end'
 
 [Map Local]

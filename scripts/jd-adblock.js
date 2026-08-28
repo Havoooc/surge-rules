@@ -5,7 +5,8 @@ const blockedKeys = new Set([
   "ad", "ads", "adinfo", "ad_info", "adlist", "ad_list", "addata", "ad_data",
   "advert", "advertise", "advertisement", "advertisementlist", "advertisement_list",
   "splash", "splashad", "splash_ad", "launchad", "launch_ad",
-  "popup", "popwindow", "pop_window", "poplayer", "pop_layer",
+  "popup", "popupinfo", "popuplist", "popwindow", "popwindows", "pop_window",
+  "poplayer", "poplayerinfo", "pop_layer", "floatingad", "floatad", "floatlayer",
   "promotion", "promotioninfo", "promotion_info", "promotionlist", "promotion_list"
 ]);
 
