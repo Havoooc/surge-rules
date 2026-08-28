@@ -10,11 +10,11 @@ URL-REGEX,^http:\/\/\w{32}\.jddebug\.com\/diagnose\?,REJECT
 
 [Body Rewrite]
 # 关闭京东 App 的 HTTPDNS 配置，使请求继续由 Surge DNS 与规则系统处理。
-http-response-jq ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig 'if (getpath(["data","JDHttpToolKit","httpdns"]) | has("httpdns")) then setpath(["data","JDHttpToolKit","httpdns","httpdns"]; 0) else . end'
+http-response-jq ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig 'if getpath(["data","JDHttpToolKit","httpdns","httpdns"]) != null then setpath(["data","JDHttpToolKit","httpdns","httpdns"]; 0) else . end'
 
 [Map Local]
-# 热词、站点拉取和首页推荐广告位。
-^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(searchBoxWord|stationPullService|uniformRecommend[06])(?:&.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 热词、站点拉取、首页推荐、开屏和运营广告位。
+^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(searchBoxWord|stationPullService|uniformRecommend[06]|homeAreaPop|home_launchConfig|lite_advertising|queryMaterialAdverts|smart_delivery_strategy)(?:&.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [Script]
 # 仅处理已知广告/运营接口；响应非 JSON 或字段结构变化时原样放行。
