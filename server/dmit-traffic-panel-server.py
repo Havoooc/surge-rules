@@ -11,6 +11,11 @@ PORT = 18081
 INTERFACE = "eth0"
 TOTAL_BYTES = 1_500_000_000_000  # DMIT: 1.50 TB, decimal and bidirectional.
 BILLING_DAY = 19
+# DMIT's control panel reported 39.78 GB on 2026-08-28. vnStat reported
+# 55,516,016,684 bytes at the same observation point. Keep the panel aligned
+# with the provider for this cycle only; a new cycle starts without an offset.
+CALIBRATION_PERIOD = date(2026, 8, 19)
+CALIBRATION_BYTES = -15_736_016_684
 
 
 def current_period_start(today):
@@ -43,6 +48,9 @@ def traffic_payload():
         item_date = date(item["date"]["year"], item["date"]["month"], item["date"]["day"])
         if start <= item_date <= now.date():
             used += int(item.get("rx", 0)) + int(item.get("tx", 0))
+    calibrated = start == CALIBRATION_PERIOD
+    if calibrated:
+        used = max(used + CALIBRATION_BYTES, 0)
     return {
         "provider": "DMIT",
         "metering": "bidirectional-vnstat",
@@ -51,6 +59,7 @@ def traffic_payload():
         "period_start": calendar.timegm(start.timetuple()),
         "reset_at": next_reset(now.date()),
         "updated_at": int(now.timestamp()),
+        "calibrated": calibrated,
     }
 
 

@@ -48,7 +48,7 @@ function dmit(result) {
   const used = Number(data.used_bytes);
   const total = Number(data.total_bytes);
   if (![used, total].every(Number.isFinite) || total <= 0) throw new Error("DMIT 统计数据不完整");
-  return { name: "DMIT", used, total, reset: Number(data.reset_at), note: "双向计费·近实时" };
+  return { name: "DMIT", used, total, reset: Number(data.reset_at), note: data.calibrated ? "双向计费·已按后台校准" : "双向计费·近实时" };
 }
 
 Promise.all([get(params.qqg_url), get(params.dmit_url)])
