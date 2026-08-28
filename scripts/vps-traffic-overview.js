@@ -19,6 +19,26 @@ function formatDate(timestamp) {
   return `${values.month}/${values.day}`;
 }
 
+function nextMonthlyReset(timestamp) {
+  const date = new Date(timestamp * 1000);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Shanghai", year: "numeric", month: "numeric",
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  let year = Number(values.year);
+  let month = Number(values.month);
+  let reset = Date.UTC(year, month - 1, 24, 16, 0) / 1000;
+  if (timestamp >= reset) {
+    month += 1;
+    if (month === 13) {
+      year += 1;
+      month = 1;
+    }
+    reset = Date.UTC(year, month - 1, 24, 16, 0) / 1000;
+  }
+  return reset;
+}
+
 function get(url) {
   return new Promise((resolve, reject) => {
     if (!url) return reject(new Error("缺少地址"));
@@ -40,7 +60,9 @@ function qqg(result) {
   const used = Number(values.upload) + Number(values.download);
   const total = Number(values.total);
   if (![used, total].every(Number.isFinite) || total <= 0) throw new Error("QQG 未返回流量信息");
-  return { name: "QQG", used, total, reset: Number(values.expire), note: "套餐统计" };
+  const updatedAt = Number(header(result.response.headers, "x-traffic-updated-at"));
+  const referenceTime = Number.isFinite(updatedAt) && updatedAt > 0 ? updatedAt : Math.floor(Date.now() / 1000);
+  return { name: "QQG", emoji: "🇺🇸", used, total, reset: nextMonthlyReset(referenceTime) };
 }
 
 function dmit(result) {
@@ -48,7 +70,7 @@ function dmit(result) {
   const used = Number(data.used_bytes);
   const total = Number(data.total_bytes);
   if (![used, total].every(Number.isFinite) || total <= 0) throw new Error("DMIT 统计数据不完整");
-  return { name: "DMIT", used, total, reset: Number(data.reset_at), note: data.calibrated ? "已按后台校准" : "近实时统计" };
+  return { name: "DMIT", emoji: "🇺🇸", used, total, reset: Number(data.reset_at) };
 }
 
 Promise.all([get(params.qqg_url), get(params.dmit_url)])
@@ -57,7 +79,14 @@ Promise.all([get(params.qqg_url), get(params.dmit_url)])
     const content = items.map((item) => {
       const remaining = Math.max(item.total - item.used, 0);
       const usedPercent = item.used / item.total * 100;
-      return [`${item.name}  ${formatSize(remaining)} 剩余 (${Math.max(100 - usedPercent, 0).toFixed(1)}%)`, `已用 ${formatSize(item.used)} / ${formatSize(item.total)} · ${formatDate(item.reset)} 重置`, item.note].join("\n");
+      const remainingPercent = Math.max(100 - usedPercent, 0);
+      const status = remainingPercent <= 20 ? "🔴" : remainingPercent <= 40 ? "🟡" : "🟢";
+      return [
+        `${item.emoji} ${item.name}`,
+        `${status} 剩余：${formatSize(remaining)} (${remainingPercent.toFixed(1)}%)`,
+        `📊 已用：${formatSize(item.used)} / ${formatSize(item.total)}`,
+        `🔄 重置：${formatDate(item.reset)}`,
+      ].join("\n");
     }).join("\n\n");
     const highest = Math.max(...items.map((item) => item.used / item.total));
     $done({ title, content, icon: "chart.bar.xaxis", "icon-color": highest >= 0.8 ? "#FF3B30" : "#34C759" });
