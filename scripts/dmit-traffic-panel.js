@@ -57,7 +57,6 @@ if (!url) {
         content: [
           `🟢 剩余：${formatSize(remaining)} (${Math.max(100 - percent, 0).toFixed(2)}%)`,
           `📊 已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
-          data.calibrated ? "↕️ 双向计费 · 已按 DMIT 后台校准" : "↕️ 双向计费 · 服务器侧近实时统计",
           `🔄 下次重置：${formatTime(Number(data.reset_at))}`,
           `🕒 更新：${formatTime(updated)}`,
         ].join("\n"),

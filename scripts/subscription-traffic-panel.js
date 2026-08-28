@@ -15,8 +15,8 @@ const url = params.url;
 
 function formatSize(bytes) {
   if (!Number.isFinite(bytes)) return "未知";
-  if (bytes >= 1024 ** 4) return `${(bytes / 1024 ** 4).toFixed(2)} TB`;
-  return `${(bytes / 1024 ** 3).toFixed(2)} GB`;
+  if (bytes >= 1000 ** 4) return `${(bytes / 1000 ** 4).toFixed(2)} TB`;
+  return `${(bytes / 1000 ** 3).toFixed(2)} GB`;
 }
 
 function formatTime(timestamp) {
@@ -100,7 +100,6 @@ if (!url) {
     const upload = Number(values.upload);
     const download = Number(values.download);
     const total = Number(values.total);
-    const expire = Number(values.expire);
     const used = upload + download;
     const remaining = Math.max(total - used, 0);
     const percent = total > 0 ? (used / total) * 100 : 0;
@@ -120,12 +119,10 @@ if (!url) {
       content: [
         `🟢 剩余：${formatSize(remaining)} (${remainingPercent.toFixed(2)}%)`,
         `📊 已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
-        `⬆️ 上传：${formatSize(upload)}  ⬇️ 下载：${formatSize(download)}`,
-        `📦 月总量：${formatSize(total)}`,
         `🔄 下次重置：${formatTime(nextMonthlyReset(referenceTime))}`,
-        `📅 服务到期：${formatTime(expire)}`,
+        `🕒 更新：${formatTime(referenceTime)}`,
       ].filter(Boolean).join("\n"),
-      icon: "chart.pie.fill",
+      icon: "server.rack",
       "icon-color": remaining / total < 0.2 ? "#FF3B30" : "#34C759",
     });
   });
