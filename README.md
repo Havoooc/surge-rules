@@ -45,6 +45,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 携程旅行去广告
 - 东方财富去广告
 - 滴滴出行去广告
+- 抖音去开屏广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/douyin-splash-adblock.sgmodule>
 - 金十数据去广告
 - 京东去广告
 - 拼多多去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/pinduoduo-adblock.sgmodule>

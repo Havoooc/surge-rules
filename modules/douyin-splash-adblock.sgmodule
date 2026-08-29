@@ -1,0 +1,22 @@
+#!name=抖音去开屏广告（稳定版）
+#!desc=移除抖音启动广告与明确的广告素材请求；保留视频播放、推荐流、直播、登录、消息及字节长连接。
+#!author=Havoooc
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-08-29
+
+[Rule]
+# 明确的字节广告素材域名；不使用 pglstatp、snssdk 等宽泛关键词规则。
+DOMAIN,lf-ad-ies.bytecdn.cn,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,byteadverts.com,REJECT,extended-matching,pre-matching
+AND,((DOMAIN-KEYWORD,-ad-),(DOMAIN-SUFFIX,byteimg.com)),REJECT,extended-matching,pre-matching
+
+[Map Local]
+# 抖音开屏广告接口。返回正常空 JSON，避免 REJECT 导致启动阶段反复重试。
+^https:\/\/aweme\.snssdk\.com\/api\/ad\/(?:\?.*)?$ data-type=text data="{\"data\":[]}" status-code=200 header="Content-Type:application/json"
+^https:\/\/api5-normal-(?:lq|m)\.amemv\.com\/api\/ad\/(?:\?.*)?$ data-type=text data="{\"data\":[]}" status-code=200 header="Content-Type:application/json"
+^https:\/\/zlink\.ugsdk\.cn\/ad\/(?:\?.*)?$ data-type=text data="{\"data\":[]}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% aweme.snssdk.com, api5-normal-lq.amemv.com, api5-normal-m.amemv.com, zlink.ugsdk.cn
