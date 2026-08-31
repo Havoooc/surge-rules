@@ -1,0 +1,32 @@
+#!name=美团去广告（稳定增强版）
+#!desc=移除美团与美团外卖的开屏、弹窗、营销配置、订单页推荐和明确广告素材；保留登录、定位、商品、门店、下单、支付、订单、聊天及配送功能。
+#!author=Havoooc
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-01
+
+[Rule]
+# 明确的美团广告投放域名；不拦截业务 API、定位、支付和配送域名。
+DOMAIN-SUFFIX,mads.meituan.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,ad.e.waimai.sankuai.com,REJECT,extended-matching,pre-matching
+
+[Map Local]
+# 美团外卖开屏与启动广告。
+^https?:\/\/wmapi\.meituan\.com\/api\/v\d+\/(?:loadInfo|openscreen|startpicture)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+# 广告下发、首页弹窗、营销卡位与订单详情页推荐。
+^https?:\/\/portal-portm\.meituan\.com\/horn_ios\/(?:mergeRequest)?(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/mall\.meituan\.com\/api\/c\/homepage\/(?:splash|bubble\/operate\/info)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/cdb\.meituan\.com\/marketing\/source\/getPageSlotList(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/sqt\.meituan\.com\/s\/gateway\/mweb\/api\/marketingResource\/show(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/apimobile\.meituan\.com\/group\/v\d+\/recommend\/unity\/recommends(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+# 明确的广告图片、横幅与灵珑广告素材；不拦截通用商品/门店 CDN。
+^https?:\/\/img\.meituan\.net\/(?:bizad|brandCpt)\/[^?]+\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
+^https?:\/\/img\.meituan\.net\/(?:adunion|display|midas)\/[^?]+\.(?:gif|jpe?g)(?:\.webp)?(?:\?.*)?$ data-type=tiny-gif status-code=200
+^https?:\/\/p\d+\.meituan\.net\/(?:bizad|wmbanner)\/[^?]+\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
+^https?:\/\/(?:s3plus|flowplus)\.meituan\.net\/v\d+\/[^/]+\/linglong\/[^?]+\.(?:gif|jpe?g|mp4)(?:\?.*)?$ data-type=tiny-gif status-code=200
+
+[MITM]
+hostname = %APPEND% apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com
