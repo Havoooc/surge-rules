@@ -40,6 +40,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 
 当前包含：
 
+- 全能去广告合集（18 合 1）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>（请勿与下列独立模块同时启用）
 - 国内银行 VPN 兼容
 - HTTPDNS 拦截（稳妥版）
 - 携程旅行去广告
