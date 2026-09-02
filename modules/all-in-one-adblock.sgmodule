@@ -9,9 +9,6 @@
 #!arguments-desc=- YouTube 屏蔽参数：[true, false] \n- 字幕翻译语言：[语言代码, off] \n- 贴吧隐藏推荐页视频帖子：[true, false]，默认关闭。\n- 调试模式平时保持关闭。
 
 [Rule]
-# > 百度贴吧去广告（稳定增强版）
-RULE-SET,https://raw.githubusercontent.com/app2smile/rules/master/rule/tieba-ad.list,REJECT-DROP
-
 # > 国内银行 VPN 兼容（稳定版）
 # 农业银行已公开验证的代理环境探测接口
 DOMAIN,msmp.abchina.com.cn,REJECT
@@ -102,6 +99,17 @@ DOMAIN,tmeadkgquic.y.qq.com,REJECT
 # 不拦截 rmonitor.qq.com、stat.y.qq.com、stat6.y.qq.com 等腾讯通用服务，
 # 避免将 QQ、微信等其他应用的统计、稳定性和推送链路一并阻断。
 
+# > 淘宝去广告（稳定增强版）
+# 淘宝联盟与直通车的明确广告、点击和统计域名；不屏蔽通用淘宝业务域名。
+DOMAIN-SUFFIX,simba.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,tunion-api.m.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,apoll.m.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN,h-adashx.ut.taobao.com,REJECT,extended-matching,pre-matching
+
+# > 百度贴吧去广告（稳定增强版）
+# 阻断贴吧广告专用地址；规则由上游维护，可随接口变化更新。
+RULE-SET,https://raw.githubusercontent.com/app2smile/rules/master/rule/tieba-ad.list,REJECT-DROP
+
 # > 航旅纵横去广告（稳定版）
 # 开屏配置与废弃广告接口
 DOMAIN,startup.umetrip.com,REJECT
@@ -124,8 +132,30 @@ DOMAIN,ad.maoyan.com,REJECT
 DOMAIN-SUFFIX,iyes.youku.com,REJECT
 AND,((URL-REGEX,^http:\/\/.+\/amdc\/mobileDispatch),(USER-AGENT,%E9%97%B2%E9%B1%BC*)),REJECT
 
+# > 小红书去广告（稳定增强版）
+# 明确的小红书广告素材与广告追踪域名。
+DOMAIN,ads-img-qc.xhscdn.com,REJECT,extended-matching,pre-matching
+DOMAIN,ads-video-al.xhscdn.com,REJECT,extended-matching,pre-matching
+DOMAIN,ads-video-qc.xhscdn.com,REJECT,extended-matching,pre-matching
+DOMAIN,t-ads.xiaohongshu.com,REJECT,extended-matching,pre-matching
+# 迫使小红书回退至可解密的 HTTPS/TCP，否则信息流脚本可能无法命中。
+AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
+
+[URL Rewrite]
+# > 携程旅行去广告
+# 开屏广告素材（保留路径规则，兼容已缓存的 URL Rewrite 配置）。
+^https?:\/\/ma-adx\.ctrip\.com\/_ma\.gif(?:\?.*)?$ - reject
+# 分享落地页的百度广告请求
+^https?:\/\/mbd\.baidu\.com\/newspage\/api\/getmobads\?page=landingshare(?:&.*)?$ - reject
+
+# > 拼多多去广告（稳定增强版）
+# 营销素材。
+^https?:\/\/images\.pinduoduo\.com\/(?:mrk|marketing_api)\/ - reject
+
 [Map Local]
 # > 携程旅行去广告
+# 携程 App 行程页/首页广告位；返回空 JSON，兼容 json、scjson 与后续同名接口路径。
+^https?:\/\/m\.ctrip\.com\/restapi\/(?:[A-Za-z0-9_-]+\/)*tripAds(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 # 携程微信小程序的热门活动/运营推广位。
 ^https?:\/\/m\.ctrip\.com\/restapi\/soa2\/12673\/(?:[A-Za-z0-9_-]+\/)*queryWeChatHotEvent(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
@@ -212,6 +242,13 @@ AND,((URL-REGEX,^http:\/\/.+\/amdc\/mobileDispatch),(USER-AGENT,%E9%97%B2%E9%B1%
 ^https:\/\/api\.pinduoduo\.com\/api\/growth\/nagato\/app\/index\/gather\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/api\.pinduoduo\.com\/api\/buffon\/nasus\/recommend\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
+# > 淘宝去广告（稳定增强版）
+# 广告服务、淘客广告、闪购广告与一淘开屏。
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alibaba\.advertisementservice\.getadv(?:\/|\?).*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alimama\.etao\.config\.query\/.*etao_advertise.*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.etao\.noah\.query\/.*tao_splash.*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.o2o\.ad\.gateway\.get(?:\/|\?).*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
 # > 航旅纵横去广告（稳定版）
 # 独立的开屏广告素材接口；仅匹配 advert 路径，不影响普通首页横幅
 ^https?:\/\/oss\.umetrip\.com\/fs\/advert\/polite(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
@@ -277,6 +314,13 @@ AND,((URL-REGEX,^http:\/\/.+\/amdc\/mobileDispatch),(USER-AGENT,%E9%97%B2%E9%B1%
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.search\.shade\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.playboy\.recommend\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.idle\.ad\.expose(?:\/|\?|$) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# > 小红书去广告（稳定增强版）
+# 惊喜弹窗、营销盒子、创作页推广和独立广告资源。
+^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d+\/surprisebox\/(?:get_style|open|submit_action)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/www\.xiaohongshu\.com\/api\/marketing\/box\/trigger(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d+\/guide\/user_banner(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/www\.xiaohongshu\.com\/api\/sns\/v\d+\/ads\/resource(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 # > 雪球去广告（激进版）
 # 启动页、新用户活动及应用内推广配置
@@ -375,12 +419,6 @@ http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsear
 http-response-jq ^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*timeline_tab_name 'del(.data)'
 
 [Script]
-# > 百度贴吧去广告（稳定增强版）
-# JSON：开屏、看图广告、悬浮广告、商品卡片及广告平台初始化配置。
-贴吧-JSON净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/(?:c\/(?:s\/sync|f\/(?:ad\/getSplashAd|frs\/(?:page|threadlist|generalTabList)|pb\/(?:pic)?page|excellent\/personalized))$|tiebaads\/commonbatch\?),requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-json.js
-# Protobuf：新版信息流、帖子详情、直播和原生广告卡片。
-贴吧-Protobuf净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/c\/(?:b\/ad\/adBid|f\/(?:frs\/(?:page|threadlist|generalTabList)|ad\/getFeedAd|pb\/page|excellent\/personalized))\?cmd,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js,argument=per_filter_video_thread={{{贴吧隐藏推荐页视频帖子}}}
-
 # > 酷安去广告（稳定增强版）
 # 开屏配置、首页信息流及推广卡片。
 酷安-首页净化 = type=http-response,pattern=^https?:\/\/api\.coolapk\.com\/v\d+\/(?:main\/(?:init|indexV\d*|dataList)|dataList)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/coolapk-adblock.js
@@ -391,9 +429,22 @@ http-response-jq ^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*timelin
 # 仅处理已知广告/运营接口；响应非 JSON 或字段结构变化时原样放行。
 jd-adblock = type=http-response,pattern=^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(deliverLayer|getTabHomeInfo|myOrderInfo|orderTrackBusiness|personinfoBusiness|start|welcomeHome)(?:&.*)?$,requires-body=1,max-size=3145728,timeout=20,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/jd-adblock.js
 
+# > 淘宝去广告（稳定增强版）
+淘宝-开屏弹窗净化 = type=http-response,pattern=^https?:\/\/(?:guide-acs\.m\.taobao\.com\/gw\/mtop\.taobao\.(?:cloudvideo\.video\.query|wireless\.home\.splash\.awesome\.get)|poplayer\.template\.alibaba\.com\/\w+\.json),requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/taobao-adblock.js
+
+# > 百度贴吧去广告（稳定增强版）
+# JSON：开屏、看图广告、悬浮广告、商品卡片及广告平台初始化配置。
+贴吧-JSON净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/(?:c\/(?:s\/sync|f\/(?:ad\/getSplashAd|frs\/(?:page|threadlist|generalTabList)|pb\/(?:pic)?page|excellent\/personalized))$|tiebaads\/commonbatch\?),requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-json.js
+# Protobuf：新版信息流、帖子详情、直播和原生广告卡片。
+贴吧-Protobuf净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/c\/(?:b\/ad\/adBid|f\/(?:frs\/(?:page|threadlist|generalTabList)|ad\/getFeedAd|pb\/page|excellent\/personalized))\?cmd,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js,argument=per_filter_video_thread={{{隐藏推荐页视频帖子}}}
+
 # > 航旅纵横去广告（稳定版）
 # 根据 Rpid 精准拒绝已知广告位；修正旧规则无法匹配 HTTPS 的问题
 移除航旅纵横广告 = type=http-request, pattern=^https?:\/\/(?:114\.115\.217\.129|(?:bkclient|umerp|home)\.umetrip\.com(?:\.cn)?)\/gateway\/api\/umetrip\/native(?:\?.*)?$, script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/umetrip-remove-ads.js, requires-body=false, timeout=10
+
+# > 小红书去广告（稳定增强版）
+# 开屏配置、首页信息流和搜索结果中的明确广告对象。
+小红书-广告净化 = type=http-response,pattern=^https?:\/\/(?:edith|rec|www)\.xiaohongshu\.com\/api\/sns\/v\d+\/(?:system_service\/(?:config|splash_config)|homefeed|search\/notes)(?:\?.*)?$,requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/xiaohongshu-adblock.js
 
 # > YouTube 增强
 # Maasea 脚本已覆盖 browse / next，因此替换原推荐去广告脚本，避免重复改写同一响应。
@@ -402,4 +453,4 @@ youtube-enhance-initplayback = type=http-request,pattern=^https?:\/\/[\w-]+\.goo
 youtube-enhance-log-event = type=http-request,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/log_event,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js
 
 [MITM]
-hostname = %APPEND% tiebac.baidu.com, c.tieba.baidu.com, api.coolapk.com, m.ctrip.com, mbd.baidu.com, as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, 112.53.55.225, 139.199.240.84, 113.46.225.*, 162.14.157.*, 123.207.209.*, 120.241.142.*, 120.241.143.*, 116.85.*, aweme.snssdk.com, api5-normal-lq.amemv.com, api5-normal-m.amemv.com, zlink.ugsdk.cn, swdlcdn.eastmoney.com, choicegw2.eastmoney.com, j5.dfcfw.com, api.m.jd.com, jad-api.jin10.com, common-open-api.jin10.com, search-open-api.jin10.com, cdn.jin10.com, *.z3c.jin10.com, apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com, home.mi.com, api.pinduoduo.com, api.yangkeduo.com, images.pinduoduo.com, t-dsp.pinduoduo.com, 114.115.217.129, home.umetrip.com, umerp.umetrip.com, umerp.umetrip.com.cn, bkclient.umetrip.com, bkclient.umetrip.com.cn, oss.umetrip.com, mcsp.cloudpnr.com, saas-ad.cloudpnr.com, rms.meituan.com, webapi.qmai.cn, dsp.fcbox.com, webchatapp.fcbox.com, app.95504.net, minipro.95504.net, ne.gdsz.sinopec.com, flow.dmall.com, api.yonghuivip.com, activity.yonghuivip.com, 3pp.starbucks.com.cn, api.mcd.cn, mxsa.mxbc.net, tm-api.pin-dao.cn, ads.ishansong.com, ump.ems.com.cn, minicap.caocaokeji.cn, r2.gzyct.com, api.kuaidihelp.com, supplier-api.imdada.cn, hdgateway.zto.com, qapi.huolala.cn, gw-passenger-wap.01zhuanche.com, passengerapi.saicmobility.com, passenger.t3go.cn, wxs-weixin.sd.zhumanggroup.com, s.jiediankeji.com, aag.enmonster.com, ad.xiaotucc.com, api-marketing.zhinengxiyifang.cn, api-fouth-mem.huazhu.com, wxapp.bestwehotel.com, wx.bthhotels.com, ad.maoyan.com, wx.maoyan.com, api.hengdianfilm.com, mkt-gateway.tuhu.cn, mobile.12306.cn, acs.m.goofish.com, g-acs.m.goofish.com, api.xueqiu.com, open.xueqiu.com, stock.xueqiu.com, fund.xueqiu.com, *.googlevideo.com, youtubei.googleapis.com
+hostname = %APPEND% api.coolapk.com, m.ctrip.com, mbd.baidu.com, as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, 112.53.55.225, 139.199.240.84, 113.46.225.*, 162.14.157.*, 123.207.209.*, 120.241.142.*, 120.241.143.*, 116.85.*, aweme.snssdk.com, api5-normal-lq.amemv.com, api5-normal-m.amemv.com, zlink.ugsdk.cn, swdlcdn.eastmoney.com, choicegw2.eastmoney.com, j5.dfcfw.com, api.m.jd.com, jad-api.jin10.com, common-open-api.jin10.com, search-open-api.jin10.com, cdn.jin10.com, *.z3c.jin10.com, apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com, home.mi.com, api.pinduoduo.com, api.yangkeduo.com, images.pinduoduo.com, t-dsp.pinduoduo.com, acs.m.taobao.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com, tiebac.baidu.com, c.tieba.baidu.com, 114.115.217.129, home.umetrip.com, umerp.umetrip.com, umerp.umetrip.com.cn, bkclient.umetrip.com, bkclient.umetrip.com.cn, oss.umetrip.com, mcsp.cloudpnr.com, saas-ad.cloudpnr.com, rms.meituan.com, webapi.qmai.cn, dsp.fcbox.com, webchatapp.fcbox.com, app.95504.net, minipro.95504.net, ne.gdsz.sinopec.com, flow.dmall.com, api.yonghuivip.com, activity.yonghuivip.com, 3pp.starbucks.com.cn, api.mcd.cn, mxsa.mxbc.net, tm-api.pin-dao.cn, ads.ishansong.com, ump.ems.com.cn, minicap.caocaokeji.cn, r2.gzyct.com, api.kuaidihelp.com, supplier-api.imdada.cn, hdgateway.zto.com, qapi.huolala.cn, gw-passenger-wap.01zhuanche.com, passengerapi.saicmobility.com, passenger.t3go.cn, wxs-weixin.sd.zhumanggroup.com, s.jiediankeji.com, aag.enmonster.com, ad.xiaotucc.com, api-marketing.zhinengxiyifang.cn, api-fouth-mem.huazhu.com, wxapp.bestwehotel.com, wx.bthhotels.com, ad.maoyan.com, wx.maoyan.com, api.hengdianfilm.com, mkt-gateway.tuhu.cn, mobile.12306.cn, acs.m.goofish.com, g-acs.m.goofish.com, edith.xiaohongshu.com, rec.xiaohongshu.com, www.xiaohongshu.com, api.xueqiu.com, open.xueqiu.com, stock.xueqiu.com, fund.xueqiu.com, *.googlevideo.com, youtubei.googleapis.com

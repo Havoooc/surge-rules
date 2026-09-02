@@ -12,13 +12,13 @@ DOMAIN,ma-adx.ctrip.com,REJECT
 # 开屏广告素材（保留路径规则，兼容已缓存的 URL Rewrite 配置）。
 ^https?:\/\/ma-adx\.ctrip\.com\/_ma\.gif(?:\?.*)?$ - reject
 
-# 携程 App 行程页/首页广告位；兼容 json、scjson 与后续同名接口路径
-^https?:\/\/m\.ctrip\.com\/restapi\/(?:[A-Za-z0-9_-]+\/)*tripAds(?:\?.*)?$ - reject-dict
-
 # 分享落地页的百度广告请求
 ^https?:\/\/mbd\.baidu\.com\/newspage\/api\/getmobads\?page=landingshare(?:&.*)?$ - reject
 
 [Map Local]
+# 携程 App 行程页/首页广告位；返回空 JSON，兼容 json、scjson 与后续同名接口路径。
+^https?:\/\/m\.ctrip\.com\/restapi\/(?:[A-Za-z0-9_-]+\/)*tripAds(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
 # 携程微信小程序的热门活动/运营推广位。
 ^https?:\/\/m\.ctrip\.com\/restapi\/soa2\/12673\/(?:[A-Za-z0-9_-]+\/)*queryWeChatHotEvent(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 

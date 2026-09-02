@@ -1,0 +1,31 @@
+#!name=小红书去广告（稳定增强版）
+#!desc=移除小红书开屏、惊喜弹窗、信息流赞助内容、搜索广告与广告素材；保留登录、浏览、搜索、发布、评论、私信、商城和正常直播。
+#!author=Havoooc（参考 R-Store、wool_scripts 规则）
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Icon/App/xiaohongshu.png
+#!date=2026-09-02
+#!requirement=SYSTEM = 'iOS'
+
+[Rule]
+# 明确的小红书广告素材与广告追踪域名。
+DOMAIN,ads-img-qc.xhscdn.com,REJECT,extended-matching,pre-matching
+DOMAIN,ads-video-al.xhscdn.com,REJECT,extended-matching,pre-matching
+DOMAIN,ads-video-qc.xhscdn.com,REJECT,extended-matching,pre-matching
+DOMAIN,t-ads.xiaohongshu.com,REJECT,extended-matching,pre-matching
+# 迫使小红书回退至可解密的 HTTPS/TCP，否则信息流脚本可能无法命中。
+AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
+
+[Map Local]
+# 惊喜弹窗、营销盒子、创作页推广和独立广告资源。
+^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d+\/surprisebox\/(?:get_style|open|submit_action)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/www\.xiaohongshu\.com\/api\/marketing\/box\/trigger(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/edith\.xiaohongshu\.com\/api\/sns\/v\d+\/guide\/user_banner(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/www\.xiaohongshu\.com\/api\/sns\/v\d+\/ads\/resource(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+# 开屏配置、首页信息流和搜索结果中的明确广告对象。
+小红书-广告净化 = type=http-response,pattern=^https?:\/\/(?:edith|rec|www)\.xiaohongshu\.com\/api\/sns\/v\d+\/(?:system_service\/(?:config|splash_config)|homefeed|search\/notes)(?:\?.*)?$,requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/xiaohongshu-adblock.js
+
+[MITM]
+hostname = %APPEND% edith.xiaohongshu.com, rec.xiaohongshu.com, www.xiaohongshu.com

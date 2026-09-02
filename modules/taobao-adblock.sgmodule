@@ -1,0 +1,28 @@
+#!name=淘宝去广告（稳定增强版）
+#!desc=移除淘宝开屏、弹窗、广告投放接口与明确广告域名；保留登录、搜索、商品、购物车、订单、旺旺和支付功能。
+#!author=Havoooc（参考 R-Store、wool_scripts 规则）
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Icon/App/taobao.png
+#!date=2026-09-02
+#!requirement=SYSTEM = 'iOS'
+
+[Rule]
+# 淘宝联盟与直通车的明确广告、点击和统计域名；不屏蔽通用淘宝业务域名。
+DOMAIN-SUFFIX,simba.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,tunion-api.m.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,apoll.m.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN,h-adashx.ut.taobao.com,REJECT,extended-matching,pre-matching
+
+[Map Local]
+# 广告服务、淘客广告、闪购广告与一淘开屏。
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alibaba\.advertisementservice\.getadv(?:\/|\?).*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alimama\.etao\.config\.query\/.*etao_advertise.*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.etao\.noah\.query\/.*tao_splash.*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.o2o\.ad\.gateway\.get(?:\/|\?).*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+淘宝-开屏弹窗净化 = type=http-response,pattern=^https?:\/\/(?:guide-acs\.m\.taobao\.com\/gw\/mtop\.taobao\.(?:cloudvideo\.video\.query|wireless\.home\.splash\.awesome\.get)|poplayer\.template\.alibaba\.com\/\w+\.json),requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/taobao-adblock.js
+
+[MITM]
+hostname = %APPEND% acs.m.taobao.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com

@@ -42,6 +42,8 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 
 - Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>（请勿与下列独立模块同时启用）
 - 百度贴吧去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/tieba-adblock.sgmodule>
+- 淘宝去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-adblock.sgmodule>
+- 小红书去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xiaohongshu-adblock.sgmodule>
 - 国内银行 VPN 兼容
 - HTTPDNS 拦截（稳妥版）
 - 携程旅行去广告
