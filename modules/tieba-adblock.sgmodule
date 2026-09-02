@@ -1,0 +1,24 @@
+#!name=百度贴吧去广告（稳定增强版）
+#!desc=移除开屏、首页及吧内信息流广告、直播推广、商品卡片、看图广告与悬浮广告；保留登录、浏览、搜索、发帖、回复、私信和图片功能。
+#!author=Havoooc（基于 app2smile 规则整理）
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-02
+#!requirement=SYSTEM = 'iOS'
+#!arguments=隐藏推荐页视频帖子:false
+#!arguments-desc=- 隐藏推荐页视频帖子：[true, false]；默认关闭，仅过滤广告和直播推广。
+
+[Rule]
+# 阻断贴吧广告专用地址；规则由上游维护，可随接口变化更新。
+RULE-SET,https://raw.githubusercontent.com/app2smile/rules/master/rule/tieba-ad.list,REJECT-DROP
+
+[Script]
+# JSON：开屏、看图广告、悬浮广告、商品卡片及广告平台初始化配置。
+贴吧-JSON净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/(?:c\/(?:s\/sync|f\/(?:ad\/getSplashAd|frs\/(?:page|threadlist|generalTabList)|pb\/(?:pic)?page|excellent\/personalized))$|tiebaads\/commonbatch\?),requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-json.js
+
+# Protobuf：新版信息流、帖子详情、直播和原生广告卡片。
+贴吧-Protobuf净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/c\/(?:b\/ad\/adBid|f\/(?:frs\/(?:page|threadlist|generalTabList)|ad\/getFeedAd|pb\/page|excellent\/personalized))\?cmd,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js,argument=per_filter_video_thread={{{隐藏推荐页视频帖子}}}
+
+[MITM]
+hostname = %APPEND% tiebac.baidu.com, c.tieba.baidu.com
