@@ -51,6 +51,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 拼多多去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/pinduoduo-adblock.sgmodule>
 - 米家去广告
 - 美团去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/meituan-adblock.sgmodule>
+- 酷安去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/coolapk-adblock.sgmodule>
 - QQ 音乐去广告
 - 航旅纵横去广告
 - 微信小程序去广告

@@ -1,0 +1,17 @@
+#!name=酷安去广告（稳定增强版）
+#!desc=移除酷安开屏、首页赞助卡片、信息流推广、评论广告与帖子商品推广；保留登录、搜索、发帖、评论、通知及正常信息流。
+#!author=Havoooc
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Icon/App/coolapk.png
+#!date=2026-09-02
+
+[Script]
+# 开屏配置、首页信息流及推广卡片。
+酷安-首页净化 = type=http-response,pattern=^https?:\/\/api\.coolapk\.com\/v\d+\/(?:main\/(?:init|indexV\d*|dataList)|dataList)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/coolapk-adblock.js
+
+# 帖子详情、评论列表和酷品页面推广。
+酷安-内容净化 = type=http-response,pattern=^https?:\/\/api\.coolapk\.com\/v\d+\/(?:feed\/(?:detail|replyList)|page\/dataList)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/coolapk-adblock.js
+
+[MITM]
+hostname = %APPEND% api.coolapk.com
