@@ -40,7 +40,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 
 当前包含：
 
-- 全能去广告合集（18 合 1）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>（请勿与下列独立模块同时启用）
+- Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>（请勿与下列独立模块同时启用）
 - 国内银行 VPN 兼容
 - HTTPDNS 拦截（稳妥版）
 - 携程旅行去广告
@@ -62,6 +62,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 
 ## 注意事项
 
+- 以后新增或更新去广告、净化及兼容模块时，同步更新 `all-in-one-adblock.sgmodule`，确保 Havoc全能去广告合集始终包含仓库内最新模块。
 - Rewrite、Map Local、Body Rewrite 和脚本模块需要开启 MITM，并在设备上安装及信任 Surge CA。
 - 模块启用前请检查其 MITM 主机范围；银行兼容模块本身不解密银行业务流量。
 - `Body Rewrite` 中的 JQ 规则需要较新的 Surge iOS/macOS 核心。
