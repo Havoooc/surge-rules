@@ -1,5 +1,5 @@
 #!name=滴滴出行去广告
-#!desc=移除开屏广告、弹窗广告、横幅推广，精简我的页面。完整转换可莉 2026-09-03 版本。
+#!desc=基于原版恢复底栏精简与广告拦截，融合可莉 2026-09-03 新接口；保留余额和福利金入口。
 #!author=可莉🅥；Havoooc（Surge 格式转换）
 #!category=去广告
 #!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DiDi.png
@@ -7,41 +7,53 @@
 #!date=2026-09-04
 # 上游版本：2026-09-03 16:19:24
 # 来源镜像：https://github.com/ifflagged/Romeo/blob/main/Modules/Loon/Kelee/Official/DiDi_remove_ads.lpx
-# 相同 URL 的响应处理按上游顺序合并；不附加旧版规则。
+# 旧版优先；新增接口补充。响应字段缺失时保留原数据。
 
 [Rule]
 DOMAIN,gwp.xiaojukeji.com,REJECT
+AND,((IP-ASN,45090,no-resolve),(DEST-PORT,25641),(PROTOCOL,TCP)),REJECT
+AND,((IP-ASN,55990,no-resolve),(DEST-PORT,25641),(PROTOCOL,TCP)),REJECT
+AND,((IP-ASN,63646,no-resolve),(DEST-PORT,25641),(PROTOCOL,TCP)),REJECT
 DOMAIN,gwpgz.diditaxi.com.cn,REJECT
 DOMAIN,adtrack.xiaojukeji.com,REJECT
 
 [Body Rewrite]
-http-response-jq ^https:\/\/as\.xiaojukeji\.com\/ep\/as\/toggles\? '.data |= map(select(.name != "isUseNetConnectivity"))'
-http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/other\/slow\? 'del(.data.order_cards.new_loss_banner_card, .data.order_cards.call_car_card_80)'
-http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/core\? '.data.order_cards.nav_list_card.data |= map(select(.nav_id == "dache_anycar" or .nav_id == "carmate" or .nav_id == "driverservice" or .nav_id == "zhandianbashi" or .nav_id == "yuancheng" or .nav_id == "pincheche" or .nav_id == "bike" or .nav_id == "special_ride" or .nav_id == "nav_more_v3")) | .data.disorder_cards.top_nav_list.data.top_nav_info |= map(select(.nav_id == "chu_xing" or .nav_id == "freight_cargo"))'
-http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/other\/fast\? '(del(.data.disorder_cards.communicate_card, .data.disorder_cards.not_login_bottom_bar, .data.disorder_cards.riding_code_card, .data.order_cards, .data.disorder_cards.car_icon.data.icon_info_new_agreement)) | (del(.data.disorder_cards.guess_card, .data.disorder_cards.scene_list_card))'
-http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/common\/v\d\/usercenter\/layout$ '.data |= (.instances |= (to_entries | map(select(.key as $k | ["center_base_info_card", "center_tool_card", "center_wallet_finance_card", "center_order_related_card"] | index($k))) | from_entries)) | .data.instances.center_wallet_finance_card.data.view_info |= map(select(.title == "优惠卡券"))'
-http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d\/dache_homepage_layout\? '(del(.data.instances.dache_main_core_icon)) | (.data |= (.instances |= (to_entries | map(select(.key | test("feed_back_|dache_main_member|order_container_|dache_main_core_icon|dache_main_card_"))) | from_entries)))'
-http-response-jq ^https:\/\/api\.udache\.com\/intercity\/ticket\/api\/v\d\/core\/getFullPageInfoLayout\? '.data.disorder_components |= (map(select(.name == "history_order_card" or .name == "inprogress_order_card" or .name == "station_calendar" or .name == "main_card_v2" or .name == "user_history_order")))'
-http-response-jq ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=lj\.cos\.apolloConfig '.data |= map(select(.name != "daijia-memberInfo-config" and .name != "daijia-transfer-share-config"))'
-http-response-jq ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=lj\.cos\.apolloToggle '.data |= map(select(.name as $n | {daijia_app_estimate_pre_req_switch:true,daijia_agent_car_picture_check:true,daijia_bluetooth_wifi_degrade_switch:true,daijia_weixin_publish_login:true,daijia_estimate_recommend_degrade_switch:true,daijia_yugu_policy_switch:true,daijia_home_location_guide_switch:true,daijia_estimate_switch:true} | has($n)))'
-http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d\/bronze\/pinchengle_homepage_layout$ '.data.instances |= with_entries(select(.key | IN("dacheanycar-certificates-1", "main-card-1", "map-1", "nav-1", "tool-container-1")))'
-http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d\/SFCHomeTab\? '.data.tab_list |= map(select(.tab_id == "passenger" or .tab_id == "driver"))'
-http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\.querySellCardSummary '.data = {}'
-http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\.queryWelfareCenter '.data = {}'
-http-response-jq ^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/startinfo\?api_version 'del(.rec_destination)'
-http-response-jq ^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/poiinfo\?product_id 'del(.rec_destination)'
-http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/user_common\/itineraryList\? 'del(.data.tab_nav[]?.tab_param)'
+http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d+\/core\? '(. as $original | try (.data.disorder_cards.bottom_nav_list.data |= map(select(.id == "home_page" or .id == "user_center")) | .data.order_cards.nav_list_card.data |= map(select(.nav_id == "dache_anycar" or .nav_id == "carmate" or .nav_id == "driverservice" or .nav_id == "zhandianbashi" or .nav_id == "yuancheng" or .nav_id == "pincheche" or .nav_id == "bike" or .nav_id == "special_ride" or .nav_id == "nav_more_v3"))) catch $original) | (. as $original | try (.data.disorder_cards.top_nav_list.data.top_nav_info |= map(select(.nav_id == "chu_xing" or .nav_id == "freight_cargo"))) catch $original)'
+http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d+\/other\/fast\? '(. as $original | try (delpaths([["data","disorder_cards","communicate_card"]])) catch $original) | (. as $original | try (delpaths([["data","disorder_cards","not_login_bottom_bar"]])) catch $original) | (. as $original | try (delpaths([["data","disorder_cards","riding_code_card"]])) catch $original) | (. as $original | try (delpaths([["data","order_cards","car_owner_widget_card"]])) catch $original) | (. as $original | try (delpaths([["data","order_cards","marketing_card"]])) catch $original) | (. as $original | try (delpaths([["data","order_cards","super_banner_card"]])) catch $original) | (. as $original | try (delpaths([["data","disorder_cards","car_icon","data","icon_info_new_agreement"]])) catch $original) | (. as $original | try (del(.data.disorder_cards.guess_card, .data.disorder_cards.scene_list_card)) catch $original)'
+http-response-jq ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget\? '(. as $original | try (delpaths([["data","mult_home_banner"]])) catch $original)'
+http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/common\/v\d+\/usercenter\/layout(?:\?|$) '(. as $original | try (.data |= (.instances |= (to_entries | map(select(.key as $k | ["center_base_info_card", "center_tool_card", "center_wallet_finance_card", "center_order_related_card"] | index($k))) | from_entries)) | .data.instances.center_wallet_finance_card.data.view_info |= map(select(.title == "优惠卡券" or .title == "余额" or .title == "福利金"))) catch $original)'
+http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d+\/dache_homepage_layout\? '(. as $original | try (.data |= (.instances |= (to_entries | map(select(.key | test("feed_back_|dache_main_member|order_container_|dache_main_core_icon|dache_main_card_"))) | from_entries))) catch $original)'
+http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d+\/pSFCHomePage\? '(. as $original | try (if (.data | type) == "object" then .data |= with_entries(select(.key == "hot_route_info" or .key == "legal_info" or .key == "tab_list")) | (if (.data.tab_list | type) == "array" then .data.tab_list |= map(select(.tab_id == "passenger")) else . end) else . end) catch $original)'
+http-response-jq ^https:\/\/daijia\.kuaidadi\.com(?::443)?\/gateway\? '(. as $original | try (delpaths([["data","variantInfo"]])) catch $original) | (. as $original | try (.data |= with_entries(select(.value.isAd != 1))) catch $original)'
+http-response-jq ^https:\/\/api\.udache\.com\/intercity\/ticket\/api\/v\d+\/core\/getFullPageInfoLayout\? '(. as $original | try (.data.disorder_components |= (map(select(.name == "history_order_card" or .name == "inprogress_order_card" or .name == "station_calendar" or .name == "main_card_v2" or .name == "user_history_order")))) catch $original) | (. as $original | try (.data.disorder_cards.top_nav_list.data.top_nav_info |= map(select(.nav_id == "chu_xing" or .nav_id == "freight_cargo"))) catch $original)'
+http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(?::443)?\/gateway\? '(. as $original | try (delpaths([["data","didi-bike-homepage-popup"]])) catch $original) | (. as $original | try (delpaths([["data","variantInfo"]])) catch $original)'
+http-response-jq ^https:\/\/as\.xiaojukeji\.com\/ep\/as\/toggles\? '(. as $original | try (.data |= map(if .name|IN("daijia_journey_new_tcp_switch","daijia_tcp_init","daijia_tcp_msg_encrypt","daijia_tcp_site_info","daijia_tcp_site_report")then.allow=false else. end)) catch $original) | (. as $original | try (.data |= map(select(.name != "isUseNetConnectivity"))) catch $original)'
+http-response-jq ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d+\/other\/slow\? '(. as $original | try (del(.data.order_cards.new_loss_banner_card, .data.order_cards.call_car_card_80)) catch $original)'
+http-response-jq ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=lj\.cos\.apolloConfig '(. as $original | try (.data |= map(select(.name != "daijia-memberInfo-config" and .name != "daijia-transfer-share-config"))) catch $original)'
+http-response-jq ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=lj\.cos\.apolloToggle '(. as $original | try (.data |= map(select(.name as $n | {daijia_app_estimate_pre_req_switch:true,daijia_agent_car_picture_check:true,daijia_bluetooth_wifi_degrade_switch:true,daijia_weixin_publish_login:true,daijia_estimate_recommend_degrade_switch:true,daijia_yugu_policy_switch:true,daijia_home_location_guide_switch:true,daijia_estimate_switch:true} | has($n)))) catch $original)'
+http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d+\/bronze\/pinchengle_homepage_layout(?:\?|$) '(. as $original | try (.data.instances |= with_entries(select(.key | IN("dacheanycar-certificates-1", "main-card-1", "map-1", "nav-1", "tool-container-1")))) catch $original)'
+http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d+\/SFCHomeTab\? '(. as $original | try (.data.tab_list |= map(select(.tab_id == "passenger" or .tab_id == "driver"))) catch $original)'
+http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\.querySellCardSummary '(. as $original | try (.data = {}) catch $original)'
+http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\.queryWelfareCenter '(. as $original | try (.data = {}) catch $original)'
+http-response-jq ^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/startinfo\?api_version '(. as $original | try (del(.rec_destination)) catch $original)'
+http-response-jq ^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/poiinfo\?product_id '(. as $original | try (del(.rec_destination)) catch $original)'
+http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/user_common\/itineraryList\? '(. as $original | try (del(.data.tab_nav[]?.tab_param)) catch $original)'
 
 [Map Local]
+^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/lion\.didialift\.com\/broker\/\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d+\/other\/slow\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/ct\.xiaojukeji\.com\/agent\/v3\/feeds\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/conf\.diditaxi\.com\.cn\/dynamic\/conf data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/recommend\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=prado\.cms\.delivery\.batch data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=prado\.cms\.AggregateDeliveryRemoteService\.aggregateDelivery data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=lj\.c\.p\.queryLevelAndRightsStatus data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=lj\.cos\.p\.popup data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d\/pSFCHomePage\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/htwkop-st\.xiaojukeji\.com\/gateway\?api=cms\.htw\.delivery\.batch data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/freight\.xiaojukeji\.com\/gateway\?api=freight\.d\.core\.multiDisplayV\d data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [MITM]
-hostname = %APPEND% as.xiaojukeji.com, conf.diditaxi.com.cn, common.diditaxi.com.cn, res.xiaojukeji.com, api.udache.com, daijia.kuaidadi.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, freight.xiaojukeji.com, poi.map.xiaojukeji.com
+hostname = %APPEND% as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, 112.53.55.225, 139.199.240.84, 113.46.225.*, 162.14.157.*, 123.207.209.*, 120.241.142.*, 120.241.143.*, 116.85.*, daijia.kuaidadi.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, freight.xiaojukeji.com, poi.map.xiaojukeji.com
