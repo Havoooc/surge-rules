@@ -1,0 +1,24 @@
+# AI services: route through the dedicated Smart policy group.
+# Kept intentionally narrow to avoid sending unrelated Google/X traffic here.
+
+# OpenAI / ChatGPT
+DOMAIN-SUFFIX,chatgpt.com
+DOMAIN-SUFFIX,openai.com
+DOMAIN-SUFFIX,oaistatic.com
+DOMAIN-SUFFIX,oaiusercontent.com
+
+# Anthropic / Claude
+DOMAIN-SUFFIX,claude.ai
+DOMAIN-SUFFIX,anthropic.com
+
+# Google Gemini APIs and web app
+DOMAIN,gemini.google.com
+DOMAIN-SUFFIX,ai.google.dev
+DOMAIN-SUFFIX,generativelanguage.googleapis.com
+
+# xAI / Grok
+DOMAIN-SUFFIX,grok.com
+DOMAIN-SUFFIX,x.ai
+
+# Perplexity
+DOMAIN-SUFFIX,perplexity.ai
