@@ -1,0 +1,16 @@
+[Unit]
+Description=Push Vmiss traffic counters to subscription Worker
+After=network-online.target vnstat.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/sbin/vmiss-traffic-push
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadOnlyPaths=/etc/vmiss-traffic /var/lib/vnstat
