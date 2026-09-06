@@ -48,14 +48,18 @@ function nextMonthlyReset(timestamp) {
   const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   let year = Number(value.year);
   let month = Number(value.month);
-  let reset = Date.UTC(year, month - 1, resetDay, resetHour - 8, resetMinute) / 1000;
+  const resetAt = (targetYear, targetMonth) => {
+    const lastDay = new Date(Date.UTC(targetYear, targetMonth, 0)).getUTCDate();
+    return Date.UTC(targetYear, targetMonth - 1, Math.min(resetDay, lastDay), resetHour - 8, resetMinute) / 1000;
+  };
+  let reset = resetAt(year, month);
   if (timestamp >= reset) {
     month += 1;
     if (month === 13) {
       year += 1;
       month = 1;
     }
-    reset = Date.UTC(year, month - 1, resetDay, resetHour - 8, resetMinute) / 1000;
+    reset = resetAt(year, month);
   }
   return reset;
 }
