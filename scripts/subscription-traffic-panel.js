@@ -108,6 +108,7 @@ if (!url) {
     const referenceTime = Number.isFinite(updatedAt) && updatedAt > 0
       ? updatedAt
       : Math.floor(Date.now() / 1000);
+    const expire = Number(values.expire);
 
     if (![upload, download, total].every(Number.isFinite)) {
       finishError("订阅未返回流量信息");
@@ -120,7 +121,7 @@ if (!url) {
         `🟢 剩余：${formatSize(remaining)} (${remainingPercent.toFixed(2)}%)`,
         `📊 已用：${formatSize(used)} (${percent.toFixed(2)}%)`,
         `🔄 下次重置：${formatTime(nextMonthlyReset(referenceTime))}`,
-        `🕒 更新：${formatTime(referenceTime)}`,
+        `📅 到期：${expire > 0 ? formatTime(expire).slice(0, 10) : "长期"}`,
       ].filter(Boolean).join("\n"),
       icon: "server.rack",
       "icon-color": remaining / total < 0.2 ? "#FF3B30" : "#34C759",

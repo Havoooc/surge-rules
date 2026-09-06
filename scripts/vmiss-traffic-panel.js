@@ -63,6 +63,7 @@ if (!url) {
     const download = Number(data.download);
     const total = Number(data.total);
     const updatedAt = Number(header(response.headers, "x-traffic-updated-at"));
+    const expire = Number(data.expire);
     if (![upload, download, total, updatedAt].every(Number.isFinite) || total <= 0) return fail("数据不完整");
     const used = upload + download;
     const remaining = Math.max(total - used, 0);
@@ -73,7 +74,7 @@ if (!url) {
         `🟢 剩余：${formatSize(remaining)} (${(100 - percentage).toFixed(2)}%)`,
         `📊 已用：${formatSize(used)} (${percentage.toFixed(2)}%)`,
         `🔄 下次重置：${formatTime(nextReset(updatedAt))}`,
-        `🕒 更新：${formatTime(updatedAt)}`,
+        `📅 到期：${expire > 0 ? formatTime(expire).slice(0, 10) : "长期"}`,
       ].join("\n"),
       icon: "server.rack",
       "icon-color": remaining / total < 0.2 ? "#FF3B30" : "#34C759",

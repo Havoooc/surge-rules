@@ -7,6 +7,7 @@ from pathlib import Path
 
 INTERFACE = "eth0"
 TOTAL_BYTES = 500_000_000_000
+EXPIRE_AT = 1818892800
 PUSH_URL = "https://sub.havooc.cc/api/traffic/vmiss-us"
 TOKEN_PATH = Path("/etc/vmiss-traffic/push-token")
 
@@ -30,7 +31,7 @@ def main():
         "upload": upload,
         "download": download,
         "total": TOTAL_BYTES,
-        "expire": 0,
+        "expire": EXPIRE_AT,
         "updated_at": int(time.time()),
         "estimated": False,
     }, separators=(",", ":")).encode()
