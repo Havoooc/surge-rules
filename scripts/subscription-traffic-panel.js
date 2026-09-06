@@ -12,6 +12,9 @@ const params = Object.fromEntries(
 
 const title = params.title || "套餐流量";
 const url = params.url;
+const resetDay = Number(params.reset_day || 25);
+const resetHour = Number(params.reset_hour || 0);
+const resetMinute = Number(params.reset_minute || 0);
 
 function formatSize(bytes) {
   if (!Number.isFinite(bytes)) return "未知";
@@ -45,15 +48,14 @@ function nextMonthlyReset(timestamp) {
   const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   let year = Number(value.year);
   let month = Number(value.month);
-  // 25 日 00:00（Asia/Shanghai）等于前一日 16:00 UTC。
-  let reset = Date.UTC(year, month - 1, 24, 16, 0) / 1000;
+  let reset = Date.UTC(year, month - 1, resetDay, resetHour - 8, resetMinute) / 1000;
   if (timestamp >= reset) {
     month += 1;
     if (month === 13) {
       year += 1;
       month = 1;
     }
-    reset = Date.UTC(year, month - 1, 24, 16, 0) / 1000;
+    reset = Date.UTC(year, month - 1, resetDay, resetHour - 8, resetMinute) / 1000;
   }
   return reset;
 }
