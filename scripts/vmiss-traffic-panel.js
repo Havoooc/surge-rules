@@ -72,7 +72,6 @@ if (!url) {
       content: [
         `🟢 剩余：${formatSize(remaining)} (${(100 - percentage).toFixed(2)}%)`,
         `📊 已用：${formatSize(used)} (${percentage.toFixed(2)}%)`,
-        `↑ ${formatSize(upload)}  ↓ ${formatSize(download)}`,
         `🔄 下次重置：${formatTime(nextReset(updatedAt))}`,
         `🕒 更新：${formatTime(updatedAt)}`,
       ].join("\n"),
