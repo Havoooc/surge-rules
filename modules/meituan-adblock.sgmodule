@@ -4,7 +4,7 @@
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-01
+#!date=2026-09-07
 
 [Rule]
 # 明确的美团广告投放域名；不拦截业务 API、定位、支付和配送域名。
@@ -27,6 +27,11 @@ DOMAIN-SUFFIX,ad.e.waimai.sankuai.com,REJECT,extended-matching,pre-matching
 ^https?:\/\/img\.meituan\.net\/(?:adunion|display|midas)\/[^?]+\.(?:gif|jpe?g)(?:\.webp)?(?:\?.*)?$ data-type=tiny-gif status-code=200
 ^https?:\/\/p\d+\.meituan\.net\/(?:bizad|wmbanner)\/[^?]+\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
 ^https?:\/\/(?:s3plus|flowplus)\.meituan\.net\/v\d+\/[^/]+\/linglong\/[^?]+\.(?:gif|jpe?g|mp4)(?:\?.*)?$ data-type=tiny-gif status-code=200
+
+# 美团外卖商品奖励广告、首页营销配置与品牌活动压缩包。
+^https?:\/\/img\.meituan\.net\/goodsawardpic\/[a-f0-9]+\.png\.webp(?:\?.*)?$ data-type=tiny-gif status-code=200
+^https?:\/\/s3plus\.meituan\.net\/ocean-blk-index\/index\/blk_conf_73\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/s3plus\.meituan\.net\/v1\/mss_[A-Za-z0-9_]+\/(?:brandcpt-vedio|waimai-alita)\/[A-Za-z0-9_]+\.zip(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [MITM]
 hostname = %APPEND% apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com

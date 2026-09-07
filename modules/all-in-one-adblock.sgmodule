@@ -228,6 +228,10 @@ AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 ^https?:\/\/img\.meituan\.net\/(?:adunion|display|midas)\/[^?]+\.(?:gif|jpe?g)(?:\.webp)?(?:\?.*)?$ data-type=tiny-gif status-code=200
 ^https?:\/\/p\d+\.meituan\.net\/(?:bizad|wmbanner)\/[^?]+\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
 ^https?:\/\/(?:s3plus|flowplus)\.meituan\.net\/v\d+\/[^/]+\/linglong\/[^?]+\.(?:gif|jpe?g|mp4)(?:\?.*)?$ data-type=tiny-gif status-code=200
+# 美团外卖商品奖励广告、首页营销配置与品牌活动压缩包。
+^https?:\/\/img\.meituan\.net\/goodsawardpic\/[a-f0-9]+\.png\.webp(?:\?.*)?$ data-type=tiny-gif status-code=200
+^https?:\/\/s3plus\.meituan\.net\/ocean-blk-index\/index\/blk_conf_73\.json(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/s3plus\.meituan\.net\/v1\/mss_[A-Za-z0-9_]+\/(?:brandcpt-vedio|waimai-alita)\/[A-Za-z0-9_]+\.zip(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 # > 米家去广告（稳定版）
 # 首页推荐横幅、轮播、“我的”推广及开屏配置
