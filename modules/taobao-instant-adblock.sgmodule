@@ -1,0 +1,22 @@
+#!name=淘宝闪购去广告（稳定版）
+#!desc=移除淘宝闪购开屏弹窗、门店品牌弹窗及明确广告/遥测请求；保留登录、地址、搜索、门店、商品、订单、支付与配送功能。
+#!author=zirawell；Havoooc（稳定适配）
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Eleme.png
+#!date=2026-09-07
+
+[Rule]
+# 明确的广告统计与广告素材桶；不拦截淘宝闪购业务、AMDC、配送或商品图片接口。
+DOMAIN,wgo.mmstat.com,REJECT,extended-matching,pre-matching
+DOMAIN,h-adashx.ut.ele.me,REJECT,extended-matching,pre-matching
+DOMAIN-KEYWORD,o2o-ad-dev.oss-cn,REJECT,extended-matching,pre-matching
+
+[Map Local]
+# 首页活动弹窗。
+^https?:\/\/nr-op\.elemecdn\.com\/eleme\/transformer\/templates\/\w_eleme_home_yolo_popup(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 门店品牌弹窗；仅匹配该静态模板，不影响门店、商品及下单接口。
+^https?:\/\/g\.alicdn\.com\/TBTakeout\/et-store\/(?:\d+\.)*\d+\/weex\/store-brand-popup(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% nr-op.elemecdn.com, g.alicdn.com
