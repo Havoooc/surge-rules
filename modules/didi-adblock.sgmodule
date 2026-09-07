@@ -1,10 +1,10 @@
 #!name=滴滴出行去广告
-#!desc=基于原版恢复底栏精简与广告拦截，融合可莉 2026-09-03 新接口；保留余额和福利金入口。
+#!desc=移除滴滴广告并保留目的地搜索、地点推荐、定位与叫车核心功能。
 #!author=可莉🅥；Havoooc（Surge 格式转换）
 #!category=去广告
 #!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/DiDi.png
 #!openUrl=https://apps.apple.com/app/id554499054
-#!date=2026-09-04
+#!date=2026-09-07
 # 上游版本：2026-09-03 16:19:24
 # 来源镜像：https://github.com/ifflagged/Romeo/blob/main/Modules/Loon/Kelee/Official/DiDi_remove_ads.lpx
 # 旧版优先；新增接口补充。响应字段缺失时保留原数据。
@@ -35,8 +35,6 @@ http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d+\/bronze\
 http-response-jq ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v\d+\/SFCHomeTab\? '(. as $original | try (.data.tab_list |= map(select(.tab_id == "passenger" or .tab_id == "driver"))) catch $original)'
 http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\.querySellCardSummary '(. as $original | try (.data = {}) catch $original)'
 http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\.queryWelfareCenter '(. as $original | try (.data = {}) catch $original)'
-http-response-jq ^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/startinfo\?api_version '(. as $original | try (del(.rec_destination)) catch $original)'
-http-response-jq ^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/poiinfo\?product_id '(. as $original | try (del(.rec_destination)) catch $original)'
 http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/user_common\/itineraryList\? '(. as $original | try (del(.data.tab_nav[]?.tab_param)) catch $original)'
 
 [Map Local]
@@ -45,7 +43,6 @@ http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/user_common\/itineraryLis
 ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d+\/other\/slow\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/ct\.xiaojukeji\.com\/agent\/v3\/feeds\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/conf\.diditaxi\.com\.cn\/dynamic\/conf data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-^https:\/\/poi\.map\.xiaojukeji\.com\/mapapi\/recommend\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/daijia\.kuaidadi\.com(:443)?\/gateway\?api=prado\.cms\.delivery\.batch data-type=text data="{}" status-code=200 header="Content-Type:application/json"
@@ -56,4 +53,4 @@ http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/user_common\/itineraryLis
 ^https:\/\/freight\.xiaojukeji\.com\/gateway\?api=freight\.d\.core\.multiDisplayV\d data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [MITM]
-hostname = %APPEND% as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, 112.53.55.225, 139.199.240.84, 113.46.225.*, 162.14.157.*, 123.207.209.*, 120.241.142.*, 120.241.143.*, 116.85.*, daijia.kuaidadi.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, freight.xiaojukeji.com, poi.map.xiaojukeji.com
+hostname = %APPEND% as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, 112.53.55.225, 139.199.240.84, 113.46.225.*, 162.14.157.*, 123.207.209.*, 120.241.142.*, 120.241.143.*, 116.85.*, daijia.kuaidadi.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, freight.xiaojukeji.com
