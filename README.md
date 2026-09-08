@@ -40,6 +40,8 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 
 当前包含：
 
+- 高德地图去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/amap-adblock.sgmodule>（已纳入合集；过滤开屏、横幅、搜索推广及营销弹窗）
+
 - NAS 分流（中国大陆直连、其余使用 QQG）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/nas-qqg.list>
 
 - Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>（请勿与下列独立模块同时启用）

@@ -1,0 +1,26 @@
+#!name=高德地图去广告
+#!desc=过滤开屏、横幅、搜索推广热词及营销弹窗；保留搜索结果、路线、导航、天气、通知和订单接口。实际效果随 App 版本变化。
+#!author=Havoooc；规则参考 QingRex、可莉、RuCu6、sooyaaabo
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!date=2026-09-08
+# 来源：QingRex/LoonKissSurge 高德地图去广告；ifflagged/Romeo Modules/Surge/sooyaaabo/Amap.sgmodule
+# 不清空路线规划、支付或订单接口；不屏蔽通用 CDN/AMDC。
+
+[Map Local]
+# 开屏专用接口
+^https:\/\/amap-aos-info-nogw\.amap\.com\/ws\/aos\/alimama\/splash_screen_rt(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/m5\.amap\.com\/ws\/valueadded\/alimama\/splash_screen(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 搜索广告提示、推广热词与横幅
+^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/tips_adv(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/m5\.amap\.com\/ws\/shield\/search\/new_hotword(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/oss\.amap\.com\/ws\/banner\/lists\/?(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Body Rewrite]
+# 仅删除已知营销字段，保留搜索及业务响应
+http-response-jq ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured(?:\?|$) 'if type == "object" then delpaths([["data","commonMaterial"],["data","tipsOperationLocation"],["data","resourcePlacement"],["obj","data","resourcePlacement"]]) else . end'
+# 打车订单详情：只移除弹窗字段
+http-response-jq ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips(?:\?|$) 'if type == "object" then delpaths([["data","carTips","data","popupInfo"]]) else . end'
+
+[MITM]
+hostname = %APPEND% amap-aos-info-nogw.amap.com, m5.amap.com, m5-zb.amap.com, oss.amap.com
