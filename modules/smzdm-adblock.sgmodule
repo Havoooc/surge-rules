@@ -1,0 +1,25 @@
+#!name=什么值得买去广告（稳定版）
+#!desc=过滤开屏、首页信息流广告、搜索广告、文章底部推广及会员页横幅；保留商品、搜索、登录、优惠通知与下单跳转。
+#!author=Havoooc；参考 QingRex、可莉
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!date=2026-09-08
+# 规则参考 QingRex/LoonKissSurge；仅处理明确广告字段。
+# 脚本限制 2 MiB，解析失败或未知响应会原样放行。
+
+[Rule]
+DOMAIN,adx-api.zdmimg.com,REJECT,extended-matching,pre-matching
+
+[Map Local]
+# 开屏、浮窗、搜索推广与会员页横幅
+^https:\/\/app-api\.smzdm\.com\/util\/loading(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/user-api\.smzdm\.com\/vip\/bottom_card_list(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/article-api\.smzdm\.com\/publish\/get_bubble(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/s-api\.smzdm\.com\/sou\/popup_coupon(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/www\.smzdm\.com\/commercial_api\/banners?(?:\/|\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+什么值得买-去广告 = type=http-response,pattern=^https:\/\/(?:app-api|homepage-api|s-api|user-api)\.smzdm\.com\/(?:util\/update|v3\/home|sou\/list_v10|vip)(?:\?|$)|^https:\/\/post\.m\.smzdm\.com\/ajax_app\/ajax_get_footer_list(?:\?|$),requires-body=1,max-size=2097152,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/smzdm-adblock.js
+
+[MITM]
+hostname = %APPEND% app-api.smzdm.com, homepage-api.smzdm.com, s-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, post.m.smzdm.com, www.smzdm.com
