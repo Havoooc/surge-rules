@@ -40,6 +40,8 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 
 当前包含：
 
+- 百度网盘去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/baidunetdisk-adblock.sgmodule>（已加入合集；过滤任务、活动、推荐与传输页广告）
+
 - 什么值得买去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/smzdm-adblock.sgmodule>（已加入合集；过滤开屏、信息流和搜索推广）
 
 - 知乎去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhihu-adblock.sgmodule>（已加入合集；2 MiB 脚本上限，保留搜索、评论、通知和盐选内容）

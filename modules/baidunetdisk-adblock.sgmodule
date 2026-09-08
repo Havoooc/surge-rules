@@ -1,0 +1,21 @@
+#!name=百度网盘去广告（稳定版）
+#!desc=过滤任务、活动、推荐、传输页广告，并隐藏首页小说、短剧、打印和求职入口；保留登录、文件、上传下载、分享及会员权益。
+#!author=Havoooc；参考 QingRex、可莉
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!date=2026-09-08
+# 不拦截 getconfig、getsyscfg 与 plugin/get，避免影响客户端配置和文件功能。
+# 脚本限制 1 MiB，解析失败会原样放行。
+
+[Map Local]
+# 任务、活动、广告和推荐位
+^https:\/\/pan\.baidu\.com\/api\/taskscore\/tasklist(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/pan\.baidu\.com\/act\/api\/activityentry(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/pan\.baidu\.com\/rest\/\d\.\d\/pcs\/adv(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/pan\.baidu\.com\/recommend\/query\/list(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+百度网盘-首页净化 = type=http-response,pattern=^https:\/\/pan\.baidu\.com\/feed\/kingkongdistrict(?:\?|$),requires-body=1,max-size=1048576,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/baidunetdisk-adblock.js
+
+[MITM]
+hostname = %APPEND% pan.baidu.com
