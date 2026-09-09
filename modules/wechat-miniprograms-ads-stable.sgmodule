@@ -8,10 +8,9 @@
 
 [Rule]
 
-# 微信小程序广告素材；拦截后激励广告不会播放，也通常不会发放奖励
-DOMAIN,wxsnsdy.wxs.qq.com,REJECT
+# 微信小程序视频广告素材；拦截后激励广告不会播放，也通常不会发放奖励
+# wxsnsdy.wxs.qq.com 与 wxsnsdythumb.wxs.qq.com 也用于朋友圈图片/缩略图，故不拦截。
 DOMAIN,wxsmsdy.video.qq.com,REJECT
-DOMAIN,wxsnsdythumb.wxs.qq.com,REJECT
 
 # 明确的第三方广告主机
 DOMAIN,ads-shopping.shouqianba.com,REJECT
