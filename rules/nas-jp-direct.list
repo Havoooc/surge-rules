@@ -1,0 +1,4 @@
+# NAS（192.168.5.5）分流：中国大陆服务直连规则。
+# NAS 的其余流量由主配置中的 SRC-IP 规则交给固定的日本直连节点。
+AND,((SRC-IP,192.168.5.5),(RULE-SET,https://raw.githubusercontent.com/Rabbit-Spec/Surge/Master/Rules/China.list)),DIRECT
+AND,((SRC-IP,192.168.5.5),(RULE-SET,https://raw.githubusercontent.com/Rabbit-Spec/Surge/Master/Rules/ChinaCIDR.list)),DIRECT
