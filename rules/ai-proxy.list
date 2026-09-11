@@ -22,3 +22,6 @@ DOMAIN-SUFFIX,x.ai
 
 # Perplexity
 DOMAIN-SUFFIX,perplexity.ai
+
+# Z.AI / ZCode (GLM coding agent)
+DOMAIN-SUFFIX,z.ai
