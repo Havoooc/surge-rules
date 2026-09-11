@@ -1,0 +1,12 @@
+# YouTube 分流：仅覆盖 YouTube 网页、应用、播放器、视频和缩略图所需域名。
+DOMAIN-SUFFIX,youtube.com
+DOMAIN-SUFFIX,youtu.be
+DOMAIN-SUFFIX,youtube-nocookie.com
+DOMAIN-SUFFIX,youtubeeducation.com
+DOMAIN-SUFFIX,googlevideo.com
+DOMAIN-SUFFIX,ytimg.com
+DOMAIN,youtubei.googleapis.com
+DOMAIN,youtube.googleapis.com
+DOMAIN,youtubeembeddedplayer.googleapis.com
+DOMAIN,yt3.ggpht.com
+DOMAIN,yt4.ggpht.com
