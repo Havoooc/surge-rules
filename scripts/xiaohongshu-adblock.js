@@ -16,7 +16,15 @@ if (!body) {
       return Boolean(item.ads_info || item.ad_info || item.adInfo) || ["ad", "ads", "advertisement", "sponsor"].includes(modelType);
     };
 
-    if (/\/system_service\/config(?:\?|$)/.test(url) && data && typeof data === "object") {
+    if (/\/search\/(?:banner_list|hot_list|hint|trending)(?:\?|$)/.test(url) && data && typeof data === "object" && !Array.isArray(data)) {
+      if (/\/banner_list(?:\?|$)/.test(url)) payload.data = {};
+      if (/\/hot_list(?:\?|$)/.test(url) && Array.isArray(data.items)) data.items = [];
+      if (/\/hint(?:\?|$)/.test(url) && Array.isArray(data.hint_words)) data.hint_words = [];
+      if (/\/trending(?:\?|$)/.test(url)) {
+        if (Array.isArray(data.queries)) data.queries = [];
+        if (data.hint_word && typeof data.hint_word === "object") data.hint_word = {};
+      }
+    } else if (/\/system_service\/config(?:\?|$)/.test(url) && data && typeof data === "object") {
       delete data.loading_img;
       delete data.splash;
     } else if (/\/system_service\/splash_config(?:\?|$)/.test(url) && Array.isArray(data?.ads_groups)) {

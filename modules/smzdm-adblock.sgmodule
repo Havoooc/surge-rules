@@ -3,7 +3,7 @@
 #!author=Havoooc；参考 QingRex、可莉
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
-#!date=2026-09-08
+#!date=2026-09-12
 # 规则参考 QingRex/LoonKissSurge；仅处理明确广告字段。
 # 脚本限制 2 MiB，解析失败或未知响应会原样放行。
 
@@ -19,7 +19,7 @@ DOMAIN,adx-api.zdmimg.com,REJECT,extended-matching,pre-matching
 ^https:\/\/www\.smzdm\.com\/commercial_api\/banners?(?:\/|\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [Script]
-什么值得买-去广告 = type=http-response,pattern=^https:\/\/(?:app-api|homepage-api|s-api|user-api)\.smzdm\.com\/(?:util\/update|v3\/home|sou\/list_v10|vip)(?:\?|$)|^https:\/\/post\.m\.smzdm\.com\/ajax_app\/ajax_get_footer_list(?:\?|$),requires-body=1,max-size=2097152,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/smzdm-adblock.js
+什么值得买-去广告 = type=http-response,pattern=^https:\/\/(?:app-api|homepage-api|s-api|user-api)\.smzdm\.com\/(?:util\/update|v3\/home|sou\/list_v10|vip)(?:\?|$)|^https:\/\/post\.m\.smzdm\.com\/ajax_app\/ajax_get_footer_list(?:\?|$)|^https:\/\/haojia-api\.smzdm\.com\/home\/list(?:\?|$),requires-body=1,max-size=2097152,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/smzdm-adblock.js
 
 [MITM]
-hostname = %APPEND% app-api.smzdm.com, homepage-api.smzdm.com, s-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, post.m.smzdm.com, www.smzdm.com
+hostname = %APPEND% haojia-api.smzdm.com, app-api.smzdm.com, homepage-api.smzdm.com, s-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, post.m.smzdm.com, www.smzdm.com

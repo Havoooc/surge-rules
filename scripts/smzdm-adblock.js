@@ -9,7 +9,19 @@
     const data = obj.data && typeof obj.data === "object" ? obj.data : null;
     const url = $request.url;
 
-    if (/\/util\/update(?:\?|$)/.test(url) && data) {
+    if (/haojia-api\.smzdm\.com\/home\/list(?:\?|$)/.test(url) && data && !Array.isArray(data)) {
+      if (data.header_operation && typeof data.header_operation === "object") delete data.header_operation.theme;
+      const isAd = item => {
+        if (!item || typeof item !== "object") return false;
+        const campaign = item.ad_campaign_id;
+        return item.model_type === "ads" ||
+          (typeof campaign === "string" && campaign.trim() !== "" && campaign !== "0") ||
+          (typeof campaign === "number" && campaign > 0);
+      };
+      for (const key of ["rows", "banner_v2"]) {
+        if (Array.isArray(data[key])) data[key] = data[key].filter(item => !isAd(item));
+      }
+    } else if (/\/util\/update(?:\?|$)/.test(url) && data) {
       ["silence_local_push_msg", "video_cache_num_configs", "haojia_widget", "widget", "operation_float"].forEach(k => delete data[k]);
       ["silence_local_push", "baichuan_redirect_switch"].forEach(k => {
         if (Object.prototype.hasOwnProperty.call(data, k)) data[k] = 0;
