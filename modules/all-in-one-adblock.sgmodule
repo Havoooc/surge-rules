@@ -137,10 +137,9 @@ DOMAIN,wxsmsdy.video.qq.com,REJECT
 DOMAIN,ads-shopping.shouqianba.com,REJECT
 DOMAIN,ad.maoyan.com,REJECT
 
-# > 闲鱼去广告（优化版）
-# 已知的闲鱼广告素材域名与闲鱼专属 HTTPDNS 请求
+# > 闲鱼去广告（平衡增强版）
+# 明确广告素材；不拦截通用淘宝/阿里 HTTPDNS，避免启动重试
 DOMAIN-SUFFIX,iyes.youku.com,REJECT
-AND,((URL-REGEX,^http:\/\/.+\/amdc\/mobileDispatch),(USER-AGENT,%E9%97%B2%E9%B1%BC*)),REJECT
 
 # > 小红书去广告（稳定增强版）
 # 明确的小红书广告素材与广告追踪域名。
@@ -363,13 +362,11 @@ AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 ^https:\/\/mobile\.12306\.cn\/wxxcx\/openplatform-inner\/miniprogram\/wifiapps\/appFrontEnd\/v2\/lounge\/open-smooth-common\/qrCode\/getAdvInfo$ data-type=text data="{}" status-code=200
 ^https:\/\/mobile\.12306\.cn\/wxxcx\/openplatform-inner\/miniprogram\/wifiapps\/appFrontEnd\/v2\/lounge\/open-smooth-common\/carService\/getCivilzedSlogan data-type=text data="{}" status-code=200
 
-# > 闲鱼去广告（优化版）
-# 开屏、策略、推荐、同城角标、购买推荐、搜索联想及广告曝光
+# > 闲鱼去广告（平衡增强版）
+# 开屏、策略、同城角标、搜索联想及广告曝光；保留商品推荐与购买推荐
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlecommerce\.splash\.ads\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.user\.strategy\.list\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
-^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.item\.recommend\.list\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.local\.near\.by\.corner\.info\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
-^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.item\.buy\.feeds\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.search\.shade\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.playboy\.recommend\/ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https:\/\/(?:g-)?acs\.m\.goofish\.com\/gw\/mtop\.idle\.ad\.expose(?:\/|\?|$) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
@@ -460,24 +457,23 @@ http-response-jq ^https:\/\/saas-ad\.cloudpnr\.com\/huifuad-base-api\/api\/tacti
 http-response-jq ^https:\/\/rms\.meituan\.com\/api\/v1\/rmsmina\/c\/queryShopPortalInfo\? 'del(.data.popUpWindows)'
 # 企迈点单系统
 
-# > 闲鱼去广告（优化版）
-# 首页、关注、同城及社区信息流：只保留商品与正常内容卡片
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.nextfresh\/ '.data.homeTopList |= map(select(.sectionType == "kingkongDo")) | .data.sections |= map(select(.data.clickParam.args.cardType as $card | $card != "homeMultiBanner" and $card != "mamaAD")) | .data.sections |= map(select((.template.name|type=="string") and (.template.name=="idlefish_home_new_commodity_card" or (.template.name|contains("fish_home_tags_item_card")))))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.widget\.refresh\.get\/ '.data.homeTopList |= map(select(.sectionType == "kingkongDo"))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.home\.whale\.modulet\/ '.data.container.sections |= map(select(.template.name == "fish_home_miniapp"))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.fun\.follow\.feed\.list\/ '.data.sections |= map(select(.cardType == 2001))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.community\/ '.data.feedsList |= map(select(.template.name == "idlefish_home_new_commodity_card" or .template.name == "idlefish_home_new_content_card"))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.newitem\.page\/ '.data.sections |= map(select(.data.clickParam.args.cardType as $card | $card != "banner" and $card != "mamaAD"))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.local\.flow\.plat\.section\/ '.data.data.components |= map(select(.data and (.data|type=="object") and .data.template and (.data.template|type=="object") and (.data.template.name|type=="string") and (.data.template.name|contains("fish_city_kingkong"))))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.local\.home\.top\/ '.data.data.components |= map(select(.key == "fish_home_second_stage_top_cardV3"))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.local\.home\/ '.data.sections |= map(select(.template.cardEnum != "ads" and .cardType == "common"))'
-# 个人页仅保留账户、交易、评价和常用工具；不覆写用户自己的工具栏
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.idle\.user\.page\.my\.adapter\/ '.data.container.sections |= map(select(.template.name | test("^my_fy[0-9]+_(header|user_info|trade|appraise|tools)$"))) | .data.container.sections |= map(.item |= (if .level and .level.exContent and (.level.exContent | has("tips")) then del(.level) else . end))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.circle\.list\/ '.data.circleList[].showInfo.titleImage |= (.lightUrl="" | .url="" | del(.width, .height))'
+# 首页、关注、同城及社区信息流：删除明确广告标记，保留未识别的新卡片
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.nextfresh\/ '.data.homeTopList |= (if type == "array" then map(select((.sectionType? // "") == "kingkongDo")) else . end) | .data.sections |= (if type == "array" then map(select(((.data?.clickParam?.args?.cardType? // "") | tostring | test("(?i)^(homeMultiBanner|mamaAD|banner|ad|ads|advert|promotion)$") | not) and ((.template?.name? // "") | tostring | test("(?i)(^|[_-])(ad|ads|advert|promotion|sponsor)([_-]|$)") | not))) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.widget\.refresh\.get\/ '.data.homeTopList |= (if type == "array" then map(select((.sectionType? // "") == "kingkongDo")) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.home\.whale\.modulet\/ '.data.container.sections |= (if type == "array" then map(select(((.template?.name? // "") | tostring | test("(?i)(^|[_-])(ad|ads|advert|promotion|sponsor)([_-]|$)") | not))) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.fun\.follow\.feed\.list\/ '.data.sections |= (if type == "array" then map(select(((.cardType? // "") | tostring | test("(?i)^(ad|ads|advert|promotion)$") | not) and ((.template?.name? // "") | tostring | test("(?i)(^|[_-])(ad|ads|advert|promotion|sponsor)([_-]|$)") | not))) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.community\/ '.data.feedsList |= (if type == "array" then map(select(((.template?.name? // "") | tostring | test("(?i)(^|[_-])(ad|ads|advert|promotion|sponsor)([_-]|$)") | not))) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.newitem\.page\/ '.data.sections |= (if type == "array" then map(select(((.data?.clickParam?.args?.cardType? // "") | tostring | test("(?i)^(banner|mamaAD|ad|ads|advert|promotion)$") | not))) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.local\.flow\.plat\.section\/ '.data.data.components |= (if type == "array" then map(select(((.data?.template?.name? // "") | tostring | test("(?i)(^|[_-])(ad|ads|advert|promotion|sponsor)([_-]|$)") | not))) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.local\.home\.top\/ '.data.data.components |= (if type == "array" then map(select(((.data?.template?.name? // "") | tostring | test("(?i)(^|[_-])(ad|ads|advert|promotion|sponsor)([_-]|$)") | not))) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idle\.local\.home\/ '.data.sections |= (if type == "array" then map(select(((.template?.cardEnum? // "") | tostring | test("(?i)^(ads?|advert|promotion)$") | not))) else . end)'
+# 个人页只删除明显营销区块，不限制为固定模板白名单
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.idle\.user\.page\.my\.adapter\/ '.data.container.sections |= (if type == "array" then map(select(((.template?.name? // "") | tostring | test("(?i)(^|[_-])(ad|ads|advert|promotion|campaign|marketing)([_-]|$)") | not)) | if (.item? | type) == "object" then .item |= (if (.level?.exContent?.tips? != null) then del(.level.exContent.tips) else . end) else . end) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlehome\.home\.circle\.list\/ '.data.circleList |= (if type == "array" then map(if (.showInfo?.titleImage? | type) == "object" then .showInfo.titleImage |= (.lightUrl="" | .url="" | del(.width, .height)) else . end) else . end)'
 # 搜索页广告、推广前缀、热榜与填充词
-http-response-jq ^https:\/\/g-acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.search\/ '.data.resultList |= map(if .data.item.main.exContent.dislikeFeedback.clickParam.args.bizType == "ad" then empty else . end) | del(.data.resultPrefixBar)'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.search\.discover\/ '.data.resultList |= map(select(.type != "MarketHotSpot"))'
-http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.item\.search\.activate\/ '.data.cardList |= map(if has("cardData") and (.cardData | has("hotwords")) then .cardData |= del(.hotwords) else . end)'
+http-response-jq ^https:\/\/g-acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.search\/ '.data.resultList |= (if type == "array" then map(select(((.data?.item?.main?.exContent?.dislikeFeedback?.clickParam?.args?.bizType? // "") | tostring | test("(?i)^(ad|ads|advert|promotion)$") | not))) else . end) | del(.data.resultPrefixBar)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.search\.discover\/ '.data.resultList |= (if type == "array" then map(select((.type? // "") != "MarketHotSpot")) else . end)'
+http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsearch\.item\.search\.activate\/ '.data.cardList |= (if type == "array" then map(if (.cardData? | type) == "object" then .cardData |= del(.hotwords) else . end) else . end)'
 
 # > 雪球去广告（激进版）
 # 按用户要求删除整段首页推广配置；代价是该配置下的正常组件也会消失
