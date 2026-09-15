@@ -1,16 +1,21 @@
 #!name=高德地图去广告
-#!desc=过滤开屏、横幅、搜索推广热词及营销弹窗；保留搜索结果、路线、导航、天气、通知和订单接口。实际效果随 App 版本变化。
+#!desc=重点过滤高德开屏广告，并清理横幅、搜索热词和营销弹窗；保留搜索、路线、导航、天气、通知和订单接口。
 #!author=Havoooc；规则参考 QingRex、可莉、RuCu6、sooyaaabo
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
-#!date=2026-09-08
+#!date=2026-09-15
 # 来源：QingRex/LoonKissSurge 高德地图去广告；ifflagged/Romeo Modules/Surge/sooyaaabo/Amap.sgmodule
-# 不清空路线规划、支付或订单接口；不屏蔽通用 CDN/AMDC。
+# 开屏采用“接口空响应 + 配置清零”双层处理；不清空路线规划、支付或订单接口。
+
+[Rule]
+# 高德专用广告素材 CDN；不拦截通用地图瓦片和 AMDC。
+DOMAIN,free-aos-cdn-image.amap.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,v.smtcdns.com,REJECT,extended-matching,pre-matching
 
 [Map Local]
 # 开屏专用接口
 ^https:\/\/amap-aos-info-nogw\.amap\.com\/ws\/aos\/alimama\/splash_screen_rt(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-^https:\/\/m5\.amap\.com\/ws\/valueadded\/alimama\/splash_screen(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# m5 开屏接口交给上游脚本清零广告时间，保留响应结构，减少重试。
 # 搜索广告提示、推广热词与横幅
 ^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/tips_adv(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/m5\.amap\.com\/ws\/shield\/search\/new_hotword(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
@@ -21,6 +26,11 @@
 http-response-jq ^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured(?:\?|$) 'if type == "object" then delpaths([["data","commonMaterial"],["data","tipsOperationLocation"],["data","resourcePlacement"],["obj","data","resourcePlacement"]]) else . end'
 # 打车订单详情：只移除弹窗字段
 http-response-jq ^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips(?:\?|$) 'if type == "object" then delpaths([["data","carTips","data","popupInfo"]]) else . end'
+
+[Script]
+# 开屏接口：上游脚本将广告展示时间归零，并清理新版开屏配置。
+高德-开屏广告 = type=http-response,pattern=^https:\/\/m5\.amap\.com\/ws\/valueadded\/alimama\/splash_screen(?:\?.*)?$,requires-body=1,max-size=2097152,timeout=10,script-path=https://raw.githubusercontent.com/ifflagged/Romeo/main/Modules/JavaScript/sooyaaabo/Amap/rucu6.pages.dev_amap.js
+高德-开屏配置 = type=http-response,pattern=^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/1(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/ifflagged/Romeo/main/Modules/JavaScript/sooyaaabo/Amap/rucu6.pages.dev_amap.js
 
 [MITM]
 hostname = %APPEND% amap-aos-info-nogw.amap.com, m5.amap.com, m5-zb.amap.com, oss.amap.com

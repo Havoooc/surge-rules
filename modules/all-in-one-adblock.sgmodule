@@ -4,7 +4,7 @@
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-12
+#!date=2026-09-15
 #!arguments=屏蔽上传按钮:true,屏蔽选段按钮:true,屏蔽Shorts按钮:false,字幕翻译语言:off,启用调试模式:false,贴吧隐藏推荐页视频帖子:false
 #!arguments-desc=- YouTube 屏蔽参数：[true, false] \n- 字幕翻译语言：[语言代码, off] \n- 贴吧隐藏推荐页视频帖子：[true, false]，默认关闭。\n- 调试模式平时保持关闭。
 
@@ -150,6 +150,11 @@ DOMAIN,t-ads.xiaohongshu.com,REJECT,extended-matching,pre-matching
 # 迫使小红书回退至可解密的 HTTPS/TCP，否则信息流脚本可能无法命中。
 AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 
+# > 高德地图去广告
+# 高德专用广告素材 CDN；不拦截通用地图瓦片和 AMDC。
+DOMAIN,free-aos-cdn-image.amap.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,v.smtcdns.com,REJECT,extended-matching,pre-matching
+
 [URL Rewrite]
 # > 携程旅行去广告
 # 开屏广告素材（保留路径规则，兼容已缓存的 URL Rewrite 配置）。
@@ -188,7 +193,6 @@ AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 # > 高德地图去广告
 # 开屏专用接口
 ^https:\/\/amap-aos-info-nogw\.amap\.com\/ws\/aos\/alimama\/splash_screen_rt(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-^https:\/\/m5\.amap\.com\/ws\/valueadded\/alimama\/splash_screen(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 # 搜索广告提示、推广热词与横幅
 ^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/tips_adv(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/m5\.amap\.com\/ws\/shield\/search\/new_hotword(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
@@ -480,6 +484,11 @@ http-response-jq ^https:\/\/acs\.m\.goofish\.com\/gw\/mtop\.taobao\.idlemtopsear
 http-response-jq ^https:\/\/open\.xueqiu\.com\/mpaas\/config\/content\?.*timeline_tab_name 'del(.data)'
 
 [Script]
+# > 高德地图去广告
+# 开屏接口：上游脚本将广告展示时间归零，并清理新版开屏配置。
+高德-开屏广告 = type=http-response,pattern=^https:\/\/m5\.amap\.com\/ws\/valueadded\/alimama\/splash_screen(?:\?.*)?$,requires-body=1,max-size=2097152,timeout=10,script-path=https://raw.githubusercontent.com/ifflagged/Romeo/main/Modules/JavaScript/sooyaaabo/Amap/rucu6.pages.dev_amap.js
+高德-开屏配置 = type=http-response,pattern=^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/1(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/ifflagged/Romeo/main/Modules/JavaScript/sooyaaabo/Amap/rucu6.pages.dev_amap.js
+
 # > 百度网盘去广告（稳定版）
 百度网盘-首页净化 = type=http-response,pattern=^https:\/\/pan\.baidu\.com\/feed\/kingkongdistrict(?:\?|$),requires-body=1,max-size=1048576,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/baidunetdisk-adblock.js
 
