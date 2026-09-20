@@ -56,28 +56,29 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 淘宝去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-adblock.sgmodule>
 - 淘宝闪购去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-instant-adblock.sgmodule>
 - 小红书去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xiaohongshu-adblock.sgmodule>
-- 国内银行 VPN 兼容
-- HTTPDNS 拦截（稳妥版）
-- 携程旅行去广告
-- 东方财富去广告
-- 滴滴出行去广告
+- 国内银行 VPN 兼容：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bank-vpn-compat.sgmodule>
+- HTTPDNS 拦截（稳妥版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/httpdns-block-safe.sgmodule>
+- 携程旅行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ctrip-adblock.sgmodule>
+- 东方财富去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/eastmoney-adblock.sgmodule>
+- 滴滴出行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/didi-adblock.sgmodule>
 - 抖音去开屏广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/douyin-splash-adblock.sgmodule>
-- 金十数据去广告
-- 京东去广告
+- 金十数据去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jin10.sgmodule>
+- 京东去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jd-adblock.sgmodule>
 - 拼多多去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/pinduoduo-adblock.sgmodule>
-- 米家去广告
+- 米家去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/mijia.sgmodule>
 - 美团去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/meituan-adblock.sgmodule>
 - 酷安去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/coolapk-adblock.sgmodule>
-- QQ 音乐去广告
-- 航旅纵横去广告
-- 微信小程序去广告
-- 闲鱼去广告
+- QQ 音乐去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/qqmusic-adblock.sgmodule>
+- 航旅纵横去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/umetrip.sgmodule>
+- 微信小程序去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-miniprograms-ads-stable.sgmodule>
+- 闲鱼去广告（平衡增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
 - 雪球去广告（激进版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
-- YouTube 推荐去广告（不含视频贴片广告）
+- YouTube 推荐去广告（不含视频贴片广告）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
 
 ## 注意事项
 
 - 以后新增或更新去广告、净化及兼容模块时，同步更新 `all-in-one-adblock.sgmodule`，确保 Havoc全能去广告合集始终包含仓库内最新模块。
+- 合集与独立模块同步范围包括 `[General]` 段（skip-proxy、always-real-ip）；银行 VPN 兼容依赖这些设置生效，仅在独立模块启用时二者不可叠加产生冲突。
 - Rewrite、Map Local、Body Rewrite 和脚本模块需要开启 MITM，并在设备上安装及信任 Surge CA。
 - 模块启用前请检查其 MITM 主机范围；银行兼容模块本身不解密银行业务流量。
 - `Body Rewrite` 中的 JQ 规则需要较新的 Surge iOS/macOS 核心。

@@ -4,9 +4,17 @@
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-15
+#!date=2026-09-20
 #!arguments=屏蔽上传按钮:true,屏蔽选段按钮:true,屏蔽Shorts按钮:false,字幕翻译语言:off,启用调试模式:false,贴吧隐藏推荐页视频帖子:false
 #!arguments-desc=- YouTube 屏蔽参数：[true, false] \n- 字幕翻译语言：[语言代码, off] \n- 贴吧隐藏推荐页视频帖子：[true, false]，默认关闭。\n- 调试模式平时保持关闭。
+
+[General]
+# 国内银行 VPN 兼容（稳定版）General 部分：多个国内 App 共用的网络连通性检测
+# 包括中行缤纷生活、光大及部分地方银行场景；建行、中国银行和交通银行使用公开配置中反复出现的银行域名后缀
+skip-proxy = %APPEND% www.baidu.com, yunbusiness.ccb.com, www.abchina.com.cn, login-service.mobile-bank.psbc.com, mobile-bank.psbc.com, mbank.psbc.com, *.bankcomm.com, *.ccb.com, *.boc.cn
+# 避免运营商登录及部分金融 App 域名受到 Fake-IP 影响
+# 平安和招商银行仅加入 always-real-ip，不跳过规则策略，也不拦截业务接口
+always-real-ip = %APPEND% easy-login.10099.com.cn, id6.me, open.e.189.cn, *.pingan.com.cn, *.cmbchina.com
 
 [Rule]
 # > 什么值得买去广告（稳定版）
