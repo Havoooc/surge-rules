@@ -96,6 +96,11 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 知乎去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhihu-adblock.sgmodule>
 - YouTube 增强：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
 
+### 工具与面板
+
+- 网络信息面板：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/network-info.sgmodule>
+
+
 ## 注意事项
 
 - 运行 `python3 scripts/build-all-in-one.py` 即可一键将所有独立模块自动解析合并并更新 `all-in-one-adblock.sgmodule`，避免人工同步排版错误。
