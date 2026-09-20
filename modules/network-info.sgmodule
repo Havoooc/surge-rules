@@ -1,5 +1,5 @@
 #!name=网络信息面板
-#!desc=简洁显示直连、中转、落地地区、中文运营商与实际策略；不展示任何 IP，并在网络状态切换时通知。
+#!desc=简洁显示直连、中转、落地地区与实际策略；不展示任何 IP，并在网络状态切换时通知。
 #!author=Havoooc；原作者 @xream @keywos
 #!category=工具
 #!homepage=https://github.com/Havoooc/surge-rules

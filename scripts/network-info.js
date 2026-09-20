@@ -1,6 +1,6 @@
 /**
  * 网络信息面板 (Surge 5 深度定制重构版)
- * 简洁显示网络环境、国内直连、中转入口、代理落地、中文运营商与实际策略。
+ * 简洁显示网络环境、国内直连、中转入口、代理落地与实际策略。
  * 支持网络变动后台提醒（Event: network-changed）与持久化中转归属地缓存。
  * 
  * 原作者: @xream @keywos
@@ -117,28 +117,6 @@ function formatDetailedLoc(country, region, city) {
   return parts.filter((value, index) => parts.indexOf(value) === index).join(' ');
 }
 
-function formatChineseProvider(data) {
-  if (!data) return '';
-  const source = String(data.org || data.isp || '');
-  const mappings = [
-    [/China Mobile/i, '中国移动'], [/China Telecom/i, '中国电信'],
-    [/China Unicom/i, '中国联通'], [/Cox Communications/i, '考克斯通信'],
-    [/Comcast/i, '康卡斯特'], [/SoftBank/i, '软银'],
-    [/NTT/i, '日本电信'], [/PCCW/i, '电讯盈科'], [/HKT/i, '香港电讯'],
-    [/Amazon|AWS/i, '亚马逊云'], [/Google/i, '谷歌云'],
-    [/Microsoft/i, '微软云'], [/Oracle/i, '甲骨文云'],
-    [/Cloudflare/i, '云服务商'], [/Akamai/i, '阿卡迈'],
-    [/DMIT/i, '海外云服务商'], [/VMISS/i, '海外网络服务商'],
-    [/Cogent/i, '国际骨干网络'], [/Hurricane Electric/i, '国际网络服务商'],
-    [/Tata/i, '塔塔通信'], [/GTT/i, '国际网络服务商'],
-    [/Quadranet|DataCamp/i, '海外数据中心']
-  ];
-  const matched = mappings.find(([pattern]) => pattern.test(source));
-  if (matched) return matched[1];
-  const chinese = source.match(/[\u3400-\u9fff]+/g);
-  return chinese ? chinese.join('') : '';
-}
-
 function formatAccessType(ssid, radio, primaryInterface) {
   if (ssid) return '无线网络';
   const value = String(radio || '').toUpperCase();
@@ -162,23 +140,7 @@ function getFlag(countryCode) {
   }
 }
 
-// 运营商与服务商名称精简美化 (国内直连使用)
-function cleanISP(isp) {
-  if (!isp) return '';
-  return isp
-    .replace(/Shenzhen Tencent.*/i, '腾讯云')
-    .replace(/Tencent.*/i, '腾讯云')
-    .replace(/Alibaba.*/i, '阿里云')
-    .replace(/Aliyun.*/i, '阿里云')
-    .replace(/Huawei.*/i, '华为云')
-    .replace(/Baidu.*/i, '百度云')
-    .replace(/Ucloud.*/i, 'UCloud')
-    .replace(/China Telecom.*/i, '中国电信')
-    .replace(/China Unicom.*/i, '中国联通')
-    .replace(/China Mobile.*/i, '中国移动');
-}
-
-// 获取国内直连出口信息（网易权威接口 + B站移动端接口容灾，包含运营商 ISP）
+// 获取国内直连出口信息（网易接口 + B站移动端接口容灾）
 async function getDomesticInfo() {
   try {
     const res = await httpGet({
@@ -194,8 +156,7 @@ async function getDomesticInfo() {
           ip: r.ip,
           country: r.country || '中国',
           province: (r.province || '').replace('省', ''),
-          city: (r.city || '').replace('市', ''),
-          isp: cleanISP(r.isp || r.org || '')
+          city: (r.city || '').replace('市', '')
         };
       }
     }
@@ -215,8 +176,7 @@ async function getDomesticInfo() {
           ip: d.addr,
           country: d.country || '中国',
           province: (d.province || '').replace('省', ''),
-          city: (d.city || '').replace('市', ''),
-          isp: cleanISP(d.isp || '')
+          city: (d.city || '').replace('市', '')
         };
       }
     }
@@ -237,17 +197,12 @@ async function getLandingInfo(probeToken, policy) {
     if (res.body) {
       const json = JSON.parse(res.body);
       if (json.success !== false && json.ip) {
-        const connection = json.connection || {};
         return {
           ip: json.ip,
           countryCode: json.country_code,
           country: json.country || '',
           region: json.region || '',
-          city: json.city || '',
-          type: json.type || '',
-          asn: connection.asn || '',
-          org: connection.org || '',
-          isp: connection.isp || ''
+          city: json.city || ''
         };
       }
     }
@@ -282,18 +237,13 @@ async function getRelayInfo(ip) {
     if (res.body) {
       const json = JSON.parse(res.body);
       if (json.success !== false && json.ip) {
-        const connection = json.connection || {};
         data = {
           ip,
           countryCode: json.country_code || '',
           country: json.country || '',
           region: json.region || '',
           city: json.city || '',
-          loc: formatDetailedLoc(json.country, json.region, json.city),
-          type: json.type || '',
-          asn: connection.asn || '',
-          org: connection.org || '',
-          isp: connection.isp || ''
+          loc: formatDetailedLoc(json.country, json.region, json.city)
         };
       }
     }
@@ -434,34 +384,30 @@ function getRecentPolicy(probeToken) {
   // 4. 组装格式化文本
   const flag = landing ? getFlag(landing.countryCode) : '🌐';
   
-  // 国内直连行（保留 ISP 运营商）
+  // 国内直连仅显示地区
   const directLoc = direct ? formatLoc(direct.province, direct.city) : '';
   const directSummary = direct
-    ? `${directLoc || '中国大陆'}${direct.isp ? ' · ' + direct.isp : ''}`.trim()
+    ? (directLoc || '中国大陆')
     : '信息获取失败';
 
-  // 中转入口仅保留中文地区与可识别的中文运营商
+  // 中转入口仅保留中文地区
   let relaySummary = '';
-  let relayProvider = '';
   if (isDirectMode) {
     relaySummary = '未启用代理';
   } else if (relayData && relayData.loc) {
     relaySummary = relayData.loc;
-    relayProvider = formatChineseProvider(relayData);
   } else {
     relaySummary = '未检测到独立中转';
   }
 
-  // 代理落地仅保留中文地区与可识别的中文运营商
+  // 代理落地仅保留中文地区
   let landingSummary = '信息获取失败';
-  let landingProvider = '';
   if (landing) {
     if (direct && landing.ip === direct.ip) {
       landingSummary = '与直连相同';
     } else {
       const landingLoc = formatDetailedLoc(landing.country, landing.region, landing.city);
       landingSummary = landingLoc || '境外出口';
-      landingProvider = formatChineseProvider(landing);
     }
   }
 
@@ -480,9 +426,7 @@ function getRecentPolicy(probeToken) {
       `🇨🇳 直连：${directSummary}`,
       `🔀 中转：${relaySummary}`
     ];
-    if (relayProvider) routeSection.push(`　　运营商：${relayProvider}`);
     routeSection.push(`${flag} 落地：${landingSummary}`);
-    if (landingProvider) routeSection.push(`　　运营商：${landingProvider}`);
   }
 
   const accessType = formatAccessType(ssid, radio, primaryInterface);
@@ -537,9 +481,7 @@ function getRecentPolicy(probeToken) {
           notifyLines.push('代理：未启用代理');
         } else {
           notifyLines.push(`中转：${relaySummary}`);
-          if (relayProvider) notifyLines.push(`中转运营商：${relayProvider}`);
           notifyLines.push(`落地：${landingSummary}`);
-          if (landingProvider) notifyLines.push(`落地运营商：${landingProvider}`);
         }
         notifyLines.push(`策略：${policyStr}`);
         if (showRTT) {
