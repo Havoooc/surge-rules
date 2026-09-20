@@ -276,6 +276,23 @@ function extractProxyAddress(remoteAddress) {
   return raw;
 }
 
+function extractActualPolicy(request) {
+  if (!request) return '';
+  const explicit = request.policyRealName ||
+                   request.finalPolicyName ||
+                   request.actualPolicyName ||
+                   request.selectedPolicyName;
+  if (explicit) return explicit;
+
+  const notes = Array.isArray(request.notes) ? request.notes : [];
+  for (let i = notes.length - 1; i >= 0; i--) {
+    const match = String(notes[i]).match(/Set up connection #\d+ via (.+)$/i);
+    if (match && match[1]) return match[1].trim();
+  }
+
+  return request.policyName || '';
+}
+
 // 精确匹配本次探测请求；内部接口无响应时在 1.2 秒后降级。
 function getRecentPolicy(probeToken) {
   return new Promise((resolve) => {
@@ -298,7 +315,7 @@ function getRecentPolicy(probeToken) {
         const proxyReq = reqs.find(r => String(r.URL || '').includes(probeToken));
         if (proxyReq) {
           return finish({
-            policy: proxyReq.policyName || '',
+            policy: extractActualPolicy(proxyReq),
             entrance: extractProxyAddress(proxyReq.remoteAddress)
           });
         }
@@ -411,8 +428,10 @@ function getRecentPolicy(probeToken) {
     }
   }
 
-  // 策略行
-  const policyStr = policy || proxyPolicy || (sameExit ? 'DIRECT' : '未识别');
+  // 实际节点行：仅在探测失败时显示未识别，不再回退显示上层策略组。
+  const policyStr = policy === 'DIRECT'
+    ? '直连'
+    : (policy || (sameExit ? '直连' : '未识别'));
 
   // 5. 层次化分段排版（两段式，中间空行，呼吸感更足）
   let routeSection = [];
@@ -431,7 +450,7 @@ function getRecentPolicy(probeToken) {
 
   const accessType = formatAccessType(ssid, radio, primaryInterface);
   const infoSection = [
-    `🧭 策略：${policyStr}`,
+    `🚀 节点：${policyStr}`,
     `📡 接入：${accessType}`
   ];
 
@@ -483,7 +502,7 @@ function getRecentPolicy(probeToken) {
           notifyLines.push(`中转：${relaySummary}`);
           notifyLines.push(`落地：${landingSummary}`);
         }
-        notifyLines.push(`策略：${policyStr}`);
+        notifyLines.push(`节点：${policyStr}`);
         if (showRTT) {
           notifyLines.push(`延迟：国内 ${baiduRTT !== null ? `${baiduRTT} 毫秒` : '超时'}，代理 ${nodeRTT !== null ? `${nodeRTT} 毫秒` : '超时'}`);
         }
