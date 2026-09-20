@@ -1,10 +1,10 @@
 /**
- * 网络信息面板 (Surge 5 现代化定制版)
- * 实时监测当前网络环境、SSID、内网IP、国内直连与代理落地出口、ISP运营商及真实延迟测速。
+ * 网络信息面板 (Surge 5 深度定制重构版)
+ * 实时监测网络环境、SSID/内网IP、国内直连、中转入口、代理落地出口、ISP运营商与真实往返延迟。
  * 支持网络变动后台提醒（Event: network-changed）与隐私打码保护。
  * 
  * 原作者: @xream @keywos
- * 重构优化: Havoooc (移除多余胶水层，内化高可用双接口并发，优化排版与延迟测速)
+ * 重构优化: Havoooc (内化双接口容灾，加入中转链路识别，增加百度/Cloudflare带标测速，优化舒适间距排版)
  */
 
 const DEFAULT_ARGS = {
@@ -34,7 +34,7 @@ const showIPv6 = arg.IPv6 === '1';
 const showRTT = arg.RTT === '1';
 const isEvent = typeof $argument !== 'undefined' && arg.TYPE === 'EVENT';
 
-// 基础工具函数
+// 基础网络请求封装
 function httpGet(options) {
   return new Promise((resolve) => {
     const opts = typeof options === 'string' ? { url: options } : options;
@@ -46,6 +46,7 @@ function httpGet(options) {
   });
 }
 
+// 延迟测速
 function testRTT(url) {
   const start = Date.now();
   return new Promise((resolve) => {
@@ -56,6 +57,7 @@ function testRTT(url) {
   });
 }
 
+// 国旗 Emoji 转换
 function getFlag(countryCode) {
   if (!countryCode || typeof countryCode !== 'string') return '🌐';
   try {
@@ -68,6 +70,7 @@ function getFlag(countryCode) {
   }
 }
 
+// IP 隐私脱敏打码
 function maskIP(ip) {
   if (!ip) return '-';
   if (!isMask) return ip;
@@ -82,7 +85,23 @@ function maskIP(ip) {
   return ip;
 }
 
-// 获取国内直连出口信息（网易高可用主接口 + B站客制化接口备选）
+// 云服务商与运营商名称美化
+function cleanISP(isp) {
+  if (!isp) return '';
+  return isp
+    .replace(/Shenzhen Tencent.*/i, '腾讯云')
+    .replace(/Tencent.*/i, '腾讯云')
+    .replace(/Alibaba.*/i, '阿里云')
+    .replace(/Aliyun.*/i, '阿里云')
+    .replace(/Huawei.*/i, '华为云')
+    .replace(/Baidu.*/i, '百度云')
+    .replace(/Ucloud.*/i, 'UCloud')
+    .replace(/China Telecom.*/i, '中国电信')
+    .replace(/China Unicom.*/i, '中国联通')
+    .replace(/China Mobile.*/i, '中国移动');
+}
+
+// 获取国内直连出口信息（网易权威接口 + B站移动端接口容灾）
 async function getDomesticInfo() {
   try {
     const res = await httpGet({
@@ -98,7 +117,7 @@ async function getDomesticInfo() {
           country: r.country || '中国',
           province: (r.province || '').replace('省', ''),
           city: (r.city || '').replace('市', ''),
-          isp: r.isp || r.org || ''
+          isp: cleanISP(r.isp || r.org || '')
         };
       }
     }
@@ -116,9 +135,9 @@ async function getDomesticInfo() {
         return {
           ip: d.addr,
           country: d.country || '中国',
-          province: d.province || '',
-          city: d.city || '',
-          isp: d.isp || ''
+          province: (d.province || '').replace('省', ''),
+          city: (d.city || '').replace('市', ''),
+          isp: cleanISP(d.isp || '')
         };
       }
     }
@@ -127,7 +146,7 @@ async function getDomesticInfo() {
   return null;
 }
 
-// 获取代理落地出口信息（ipwho.is 权威主接口 + ip-api 备选）
+// 获取代理落地出口信息（ipwho.is 权威接口 + ip-api 备选）
 async function getLandingInfo() {
   try {
     const res = await httpGet({
@@ -142,7 +161,7 @@ async function getLandingInfo() {
           countryCode: json.country_code,
           country: json.country || '',
           city: json.city || '',
-          isp: (json.connection && (json.connection.isp || json.connection.org)) || ''
+          isp: cleanISP((json.connection && (json.connection.isp || json.connection.org)) || '')
         };
       }
     }
@@ -161,7 +180,7 @@ async function getLandingInfo() {
           countryCode: json.countryCode,
           country: json.country || '',
           city: json.city || json.regionName || '',
-          isp: json.isp || json.org || ''
+          isp: cleanISP(json.isp || json.org || '')
         };
       }
     }
@@ -170,7 +189,51 @@ async function getLandingInfo() {
   return null;
 }
 
-// 从 Surge 最近请求中识别代理策略名与中转/专线入口 IP
+// 查询中转入口 IP 的归属地与服务商
+async function getRelayInfo(ip) {
+  if (!ip) return null;
+  try {
+    const res = await httpGet({
+      url: `https://ipwho.is/${encodeURIComponent(ip)}?lang=zh-CN`,
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    if (res.body) {
+      const json = JSON.parse(res.body);
+      if (json.success !== false && json.ip) {
+        const region = (json.region || '').replace('省', '');
+        const city = (json.city || '').replace('市', '');
+        return {
+          ip: json.ip,
+          loc: `${region}${city ? ' ' + city : ''}`.trim() || json.country || '',
+          isp: cleanISP((json.connection && (json.connection.isp || json.connection.org)) || '')
+        };
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const res = await httpGet({
+      url: `http://ip-api.com/json/${encodeURIComponent(ip)}?lang=zh-CN`,
+      headers: { 'User-Agent': 'curl/8.0' }
+    });
+    if (res.body) {
+      const json = JSON.parse(res.body);
+      if (json.status === 'success' && json.query) {
+        const region = (json.regionName || '').replace('省', '');
+        const city = (json.city || '').replace('市', '');
+        return {
+          ip: json.query,
+          loc: `${region}${city ? ' ' + city : ''}`.trim() || json.country || '',
+          isp: cleanISP(json.isp || json.org || '')
+        };
+      }
+    }
+  } catch (e) {}
+
+  return { ip: ip, loc: '', isp: '' };
+}
+
+// 从 Surge 最近请求中提取代理策略名与中转/专线入口 IP
 function getRecentPolicy() {
   return new Promise((resolve) => {
     if (typeof $httpAPI === 'undefined') {
@@ -200,7 +263,7 @@ function getRecentPolicy() {
 
 // 主流程
 !(async () => {
-  // 1. 获取本地网络接口与 SSID
+  // 1. 获取本地网络接口与 Wi-Fi SSID
   let ssid = '';
   let lanIP = '';
   let lanIPv6 = '';
@@ -217,67 +280,99 @@ function getRecentPolicy() {
     }
   }
 
-  // 2. 并发拉取出口信息与延迟测速
+  // 2. 并发拉取出口信息与双向延迟测速
   const tasks = [
     getDomesticInfo(),
     getLandingInfo(),
-    showRTT ? testRTT('https://connectivitycheck.platform.hicloud.com/generate_204') : Promise.resolve(null),
+    // 国内测速：百度
+    showRTT ? testRTT('https://www.baidu.com') : Promise.resolve(null),
+    // 节点测速：Cloudflare 204
     showRTT ? testRTT('https://cp.cloudflare.com/generate_204') : Promise.resolve(null)
   ];
 
-  const [direct, landing, directRTT, proxyRTT] = await Promise.all(tasks);
+  const [direct, landing, baiduRTT, cfRTT] = await Promise.all(tasks);
   const { policy, entrance } = await getRecentPolicy();
 
-  // 格式化展示文本
+  // 3. 研判并查询中转入口节点
+  let relayData = null;
+  const isDirectMode = !policy || policy === 'DIRECT';
+  const hasDistinctEntrance = entrance && 
+                              landing && 
+                              entrance !== landing.ip && 
+                              (!direct || entrance !== direct.ip);
+
+  if (!isDirectMode && hasDistinctEntrance) {
+    relayData = await getRelayInfo(entrance);
+  }
+
+  // 4. 组装格式化文本（优化间距与呼吸感）
   const flag = landing ? getFlag(landing.countryCode) : '🌐';
-  const directIPStr = direct ? `${maskIP(direct.ip)} ${direct.province}${direct.city ? ' ' + direct.city : ''} · ${direct.isp}` : '获取失败';
   
+  // 直连行
+  const directIPStr = direct 
+    ? `${maskIP(direct.ip)}  ${direct.province}${direct.city ? ' ' + direct.city : ''}${direct.isp ? ' · ' + direct.isp : ''}` 
+    : '获取失败';
+
+  // 中转行
+  let relayIPStr = '';
+  if (isDirectMode) {
+    relayIPStr = '全局直连 (未启用代理)';
+  } else if (relayData) {
+    relayIPStr = `${maskIP(relayData.ip)}  ${relayData.loc}${relayData.isp ? ' · ' + relayData.isp : ''}`;
+  } else {
+    relayIPStr = '直连出海 (无需中转)';
+  }
+
+  // 落地行
   let landingIPStr = '获取失败';
   if (landing) {
     if (direct && landing.ip === direct.ip) {
-      landingIPStr = `${maskIP(landing.ip)} 与直连相同 (未走代理)`;
+      landingIPStr = `${maskIP(landing.ip)}  与直连相同 (未走代理)`;
     } else {
-      landingIPStr = `${maskIP(landing.ip)} ${landing.country}${landing.city ? ' ' + landing.city : ''} · ${landing.isp}`;
+      landingIPStr = `${maskIP(landing.ip)}  ${landing.country}${landing.city ? ' ' + landing.city : ''}${landing.isp ? ' · ' + landing.isp : ''}`;
     }
   }
 
-  // 策略行格式化
-  let policyStr = policy ? policy : 'DIRECT';
-  if (entrance && direct && entrance !== direct.ip && landing && entrance !== landing.ip) {
-    policyStr += ` [中转: ${maskIP(entrance)}]`;
-  }
+  // 策略行
+  const policyStr = policy ? policy : 'DIRECT';
 
-  // 延迟测速
+  // 延迟行（带网站专属 Logo：🐾 百度 与 ☁️ Cloudflare）
   let rttSummary = '';
   if (showRTT) {
-    const dStr = directRTT !== null ? `${directRTT}ms` : '超时';
-    const pStr = proxyRTT !== null ? `${proxyRTT}ms` : '超时';
-    rttSummary = `国内 ${dStr} | 节点 ${pStr}`;
+    const bStr = baiduRTT !== null ? `${baiduRTT}ms` : '超时';
+    const cStr = cfRTT !== null ? `${cfRTT}ms` : '超时';
+    rttSummary = `🐾 百度 ${bStr}   ☁️ Cloudflare ${cStr}`;
   }
 
-  // 构建面板内容
-  const lines = [
+  // 5. 层次化分段排版（更加舒展、松弛有度）
+  const routeSection = [
     `🇨🇳 直连: ${directIPStr}`,
-    `${flag} 落地: ${landingIPStr}`,
+    `🔀 中转: ${relayIPStr}`,
+    `${flag} 落地: ${landingIPStr}`
+  ];
+
+  const infoSection = [
     `🧭 策略: ${policyStr}`
   ];
 
   if (showRTT && rttSummary) {
-    lines.push(`⚡ 延迟: ${rttSummary}`);
+    infoSection.push(`⚡ 延迟: ${rttSummary}`);
   }
 
   if (showIPv6 && lanIPv6) {
-    lines.push(`🌐 IPv6: ${maskIP(lanIPv6)}`);
+    infoSection.push(`🌐 IPv6: ${maskIP(lanIPv6)}`);
   }
 
+  // 路由链路与节点状态之间空一行，大幅增强可读性
+  const panelContent = [routeSection.join('\n'), infoSection.join('\n')].join('\n\n');
   const panelTitle = `📶 ${ssid ? ssid : '蜂窝移动网络'}${lanIP ? ` (${lanIP})` : ''}`;
-  const panelContent = lines.join('\n');
 
-  // 3. 网络变动事件处理 (Event: network-changed)
+  // 6. 网络变动事件处理 (Event: network-changed)
   if (isEvent) {
     const currentState = {
       ssid: ssid,
       directIP: direct ? direct.ip : '',
+      entrance: entrance || '',
       landingIP: landing ? landing.ip : '',
       policy: policy
     };
@@ -292,13 +387,14 @@ function getRecentPolicy() {
                       lastState.ssid !== currentState.ssid || 
                       lastState.directIP !== currentState.directIP || 
                       lastState.landingIP !== currentState.landingIP ||
+                      lastState.entrance !== currentState.entrance ||
                       lastState.policy !== currentState.policy;
 
     if (isChanged) {
       $persistentStore.write(JSON.stringify(currentState), 'network_info_last_state');
       if (arg.NOTIFY === '1') {
-        const subTitle = `${ssid ? `WiFi: ${ssid}` : '蜂窝网络'} | 直连 ➟ ${flag} 落地`;
-        const notifyBody = `直连: ${directIPStr}\n落地: ${landingIPStr}\n策略: ${policyStr}`;
+        const subTitle = `${ssid ? `WiFi: ${ssid}` : '蜂窝网络'} ｜ 直连 ➟ 中转 ➟ 落地`;
+        const notifyBody = `直连: ${directIPStr}\n中转: ${relayIPStr}\n落地: ${landingIPStr}\n策略: ${policyStr}`;
         $notification.post('网络环境已变动', subTitle, notifyBody);
       }
     }
@@ -306,7 +402,7 @@ function getRecentPolicy() {
     return;
   }
 
-  // 4. 面板正常展示
+  // 7. 面板正常展示
   $done({
     title: panelTitle,
     content: panelContent,
