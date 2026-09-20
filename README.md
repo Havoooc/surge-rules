@@ -71,7 +71,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - QQ 音乐去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/qqmusic-adblock.sgmodule>
 - 航旅纵横去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/umetrip.sgmodule>
 - 微信小程序去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-miniprograms-ads-stable.sgmodule>
-- 闲鱼去广告（平衡增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
+- 闲鱼去广告（白名单增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
 - 雪球去广告（激进版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
 - YouTube 推荐去广告（不含视频贴片广告）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
 
