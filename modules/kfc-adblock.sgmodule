@@ -1,0 +1,14 @@
+#!name=肯德基去广告（稳定版）
+#!desc=移除肯德基 App 与小程序开屏海报、首页广告与活动弹窗；保留自助点餐、外送、卡包优惠券及支付功能。
+#!author=Havoooc；参考开源社区规则
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-20
+
+[Map Local]
+# 肯德基 App 与小程序开屏海报、首页全屏广告与营销弹窗
+^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/(?:apphome\d*\/|custom_v\d*\/|.*\.json)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% res.kfc.com.cn

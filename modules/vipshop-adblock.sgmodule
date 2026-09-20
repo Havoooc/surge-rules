@@ -1,0 +1,22 @@
+#!name=唯品会去广告（稳定版）
+#!desc=移除唯品会开屏广告、首页营销弹窗与推广素材；保留商品搜索、分类浏览、购物车、结算与支付流程。
+#!author=Havoooc；参考开源社区规则
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-20
+
+[Rule]
+# 唯品会广告追踪与统计域名；不拦截业务 API 与支付域名
+DOMAIN-SUFFIX,ad.vip.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,mar.vip.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,union.vip.com,REJECT,extended-matching,pre-matching
+
+[Map Local]
+# 开屏与营销活动弹窗广告
+^https?:\/\/mapi\.appvipshop\.com\/vips-mobile\/rest\/activity\/advertisement\/get(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 购物营销推广素材
+^https?:\/\/mapi\.appvipshop\.com\/vips-mobile\/rest\/shopping\/ad_resource(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% mapi.appvipshop.com

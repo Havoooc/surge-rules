@@ -1,0 +1,29 @@
+#!name=大众点评去广告（稳定版）
+#!desc=移除大众点评开屏广告、运营营销弹窗及搜索推荐广告；保留定位、搜索、商户信息、评价、团购券及排队买单功能。
+#!author=Havoooc；参考开源社区规则
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-20
+
+[Rule]
+# 大众点评推送与广告追踪域名；不拦截核心业务与定位域名
+DOMAIN,dpmtpush.dianping.com,REJECT,extended-matching,pre-matching
+DOMAIN,dynamicf.sankuai.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,lx.meituan.net,REJECT,extended-matching,pre-matching
+DOMAIN,tte.meituan.com,REJECT,extended-matching,pre-matching
+
+[Map Local]
+# 开屏与运营弹窗
+^https?:\/\/mapi\.dianping\.com\/mapi\/operating\/(?:indexopsmodules|loadsplashconfig)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 首页智能推荐广告与卡位
+^https?:\/\/mapi\.dianping\.com\/mapi\/intelliindex(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 购物推广广告
+^https?:\/\/mapi\.dianping\.com\/adshopping(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 预加载预测广告
+^https?:\/\/mapi\.dianping\.com\/wdrpreload\/userprediction(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 推广运营素材
+^https?:\/\/www\.dpfile\.com\/sc\/indexpromotion(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% mapi.dianping.com, www.dpfile.com

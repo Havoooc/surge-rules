@@ -1,0 +1,29 @@
+#!name=盒马去广告（稳定版）
+#!desc=移除盒马开屏广告、首页信息流推广、弹窗、悬浮挂件及推荐，精简底栏 Tab；保留门店选择、商品搜索、购物车及下单结算流程。
+#!author=Havoooc；规则参考 可莉/Kelee
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-20
+
+[Body Rewrite]
+# 首页信息流场景净化
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.queryindexpage\/ 'if .data?.pageType == "1" then .data.scenes |= map(select(.bizCode == "three_row_circle")) else . end'
+# 标签页流推广
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.querytabfeedstream\/ 'if .data?.pageType == "5" then .data.scenes |= map(select(.sceneType == "100028")) else . end'
+# 频道单页广告卡片
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/(?:mtop\.wdk\.render\.querychannelpage|mtop\.wdk\.render\.querysinglepage)\/ 'if .data?.pageType == "216" then .data.scenes |= map(select(.bizCode == "shop_walk_top_picture" or .bizCode == "shop_walk_shop_util" or .bizCode == "shop_walk_bistro")) else . end'
+# 我的页面营销精简
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.querymypage\/ 'if .data?.scenes? then .data.scenes |= map(select(.sceneType | IN("400029", "400005", "400010", "400002", "400004", "400015"))) else . end'
+# 底栏 Tab 精简，保留 首页/分类/购物车/我的
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/(?:mtop\.wdk\.lbs\.location\.shopdecideapi\.decideformain|mtop\.wdk\.lbs\.location\.shopdecideapi\.decidebygeocode)\/ 'if .data?.groupList? then .data.groupList |= map(if .ext?.tabConfig? then .ext.tabConfig |= (.normalTabList = (.normalTabList | map(select(.code as $c | ["HOME", "CLASSIFY", "CART", "MY"] | any(. == $c)))) | .normalTabListB = (.normalTabListB | map(select(.code as $c | ["HOME", "CLASSIFY", "CART", "MY"] | any(. == $c))))) else . end) else . end'
+
+[Map Local]
+# 弹窗广告、悬浮挂件与猜你喜欢推荐（排除门店获取与搜索页面，保障核心购物）
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.sg\.queryinnerpage\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.sg\.querysinglescene\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.melon\.collocation\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.fc\.recommend\.feedscommondservice\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% acs-m.freshippo.com

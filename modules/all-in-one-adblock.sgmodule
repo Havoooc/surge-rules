@@ -43,6 +43,13 @@ AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,biliapi.net)),REJECT-NO-DROP
 # 携程专用广告分发域名，规则层直接阻断，不依赖 MITM。
 DOMAIN,ma-adx.ctrip.com,REJECT
 
+# > 大众点评去广告（稳定版）
+# 大众点评推送与广告追踪域名；不拦截核心业务与定位域名
+DOMAIN,dpmtpush.dianping.com,REJECT,extended-matching,pre-matching
+DOMAIN,dynamicf.sankuai.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,lx.meituan.net,REJECT,extended-matching,pre-matching
+DOMAIN,tte.meituan.com,REJECT,extended-matching,pre-matching
+
 # > 滴滴出行去广告
 DOMAIN,gwp.xiaojukeji.com,REJECT
 AND,((IP-ASN,45090,no-resolve),(DEST-PORT,25641),(PROTOCOL,TCP)),REJECT
@@ -159,6 +166,12 @@ DOMAIN,discardrp.umetrip.com,REJECT
 DOMAIN,analytics.umetrip.com,REJECT
 DOMAIN,sensors.umetrip.com.cn,REJECT
 
+# > 唯品会去广告（稳定版）
+# 唯品会广告追踪与统计域名；不拦截业务 API 与支付域名
+DOMAIN-SUFFIX,ad.vip.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,mar.vip.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,union.vip.com,REJECT,extended-matching,pre-matching
+
 # > 微信小程序去广告（稳定版）
 # 微信小程序视频广告素材；拦截后激励广告不会播放，也通常不会发放奖励
 # wxsnsdy.wxs.qq.com 与 wxsnsdythumb.wxs.qq.com 也用于朋友圈图片/缩略图，故不拦截。
@@ -229,6 +242,18 @@ AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 # 携程微信小程序的热门活动/运营推广位。
 ^https?:\/\/m\.ctrip\.com\/restapi\/soa2\/12673\/(?:[A-Za-z0-9_-]+\/)*queryWeChatHotEvent(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
+# > 大众点评去广告（稳定版）
+# 开屏与运营弹窗
+^https?:\/\/mapi\.dianping\.com\/mapi\/operating\/(?:indexopsmodules|loadsplashconfig)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 首页智能推荐广告与卡位
+^https?:\/\/mapi\.dianping\.com\/mapi\/intelliindex(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 购物推广广告
+^https?:\/\/mapi\.dianping\.com\/adshopping(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 预加载预测广告
+^https?:\/\/mapi\.dianping\.com\/wdrpreload\/userprediction(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 推广运营素材
+^https?:\/\/www\.dpfile\.com\/sc\/indexpromotion(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
 # > 滴滴出行去广告
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/mget(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/lion\.didialift\.com\/broker\/\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
@@ -261,6 +286,13 @@ AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 # 客户端下发的启动页及活动图片
 ^https?:\/\/j5\.dfcfw\.com\/WG\/(?:appconf|conf)\/202[0-9]{5}\/.*\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
 
+# > 盒马去广告（稳定版）
+# 弹窗广告、悬浮挂件与猜你喜欢推荐（排除门店获取与搜索页面，保障核心购物）
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.sg\.queryinnerpage\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.sg\.querysinglescene\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.melon\.collocation\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.fc\.recommend\.feedscommondservice\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
 # > 京东去广告
 # 热词、站点拉取、首页推荐、开屏和运营广告位。
 ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(searchBoxWord|stationPullService|uniformRecommend[06]|homeAreaPop|home_launchConfig|lite_advertising|queryMaterialAdverts|smart_delivery_strategy)(?:&.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
@@ -279,6 +311,10 @@ AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 
 # 未读消息区域的广告入口
 ^https:\/\/jad-api\.jin10\.com\/mult\/list_unread\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# > 肯德基去广告（稳定版）
+# 肯德基 App 与小程序开屏海报、首页全屏广告与营销弹窗
+^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/(?:apphome\d*\/|custom_v\d*\/|.*\.json)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 # > 美团去广告（稳定增强版）
 # 美团外卖开屏与启动广告。
@@ -363,6 +399,12 @@ AND,((PROTOCOL,QUIC),(DOMAIN-SUFFIX,xiaohongshu.com)),REJECT-NO-DROP
 # > 航旅纵横去广告（稳定版）
 # 独立的开屏广告素材接口；仅匹配 advert 路径，不影响普通首页横幅
 ^https?:\/\/oss\.umetrip\.com\/fs\/advert\/polite(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# > 唯品会去广告（稳定版）
+# 开屏与营销活动弹窗广告
+^https?:\/\/mapi\.appvipshop\.com\/vips-mobile\/rest\/activity\/advertisement\/get(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 购物营销推广素材
+^https?:\/\/mapi\.appvipshop\.com\/vips-mobile\/rest\/shopping\/ad_resource(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 # > 微信小程序去广告（稳定版）
 ^https:\/\/webapi\.qmai\.cn\/web\/catering\/advertising\/ data-type=text data="{}" status-code=200
@@ -517,6 +559,18 @@ http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\
 http-response-jq ^https:\/\/htwkop\.xiaojukeji\.com(:443)?\/gateway\?api=hm\.fa\.queryWelfareCenter '(. as $original | try (.data = {}) catch $original)'
 http-response-jq ^https:\/\/common\.diditaxi\.com\.cn\/user_common\/itineraryList\? '(. as $original | try (del(.data.tab_nav[]?.tab_param)) catch $original)'
 
+# > 盒马去广告（稳定版）
+# 首页信息流场景净化
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.queryindexpage\/ 'if .data?.pageType == "1" then .data.scenes |= map(select(.bizCode == "three_row_circle")) else . end'
+# 标签页流推广
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.querytabfeedstream\/ 'if .data?.pageType == "5" then .data.scenes |= map(select(.sceneType == "100028")) else . end'
+# 频道单页广告卡片
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/(?:mtop\.wdk\.render\.querychannelpage|mtop\.wdk\.render\.querysinglepage)\/ 'if .data?.pageType == "216" then .data.scenes |= map(select(.bizCode == "shop_walk_top_picture" or .bizCode == "shop_walk_shop_util" or .bizCode == "shop_walk_bistro")) else . end'
+# 我的页面营销精简
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/mtop\.wdk\.render\.querymypage\/ 'if .data?.scenes? then .data.scenes |= map(select(.sceneType | IN("400029", "400005", "400010", "400002", "400004", "400015"))) else . end'
+# 底栏 Tab 精简，保留 首页/分类/购物车/我的
+http-response-jq ^https:\/\/acs-m\.freshippo\.com\/gw\/(?:mtop\.wdk\.lbs\.location\.shopdecideapi\.decideformain|mtop\.wdk\.lbs\.location\.shopdecideapi\.decidebygeocode)\/ 'if .data?.groupList? then .data.groupList |= map(if .ext?.tabConfig? then .ext.tabConfig |= (.normalTabList = (.normalTabList | map(select(.code as $c | ["HOME", "CLASSIFY", "CART", "MY"] | any(. == $c)))) | .normalTabListB = (.normalTabListB | map(select(.code as $c | ["HOME", "CLASSIFY", "CART", "MY"] | any(. == $c))))) else . end) else . end'
+
 # > 京东去广告
 # 关闭京东 App 的 HTTPDNS 配置，使请求继续由 Surge DNS 与规则系统处理。
 http-response-jq ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicConfig 'if getpath(["data","JDMessage","socketmonitor","isSocketEstablishedAhead"]) != null then setpath(["data","JDMessage","socketmonitor","isSocketEstablishedAhead"]; 0) else . end'
@@ -632,4 +686,4 @@ jd-adblock = type=http-response,pattern=^https:\/\/api\.m\.jd\.com\/client\.acti
 知乎-信息流去广告 = type=http-response,pattern=^https:\/\/api\.zhihu\.com\/(?:moments\/recommend|moments_v3|topstory\/recommend|(?:v4\/)?questions\/\d+\/(?:answers|feeds)|bazaar\/vip_tab\/header)(?:\?|$),requires-body=1,max-size=2097152,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/zhihu-adblock.js
 
 [MITM]
-hostname = %APPEND% amap-aos-info-nogw.amap.com, m5.amap.com, m5-zb.amap.com, oss.amap.com, pan.baidu.com, app.bilibili.com, grpc.biliapi.net, api.coolapk.com, m.ctrip.com, mbd.baidu.com, as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, 112.53.55.225, 139.199.240.84, 113.46.225.*, 162.14.157.*, 123.207.209.*, 120.241.142.*, 120.241.143.*, 116.85.*, daijia.kuaidadi.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, freight.xiaojukeji.com, aweme.snssdk.com, api5-normal-lq.amemv.com, api5-normal-m.amemv.com, zlink.ugsdk.cn, swdlcdn.eastmoney.com, choicegw2.eastmoney.com, j5.dfcfw.com, api.m.jd.com, jad-api.jin10.com, common-open-api.jin10.com, search-open-api.jin10.com, cdn.jin10.com, *.z3c.jin10.com, apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com, home.mi.com, api.pinduoduo.com, api.yangkeduo.com, images.pinduoduo.com, t-dsp.pinduoduo.com, haojia-api.smzdm.com, app-api.smzdm.com, homepage-api.smzdm.com, s-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, post.m.smzdm.com, www.smzdm.com, haojia.m.smzdm.com, acs.m.taobao.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com, nr-op.elemecdn.com, g.alicdn.com, tiebac.baidu.com, c.tieba.baidu.com, 114.115.217.129, home.umetrip.com, umerp.umetrip.com, umerp.umetrip.com.cn, bkclient.umetrip.com, bkclient.umetrip.com.cn, oss.umetrip.com, mcsp.cloudpnr.com, saas-ad.cloudpnr.com, rms.meituan.com, webapi.qmai.cn, dsp.fcbox.com, webchatapp.fcbox.com, app.95504.net, minipro.95504.net, ne.gdsz.sinopec.com, flow.dmall.com, api.yonghuivip.com, activity.yonghuivip.com, 3pp.starbucks.com.cn, api.mcd.cn, mxsa.mxbc.net, tm-api.pin-dao.cn, ads.ishansong.com, ump.ems.com.cn, minicap.caocaokeji.cn, r2.gzyct.com, api.kuaidihelp.com, supplier-api.imdada.cn, hdgateway.zto.com, qapi.huolala.cn, gw-passenger-wap.01zhuanche.com, passengerapi.saicmobility.com, passenger.t3go.cn, wxs-weixin.sd.zhumanggroup.com, s.jiediankeji.com, aag.enmonster.com, ad.xiaotucc.com, api-marketing.zhinengxiyifang.cn, api-fouth-mem.huazhu.com, wxapp.bestwehotel.com, wx.bthhotels.com, ad.maoyan.com, wx.maoyan.com, api.hengdianfilm.com, mkt-gateway.tuhu.cn, mobile.12306.cn, mp.weixin.qq.com, api.weibo.cn, sdkapp.uve.weibo.com, wbapp.uve.weibo.com, acs.m.goofish.com, g-acs.m.goofish.com, edith.xiaohongshu.com, rec.xiaohongshu.com, www.xiaohongshu.com, api.xueqiu.com, open.xueqiu.com, stock.xueqiu.com, fund.xueqiu.com, api.zhihu.com, www.zhihu.com, zhida.zhihu.com
+hostname = %APPEND% amap-aos-info-nogw.amap.com, m5.amap.com, m5-zb.amap.com, oss.amap.com, pan.baidu.com, app.bilibili.com, grpc.biliapi.net, api.coolapk.com, m.ctrip.com, mbd.baidu.com, mapi.dianping.com, www.dpfile.com, as.xiaojukeji.com, common.diditaxi.com.cn, conf.diditaxi.com.cn, lion.didialift.com, api.udache.com, ct.xiaojukeji.com, res.xiaojukeji.com, 112.53.55.225, 139.199.240.84, 113.46.225.*, 162.14.157.*, 123.207.209.*, 120.241.142.*, 120.241.143.*, 116.85.*, daijia.kuaidadi.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, freight.xiaojukeji.com, aweme.snssdk.com, api5-normal-lq.amemv.com, api5-normal-m.amemv.com, zlink.ugsdk.cn, swdlcdn.eastmoney.com, choicegw2.eastmoney.com, j5.dfcfw.com, acs-m.freshippo.com, api.m.jd.com, jad-api.jin10.com, common-open-api.jin10.com, search-open-api.jin10.com, cdn.jin10.com, *.z3c.jin10.com, res.kfc.com.cn, apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com, home.mi.com, api.pinduoduo.com, api.yangkeduo.com, images.pinduoduo.com, t-dsp.pinduoduo.com, haojia-api.smzdm.com, app-api.smzdm.com, homepage-api.smzdm.com, s-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, post.m.smzdm.com, www.smzdm.com, haojia.m.smzdm.com, acs.m.taobao.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com, nr-op.elemecdn.com, g.alicdn.com, tiebac.baidu.com, c.tieba.baidu.com, 114.115.217.129, home.umetrip.com, umerp.umetrip.com, umerp.umetrip.com.cn, bkclient.umetrip.com, bkclient.umetrip.com.cn, oss.umetrip.com, mapi.appvipshop.com, mcsp.cloudpnr.com, saas-ad.cloudpnr.com, rms.meituan.com, webapi.qmai.cn, dsp.fcbox.com, webchatapp.fcbox.com, app.95504.net, minipro.95504.net, ne.gdsz.sinopec.com, flow.dmall.com, api.yonghuivip.com, activity.yonghuivip.com, 3pp.starbucks.com.cn, api.mcd.cn, mxsa.mxbc.net, tm-api.pin-dao.cn, ads.ishansong.com, ump.ems.com.cn, minicap.caocaokeji.cn, r2.gzyct.com, api.kuaidihelp.com, supplier-api.imdada.cn, hdgateway.zto.com, qapi.huolala.cn, gw-passenger-wap.01zhuanche.com, passengerapi.saicmobility.com, passenger.t3go.cn, wxs-weixin.sd.zhumanggroup.com, s.jiediankeji.com, aag.enmonster.com, ad.xiaotucc.com, api-marketing.zhinengxiyifang.cn, api-fouth-mem.huazhu.com, wxapp.bestwehotel.com, wx.bthhotels.com, ad.maoyan.com, wx.maoyan.com, api.hengdianfilm.com, mkt-gateway.tuhu.cn, mobile.12306.cn, mp.weixin.qq.com, api.weibo.cn, sdkapp.uve.weibo.com, wbapp.uve.weibo.com, acs.m.goofish.com, g-acs.m.goofish.com, edith.xiaohongshu.com, rec.xiaohongshu.com, www.xiaohongshu.com, api.xueqiu.com, open.xueqiu.com, stock.xueqiu.com, fund.xueqiu.com, api.zhihu.com, www.zhihu.com, zhida.zhihu.com
