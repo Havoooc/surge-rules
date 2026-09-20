@@ -10,8 +10,10 @@ const blockedRpids = new Set([
   "1000002",
   "1000019",
   "1430064",
+  "1430065",
   "1120002",
-  "1130016"
+  "1130016",
+  "1130018"
 ]);
 
 if (blockedRpids.has(String(rpid))) {
