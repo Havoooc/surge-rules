@@ -1,0 +1,22 @@
+#!name=哔哩哔哩去广告
+#!desc=移除哔哩哔哩开屏广告、推荐页推广、动态流广告与视频播放页 UP 主推广广告；保留评论、弹幕与正常动态。
+#!author=Havoooc（基于 app2smile 规则优化）
+#!category=去广告
+#!tag=Bilibili,去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/BiliBili.png
+#!date=2026-09-20
+
+[Rule]
+# 阻止 QUIC 避免穿透 MITM
+AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,bilibili.com)),REJECT-NO-DROP
+AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,biliapi.net)),REJECT-NO-DROP
+
+[Script]
+# 开屏与推荐流 JSON 净化
+bilibili-json = type=http-response,pattern=^https:\/\/app\.bilibili\.com\/x\/(v2\/(splash\/(list|show)|feed\/index\?)|resource\/show\/tab\/v2),requires-body=1,max-size=5242880,timeout=10,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/bilibili-json.js
+# 动态与播放页 Protobuf 净化
+bilibili-proto = type=http-response,pattern=^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.(viewunite\.v1\.View\/View|dynamic\.v2\.Dynamic\/DynAll)$,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/bilibili-proto.js
+
+[MITM]
+hostname = %APPEND% app.bilibili.com, grpc.biliapi.net

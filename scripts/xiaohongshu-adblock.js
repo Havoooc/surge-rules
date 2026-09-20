@@ -13,7 +13,16 @@ if (!body) {
     const isAdvertisement = (item) => {
       if (!item || typeof item !== "object") return false;
       const modelType = String(item.model_type || item.modelType || "").toLowerCase();
-      return Boolean(item.ads_info || item.ad_info || item.adInfo) || ["ad", "ads", "advertisement", "sponsor"].includes(modelType);
+      const cardType = String(item.card_type || item.cardType || "").toLowerCase();
+      const itemType = String(item.item_type || item.itemType || "").toLowerCase();
+      return (
+        Boolean(item.ads_info || item.ad_info || item.adInfo || item.brand_ad || item.brand_info) ||
+        Boolean(item.goods_card || item.live_card) ||
+        Boolean(item.inventory && item.inventory.type) ||
+        ["ad", "ads", "advertisement", "sponsor", "live_card", "goods_card"].includes(modelType) ||
+        ["ad", "ads", "advertisement", "sponsor", "live_card", "goods_card"].includes(cardType) ||
+        ["ad", "ads", "advertisement", "sponsor"].includes(itemType)
+      );
     };
 
     if (/\/search\/(?:banner_list|hot_list|hint|trending)(?:\?|$)/.test(url) && data && typeof data === "object" && !Array.isArray(data)) {

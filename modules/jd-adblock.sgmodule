@@ -6,6 +6,8 @@
 #!homepage=https://github.com/Havoooc/surge-rules
 
 [Rule]
+# 阻止 QUIC 避免穿透 MITM
+AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,jd.com)),REJECT-NO-DROP
 URL-REGEX,^http:\/\/\w{32}\.jddebug\.com\/diagnose\?,REJECT
 
 [Body Rewrite]

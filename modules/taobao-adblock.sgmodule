@@ -8,6 +8,8 @@
 #!requirement=SYSTEM = 'iOS'
 
 [Rule]
+# 阻止 QUIC 避免穿透 MITM
+AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,taobao.com)),REJECT-NO-DROP
 # 淘宝联盟与直通车的明确广告、点击和统计域名；不屏蔽通用淘宝业务域名。
 DOMAIN-SUFFIX,simba.taobao.com,REJECT,extended-matching,pre-matching
 DOMAIN-SUFFIX,tunion-api.m.taobao.com,REJECT,extended-matching,pre-matching

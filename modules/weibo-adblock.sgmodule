@@ -1,0 +1,29 @@
+#!name=微博去广告
+#!desc=移除新浪微博开屏广告、时间线广告卡片、超话推荐与推广博文；保留关注、评论、私信与正常浏览。
+#!author=Havoooc（参考 ddgksf2013、RuCu6 规则）
+#!category=去广告
+#!tag=微博,去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Weibo.png
+#!date=2026-09-20
+
+[Rule]
+# 阻止 QUIC 避免穿透 MITM
+AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,weibo.cn)),REJECT-NO-DROP
+AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,weibo.com)),REJECT-NO-DROP
+# 微博广告与追踪 SDK
+DOMAIN,sdkapp.uve.weibo.com,REJECT
+DOMAIN,adstrategy.biz.weibo.com,REJECT
+DOMAIN,kad.uve.weibo.com,REJECT
+
+[Map Local]
+# 微博开屏与广告投放配置
+^https?:\/\/sdkapp\.uve\.weibo\.com\/interface\/sdk\/sdkad\.php data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/wbapp\.uve\.weibo\.com\/wbapplua\/wbpullad\.lua data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+# 时间线广告与热门推荐净化
+微博-时间线净化 = type=http-response,pattern=^https?:\/\/api\.weibo\.cn\/2\/(?:statuses\/(?:unread_hot_timeline|friends_timeline|unread_friends_timeline)|groups\/timeline)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/weibo-adblock.js
+
+[MITM]
+hostname = %APPEND% api.weibo.cn, sdkapp.uve.weibo.com, wbapp.uve.weibo.com

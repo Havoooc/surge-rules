@@ -71,13 +71,17 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - QQ 音乐去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/qqmusic-adblock.sgmodule>
 - 航旅纵横去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/umetrip.sgmodule>
 - 微信小程序去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-miniprograms-ads-stable.sgmodule>
+- 微信公众号去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-mp-adblock.sgmodule>
+- 微博去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/weibo-adblock.sgmodule>
+- 哔哩哔哩去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bilibili-adblock.sgmodule>
 - 闲鱼去广告（白名单增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
 - 雪球去广告（激进版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
-- YouTube 推荐去广告（不含视频贴片广告）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
+- YouTube 增强（独立可选模块）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
 
 ## 注意事项
 
-- 以后新增或更新去广告、净化及兼容模块时，同步更新 `all-in-one-adblock.sgmodule`，确保 Havoc全能去广告合集始终包含仓库内最新模块。
+- 运行 `python3 scripts/build-all-in-one.py` 即可一键将所有独立模块自动解析合并并更新 `all-in-one-adblock.sgmodule`，避免人工同步排版错误。
+- YouTube 增强模块包含 `*.googlevideo.com` 解密，为避免影响 Apple TV 及海外流媒体 CDN 视频缓冲，保持为独立可选模块，不强行并入全能合集。
 - 合集与独立模块同步范围包括 `[General]` 段（skip-proxy、always-real-ip）；银行 VPN 兼容依赖这些设置生效，仅在独立模块启用时二者不可叠加产生冲突。
 - Rewrite、Map Local、Body Rewrite 和脚本模块需要开启 MITM，并在设备上安装及信任 Surge CA。
 - 模块启用前请检查其 MITM 主机范围；银行兼容模块本身不解密银行业务流量。
