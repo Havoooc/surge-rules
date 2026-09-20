@@ -1,4 +1,4 @@
-#!name=HTTPDNS 拦截（稳妥版）
+#!name=HTTPDNS 拦截
 #!desc=阻止少量低风险 HTTPDNS 请求，使其回退至 Surge DNS；不拦截微信、支付宝、滴滴、美团、流媒体及小米服务。
 #!author=Havoooc（参考可莉、VirgilClyne 规则）
 #!category=网络优化

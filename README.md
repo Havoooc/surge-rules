@@ -30,6 +30,22 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/futu-p
 RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/1password-proxy.list,你的代理策略
 ```
 
+### NAS 分流
+
+```ini
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/nas-jp-direct.list,DIRECT
+```
+
+中国大陆直连，其余固定走日本直连节点。
+
+### YouTube 分流
+
+```ini
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/youtube-proxy.list,▶️ YouTube
+```
+
+在 Surge 中指定 `▶️ YouTube` 策略组。
+
 ## 模块安装
 
 在 Surge 的模块管理页面使用以下格式安装：
@@ -38,49 +54,47 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/1passw
 https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件名>.sgmodule
 ```
 
-当前包含：
+### 全能合集（推荐）
 
-- 百度网盘去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/baidunetdisk-adblock.sgmodule>（已加入合集；过滤任务、活动、推荐与传输页广告）
+- Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>
 
-- 什么值得买去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/smzdm-adblock.sgmodule>（已加入合集；过滤开屏、信息流和搜索推广）
+### 独立模块
 
-- 知乎去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhihu-adblock.sgmodule>（已加入合集；2 MiB 脚本上限，保留搜索、评论、通知和盐选内容）
+如仅需对特定 App 生效，可单独安装对应模块（请勿与全能合集同时启用相同模块）：
 
-- 高德地图去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/amap-adblock.sgmodule>（已纳入合集；过滤开屏、横幅、搜索推广及营销弹窗）
-
-- NAS 分流（中国大陆直连、其余固定走日本直连节点）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/nas-jp-direct.list>
-- YouTube 分流（在 Surge 中指定 `▶️ YouTube` 策略组）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/youtube-proxy.list>
-
-- Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>（请勿与下列独立模块同时启用）
-- 百度贴吧去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/tieba-adblock.sgmodule>
-- 淘宝去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-adblock.sgmodule>
-- 淘宝闪购去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-instant-adblock.sgmodule>
-- 小红书去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xiaohongshu-adblock.sgmodule>
-- 国内银行 VPN 兼容：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bank-vpn-compat.sgmodule>
-- HTTPDNS 拦截（稳妥版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/httpdns-block-safe.sgmodule>
-- 携程旅行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ctrip-adblock.sgmodule>
-- 东方财富去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/eastmoney-adblock.sgmodule>
-- 滴滴出行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/didi-adblock.sgmodule>
-- 抖音去开屏广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/douyin-splash-adblock.sgmodule>
-- 金十数据去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jin10.sgmodule>
-- 京东去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jd-adblock.sgmodule>
-- 拼多多去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/pinduoduo-adblock.sgmodule>
-- 米家去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/mijia.sgmodule>
-- 美团去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/meituan-adblock.sgmodule>
-- 酷安去广告（稳定增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/coolapk-adblock.sgmodule>
-- QQ 音乐去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/qqmusic-adblock.sgmodule>
-- 航旅纵横去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/umetrip.sgmodule>
-- 微信小程序去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-miniprograms-ads-stable.sgmodule>
-- 微信公众号去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-mp-adblock.sgmodule>
-- 微博去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/weibo-adblock.sgmodule>
+- 百度网盘去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/baidunetdisk-adblock.sgmodule>
+- 百度贴吧去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/tieba-adblock.sgmodule>
 - 哔哩哔哩去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bilibili-adblock.sgmodule>
-- 唯品会去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/vipshop-adblock.sgmodule>
-- 肯德基去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/kfc-adblock.sgmodule>
-- 大众点评去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/dianping-adblock.sgmodule>
-- 盒马去广告（稳定版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/hema-adblock.sgmodule>
-- 闲鱼去广告（白名单增强版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
-- 雪球去广告（激进版）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
-- YouTube 增强（独立可选模块）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
+- 大众点评去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/dianping-adblock.sgmodule>
+- 滴滴出行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/didi-adblock.sgmodule>
+- 东方财富去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/eastmoney-adblock.sgmodule>
+- 抖音去开屏广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/douyin-splash-adblock.sgmodule>
+- 高德地图去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/amap-adblock.sgmodule>
+- 国内银行 VPN 兼容：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bank-vpn-compat.sgmodule>
+- 航旅纵横去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/umetrip.sgmodule>
+- 盒马去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/hema-adblock.sgmodule>
+- HTTPDNS 拦截：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/httpdns-block-safe.sgmodule>
+- 京东去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jd-adblock.sgmodule>
+- 金十数据去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jin10.sgmodule>
+- 肯德基去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/kfc-adblock.sgmodule>
+- 酷安去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/coolapk-adblock.sgmodule>
+- 美团去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/meituan-adblock.sgmodule>
+- 米家去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/mijia.sgmodule>
+- 拼多多去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/pinduoduo-adblock.sgmodule>
+- QQ 音乐去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/qqmusic-adblock.sgmodule>
+- 什么值得买去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/smzdm-adblock.sgmodule>
+- 淘宝去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-adblock.sgmodule>
+- 淘宝闪购去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-instant-adblock.sgmodule>
+- 唯品会去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/vipshop-adblock.sgmodule>
+- 微信公众号去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-mp-adblock.sgmodule>
+- 微信小程序去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-miniprograms-ads-stable.sgmodule>
+- 微博去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/weibo-adblock.sgmodule>
+- 闲鱼去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
+- 小红书去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xiaohongshu-adblock.sgmodule>
+- 携程旅行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ctrip-adblock.sgmodule>
+- 雪球去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
+- 知乎去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhihu-adblock.sgmodule>
+- YouTube 增强：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
 
 ## 注意事项
 

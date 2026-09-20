@@ -1,4 +1,4 @@
-#!name=国内银行 VPN 兼容（稳定版）
+#!name=国内银行 VPN 兼容
 #!desc=兼容农行、建行/建行生活、中行、交行、邮储，并改善招行和平安银行的 Fake-IP 兼容；不解密银行流量
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules

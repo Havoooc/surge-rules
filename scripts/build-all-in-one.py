@@ -153,7 +153,7 @@ def build():
 
     # 1. General
     out.append("[General]")
-    out.append("# 国内银行 VPN 兼容（稳定版）General 部分：多个国内 App 共用的网络连通性检测")
+    out.append("# 国内银行 VPN 兼容 General 部分：多个国内 App 共用的网络连通性检测")
     out.append("# 包括中行缤纷生活、光大及部分地方银行场景；建行、中国银行和交通银行使用公开配置中反复出现的银行域名后缀")
     sorted_skip = sorted(general_skip_proxy)
     out.append(f"skip-proxy = %APPEND% {', '.join(sorted_skip)}")

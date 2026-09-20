@@ -1,4 +1,4 @@
-#!name=微信小程序去广告（稳定版）
+#!name=微信小程序去广告
 #!desc=精选常用小程序的明确广告接口；移除金融/支付 MITM、整站及宽泛静态资源拦截，不依赖外部脚本
 #!author=可莉🅥, Havoc（稳定性整理）
 #!homepage=https://github.com/Havoooc/surge-rules

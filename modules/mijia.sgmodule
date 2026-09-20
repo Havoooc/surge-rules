@@ -1,4 +1,4 @@
-#!name=米家去广告（稳定版）
+#!name=米家去广告
 #!desc=移除米家开屏、首页轮播及“我的”页面推广；仅匹配明确广告接口，不影响设备控制
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules

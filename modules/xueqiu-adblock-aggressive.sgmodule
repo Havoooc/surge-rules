@@ -1,4 +1,4 @@
-#!name=雪球去广告（激进版）
+#!name=雪球去广告
 #!desc=删除首页推广配置整体 data 并拦截用户资料接口，额外移除 AI 搜索推荐、金融产品推广和弹窗；可能导致头像、昵称、个人页或部分页面空白，请勿与稳定版同时启用
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules
