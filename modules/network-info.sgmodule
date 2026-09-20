@@ -1,12 +1,12 @@
 #!name=网络信息面板
-#!desc=实时显示网络环境、SSID/内网IP、国内直连与代理落地出口、完整IP与独立测速双延迟；支持网络变动后台提醒与中转链路识别。
+#!desc=实时显示网络环境、SSID/内网IP、国内直连与代理落地出口、可选延迟测试；默认 IP 打码、静默运行，支持网络变动提醒与中转链路识别。
 #!author=Havoooc；原作者 @xream @keywos
 #!category=工具
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Network.png
 #!date=2026-09-20
-#!arguments=MASK:0,IPv6:0,NOTIFY:1,RTT:1,UPDATE-INTERVAL:-1,ICON:globe.asia.australia,ICON-COLOR:#007AFF
-#!arguments-desc=- MASK: 是否打码保护IP地址 [1: 开启, 0: 关闭(默认完整显示)]\n- IPv6: 是否显示IPv6地址 [1: 开启, 0: 关闭]\n- NOTIFY: 网络变化时是否发送系统通知 [1: 开启, 0: 关闭]\n- RTT: 是否测速显示真实延迟 [1: 开启, 0: 关闭]\n- UPDATE-INTERVAL: 面板刷新间隔(秒)，默认 -1 表示点击或进入App时刷新\n- ICON: 面板图标 (SF Symbol)\n- ICON-COLOR: 面板图标颜色 (#007AFF 等)
+#!arguments=MASK:1,IPv6:0,NOTIFY:0,RTT:0,UPDATE-INTERVAL:-1,ICON:globe.asia.australia,ICON-COLOR:#007AFF
+#!arguments-desc=- MASK: 是否打码保护IP地址 [1: 开启(默认), 0: 关闭]\n- IPv6: 是否显示IPv6地址 [1: 开启, 0: 关闭]\n- NOTIFY: 网络变化时是否发送系统通知 [1: 开启, 0: 关闭(默认)]\n- RTT: 是否测速显示真实延迟 [1: 开启, 0: 关闭(默认)]\n- UPDATE-INTERVAL: 面板刷新间隔(秒)，默认 -1 表示点击或进入App时刷新\n- ICON: 面板图标 (SF Symbol)\n- ICON-COLOR: 面板图标颜色 (#007AFF 等)
 
 [Script]
 # 网络变动后台通知

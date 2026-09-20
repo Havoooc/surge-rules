@@ -4,14 +4,14 @@
  * 支持网络变动后台提醒（Event: network-changed）与持久化中转归属地缓存。
  * 
  * 原作者: @xream @keywos
- * 重构优化: Havoooc (完整IP展示、双通道延迟容灾、健康状态灯、离线即时侦测、中转1小时缓存、呼吸感两段排版)
+ * 重构优化: Havoooc (隐私默认保护、国内探测固定直连、双通道延迟容灾、健康状态灯、离线即时侦测、中转1小时缓存、呼吸感两段排版)
  */
 
 const DEFAULT_ARGS = {
-  MASK: '0',            // 1: 开启 IP 打码保护; 0: 显示完整 IP (默认)
+  MASK: '1',            // 1: 开启 IP 打码保护 (默认); 0: 显示完整 IP
   IPv6: '0',            // 1: 显示 IPv6; 0: 不显示
-  NOTIFY: '1',          // 1: 网络变动时发送通知; 0: 静默
-  RTT: '1',             // 1: 测速显示往返延迟; 0: 不测速
+  NOTIFY: '0',          // 1: 网络变动时发送通知; 0: 静默 (默认)
+  RTT: '0',             // 1: 测速显示往返延迟; 0: 不测速 (默认)
   ICON: 'globe.asia.australia',
   'ICON-COLOR': '#007AFF'
 };
@@ -47,10 +47,12 @@ function httpGet(options) {
 }
 
 // 延迟测速基础函数
-function testRTT(url, timeout = 2.5) {
+function testRTT(url, timeout = 2.5, policy) {
   const start = Date.now();
   return new Promise((resolve) => {
-    $httpClient.get({ url, timeout }, (err) => {
+    const options = { url, timeout };
+    if (policy) options.policy = policy;
+    $httpClient.get(options, (err) => {
       if (err) return resolve(null);
       resolve(Date.now() - start);
     });
@@ -59,9 +61,9 @@ function testRTT(url, timeout = 2.5) {
 
 // 双通道国内延迟测速：百度优先，华为 204 备选
 async function getDomesticRTT() {
-  const rtt = await testRTT('https://www.baidu.com', 2);
+  const rtt = await testRTT('https://www.baidu.com', 2, 'DIRECT');
   if (rtt !== null) return rtt;
-  return await testRTT('https://connectivitycheck.platform.hicloud.com/generate_204', 2);
+  return await testRTT('https://connectivitycheck.platform.hicloud.com/generate_204', 2, 'DIRECT');
 }
 
 // 双通道国外/节点延迟测速：Cloudflare 204 优先，Google 204 备选
@@ -146,6 +148,7 @@ async function getDomesticInfo() {
   try {
     const res = await httpGet({
       url: 'https://dashi.163.com/fgw/mailsrv-ipdetail/detail',
+      policy: 'DIRECT',
       headers: { 'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)' }
     });
     if (res.body) {
@@ -166,6 +169,7 @@ async function getDomesticInfo() {
   try {
     const res = await httpGet({
       url: 'https://api.live.bilibili.com/ip_service/v1/ip_service/get_ip_addr',
+      policy: 'DIRECT',
       headers: { 'User-Agent': 'bili-universal/65100300' }
     });
     if (res.body) {
@@ -206,24 +210,6 @@ async function getLandingInfo() {
     }
   } catch (e) {}
 
-  try {
-    const res = await httpGet({
-      url: 'http://ip-api.com/json?lang=zh-CN',
-      headers: { 'User-Agent': 'curl/8.0' }
-    });
-    if (res.body) {
-      const json = JSON.parse(res.body);
-      if (json.status === 'success' && json.query) {
-        return {
-          ip: json.query,
-          countryCode: json.countryCode,
-          country: json.country || '',
-          city: json.city || json.regionName || ''
-        };
-      }
-    }
-  } catch (e) {}
-
   return null;
 }
 
@@ -257,24 +243,17 @@ async function getRelayInfo(ip) {
     }
   } catch (e) {}
 
-  if (!loc) {
-    try {
-      const res = await httpGet({
-        url: `http://ip-api.com/json/${encodeURIComponent(ip)}?lang=zh-CN`,
-        headers: { 'User-Agent': 'curl/8.0' }
-      });
-      if (res.body) {
-        const json = JSON.parse(res.body);
-        if (json.status === 'success' && json.query) {
-          loc = formatLoc(json.regionName, json.city) || json.country || '';
-        }
-      }
-    } catch (e) {}
-  }
 
   if (loc) {
     try {
       cache[ip] = { loc, time: Date.now() };
+      const entries = Object.keys(cache);
+      if (entries.length > 32) {
+        entries
+          .sort((a, b) => (cache[a].time || 0) - (cache[b].time || 0))
+          .slice(0, entries.length - 32)
+          .forEach(key => delete cache[key]);
+      }
       $persistentStore.write(JSON.stringify(cache), CACHE_KEY);
     } catch (e) {}
   }
@@ -343,6 +322,12 @@ function getRecentPolicy() {
       icon: 'airplane',
       'icon-color': '#FF9500'
     });
+    return;
+  }
+
+  // 通知关闭时，网络变化事件无需访问外部接口，避免后台产生额外流量。
+  if (isEvent && arg.NOTIFY !== '1') {
+    $done();
     return;
   }
 
