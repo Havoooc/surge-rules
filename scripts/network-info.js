@@ -1,18 +1,15 @@
 /**
  * 网络信息面板 (Surge 5 深度定制重构版)
- * 实时监测网络环境、国内直连、中转入口、代理落地、ASN/运营商、实际策略与真实往返延迟。
+ * 简洁显示网络环境、国内直连、中转入口、代理落地、中文运营商与实际策略。
  * 支持网络变动后台提醒（Event: network-changed）与持久化中转归属地缓存。
  * 
  * 原作者: @xream @keywos
- * 重构优化: Havoooc (统一隐私保护、精确策略识别、详细链路信息、网络切换通知、接口超时保护与中转缓存)
+ * 重构优化: Havoooc (无 IP 展示、中文化链路摘要、精确策略识别、网络切换通知与接口超时保护)
  */
 
 const DEFAULT_ARGS = {
-  MASK: '1',            // 1: 开启 IP 打码保护 (默认); 0: 显示完整 IP
-  IPv6: '0',            // 1: 显示 IPv6; 0: 不显示
   NOTIFY: '1',          // 1: 网络状态切换时发送通知 (默认); 0: 静默
   RTT: '0',             // 1: 测速显示往返延迟; 0: 不测速 (默认)
-  DETAIL: '1',          // 1: 显示 ASN/运营商/IP 类型 (默认); 0: 精简显示
   'PROXY-POLICY': 'AUTO',
   ICON: 'globe.asia.australia',
   'ICON-COLOR': '#007AFF'
@@ -35,10 +32,7 @@ if (typeof $argument !== 'undefined' && $argument) {
   });
 }
 
-const isMask = arg.MASK === '1';
-const showIPv6 = arg.IPv6 === '1';
 const showRTT = arg.RTT === '1';
-const showDetail = arg.DETAIL === '1';
 const proxyPolicy = arg['PROXY-POLICY'] && arg['PROXY-POLICY'].toUpperCase() !== 'AUTO'
   ? arg['PROXY-POLICY']
   : '';
@@ -100,48 +94,59 @@ function formatLoc(p, c) {
   return `${prov} ${city}`;
 }
 
-// 落地地区名称去重（如避免“香港 香港”、“新加坡 新加坡”）
-function formatLandingLoc(country, city) {
-  const cnt = (country || '').trim();
-  const ct = (city || '').trim();
-  if (!cnt) return ct;
-  if (!ct || cnt === ct || ct.includes(cnt)) return cnt;
-  return `${cnt} ${ct}`;
+const GEO_ZH = {
+  'united states': '美国', 'california': '加利福尼亚', 'los angeles': '洛杉矶',
+  'san jose': '圣何塞', 'seattle': '西雅图', 'new york': '纽约',
+  'japan': '日本', 'tokyo': '东京', 'tokyo-to': '东京', 'osaka': '大阪',
+  'singapore': '新加坡', 'hong kong': '香港', 'taiwan': '台湾',
+  'south korea': '韩国', 'seoul': '首尔', 'germany': '德国',
+  'frankfurt': '法兰克福', 'united kingdom': '英国', 'london': '伦敦',
+  'netherlands': '荷兰', 'amsterdam': '阿姆斯特丹', 'canada': '加拿大',
+  'australia': '澳大利亚'
+};
+
+function toChineseGeo(value) {
+  const text = String(value || '').trim();
+  if (!text) return '';
+  if (/[\u3400-\u9fff]/.test(text)) return text;
+  return GEO_ZH[text.toLowerCase()] || '';
 }
 
 function formatDetailedLoc(country, region, city) {
-  const parts = [country, region, city]
-    .map(v => (v || '').replace(/省|市/g, '').trim())
-    .filter(Boolean);
+  const parts = [country, region, city].map(toChineseGeo).filter(Boolean);
   return parts.filter((value, index) => parts.indexOf(value) === index).join(' ');
 }
 
-function normalizeASN(asn) {
-  if (!asn && asn !== 0) return '';
-  const value = String(asn).trim();
-  if (!value) return '';
-  return /^AS/i.test(value) ? value.toUpperCase() : 'AS' + value;
-}
-
-function cleanProvider(value) {
-  if (!value) return '';
-  return String(value)
-    .replace(/\s+(LLC|L\.L\.C\.|Inc\.?|Limited|Ltd\.?|Corporation|Corp\.?)$/i, '')
-    .trim();
-}
-
-function formatNetworkMeta(data) {
+function formatChineseProvider(data) {
   if (!data) return '';
-  const provider = cleanProvider(data.org || data.isp || '');
-  return [normalizeASN(data.asn), provider, data.type || '']
-    .filter(Boolean)
-    .filter((value, index, values) => values.indexOf(value) === index)
-    .join(' · ');
+  const source = String(data.org || data.isp || '');
+  const mappings = [
+    [/China Mobile/i, '中国移动'], [/China Telecom/i, '中国电信'],
+    [/China Unicom/i, '中国联通'], [/Cox Communications/i, '考克斯通信'],
+    [/Comcast/i, '康卡斯特'], [/SoftBank/i, '软银'],
+    [/NTT/i, '日本电信'], [/PCCW/i, '电讯盈科'], [/HKT/i, '香港电讯'],
+    [/Amazon|AWS/i, '亚马逊云'], [/Google/i, '谷歌云'],
+    [/Microsoft/i, '微软云'], [/Oracle/i, '甲骨文云'],
+    [/Cloudflare/i, '云服务商'], [/Akamai/i, '阿卡迈'],
+    [/DMIT/i, '海外云服务商'], [/VMISS/i, '海外网络服务商'],
+    [/Cogent/i, '国际骨干网络'], [/Hurricane Electric/i, '国际网络服务商'],
+    [/Tata/i, '塔塔通信'], [/GTT/i, '国际网络服务商'],
+    [/Quadranet|DataCamp/i, '海外数据中心']
+  ];
+  const matched = mappings.find(([pattern]) => pattern.test(source));
+  if (matched) return matched[1];
+  const chinese = source.match(/[\u3400-\u9fff]+/g);
+  return chinese ? chinese.join('') : '';
 }
 
-function formatTime(date) {
-  const pad = value => String(value).padStart(2, '0');
-  return pad(date.getHours()) + ':' + pad(date.getMinutes());
+function formatAccessType(ssid, radio, primaryInterface) {
+  if (ssid) return '无线网络';
+  const value = String(radio || '').toUpperCase();
+  if (value.includes('5G')) return '第五代移动网络';
+  if (value.includes('LTE') || value.includes('4G')) return '第四代移动网络';
+  if (value.includes('3G')) return '第三代移动网络';
+  if (primaryInterface) return '有线网络';
+  return '蜂窝网络';
 }
 
 // 国旗 Emoji 转换
@@ -155,21 +160,6 @@ function getFlag(countryCode) {
   } catch (e) {
     return '🌐';
   }
-}
-
-// IP 隐私脱敏打码（默认开启）
-function maskIP(ip) {
-  if (!ip) return '-';
-  if (!isMask) return ip;
-  if (ip.includes(':')) {
-    const parts = ip.split(':');
-    return parts.slice(0, 2).join(':') + ':*:*';
-  }
-  const parts = ip.split('.');
-  if (parts.length === 4) {
-    return `${parts[0]}.${parts[1]}.*.*`;
-  }
-  return ip;
 }
 
 // 运营商与服务商名称精简美化 (国内直连使用)
@@ -372,14 +362,11 @@ function getRecentPolicy(probeToken) {
 
 // 主流程
 !(async () => {
-  // 1. 获取本地网络接口与 Wi-Fi SSID
+  // 1. 获取本地网络接口与无线网络名称
   let ssid = '';
   let lanIP = '';
   let lanIPv6 = '';
   let primaryInterface = '';
-  let primaryRouter = '';
-  let dnsServers = [];
-  let carrier = '';
   let radio = '';
 
   if (typeof $network !== 'undefined' && $network) {
@@ -389,16 +376,11 @@ function getRecentPolicy(probeToken) {
     if ($network.v4 && $network.v4.primaryAddress) {
       lanIP = $network.v4.primaryAddress;
       primaryInterface = $network.v4.primaryInterface || '';
-      primaryRouter = $network.v4.primaryRouter || '';
     }
     if ($network.v6 && $network.v6.primaryAddress) {
       lanIPv6 = $network.v6.primaryAddress;
     }
-    if (Array.isArray($network.dns)) {
-      dnsServers = $network.dns.slice(0, 2);
-    }
     const cellular = $network['cellular-data'] || {};
-    carrier = cellular.carrier || '';
     radio = cellular.radio || '';
   }
 
@@ -411,7 +393,7 @@ function getRecentPolicy(probeToken) {
     }
     $done({
       title: '✈️ 飞行模式 / 暂无网络连接',
-      content: '设备未接入任何网络\n请检查 Wi-Fi 或蜂窝移动数据设置',
+      content: '设备未接入任何网络\n请检查无线网络或蜂窝移动数据设置',
       icon: 'airplane',
       'icon-color': '#FF9500'
     });
@@ -454,34 +436,32 @@ function getRecentPolicy(probeToken) {
   
   // 国内直连行（保留 ISP 运营商）
   const directLoc = direct ? formatLoc(direct.province, direct.city) : '';
-  const directIPStr = direct 
-    ? `${maskIP(direct.ip)}  ${directLoc}${direct.isp ? ' · ' + direct.isp : ''}`.trim()
-    : '获取失败';
+  const directSummary = direct
+    ? `${directLoc || '中国大陆'}${direct.isp ? ' · ' + direct.isp : ''}`.trim()
+    : '信息获取失败';
 
-  // 中转入口与详细 ASN/运营商信息
-  let relayIPStr = '';
-  let relayMeta = '';
+  // 中转入口仅保留中文地区与可识别的中文运营商
+  let relaySummary = '';
+  let relayProvider = '';
   if (isDirectMode) {
-    relayIPStr = '全局直连 (未启用代理)';
+    relaySummary = '未启用代理';
   } else if (relayData && relayData.loc) {
-    relayIPStr = `${maskIP(relayData.ip)}  ${relayData.loc}`.trim();
-    relayMeta = formatNetworkMeta(relayData);
-  } else if (relayData && relayData.ip) {
-    relayIPStr = `${maskIP(relayData.ip)}`;
+    relaySummary = relayData.loc;
+    relayProvider = formatChineseProvider(relayData);
   } else {
-    relayIPStr = '未检测到独立中转';
+    relaySummary = '未检测到独立中转';
   }
 
-  // 代理落地行与详细 ASN/运营商信息
-  let landingIPStr = '获取失败';
-  let landingMeta = '';
+  // 代理落地仅保留中文地区与可识别的中文运营商
+  let landingSummary = '信息获取失败';
+  let landingProvider = '';
   if (landing) {
     if (direct && landing.ip === direct.ip) {
-      landingIPStr = `${maskIP(landing.ip)}  与直连相同 (未走代理)`;
+      landingSummary = '与直连相同';
     } else {
       const landingLoc = formatDetailedLoc(landing.country, landing.region, landing.city);
-      landingIPStr = `${maskIP(landing.ip)}  ${landingLoc}`.trim();
-      landingMeta = formatNetworkMeta(landing);
+      landingSummary = landingLoc || '境外出口';
+      landingProvider = formatChineseProvider(landing);
     }
   }
 
@@ -492,48 +472,37 @@ function getRecentPolicy(probeToken) {
   let routeSection = [];
   if (isDirectMode) {
     routeSection = [
-      `🇨🇳 直连: ${directIPStr}`,
-      `🔀 代理: 全局直连 (未走代理)`
+      `🇨🇳 直连：${directSummary}`,
+      `🔀 代理：未启用代理`
     ];
   } else {
     routeSection = [
-      `🇨🇳 直连: ${directIPStr}`,
-      `🔀 中转: ${relayIPStr}`
+      `🇨🇳 直连：${directSummary}`,
+      `🔀 中转：${relaySummary}`
     ];
-    if (showDetail && relayMeta) routeSection.push(`   ↳ ${relayMeta}`);
-    routeSection.push(`${flag} 落地: ${landingIPStr}`);
-    if (showDetail && landingMeta) routeSection.push(`   ↳ ${landingMeta}`);
+    if (relayProvider) routeSection.push(`　　运营商：${relayProvider}`);
+    routeSection.push(`${flag} 落地：${landingSummary}`);
+    if (landingProvider) routeSection.push(`　　运营商：${landingProvider}`);
   }
 
-  let accessType = ssid ? 'Wi-Fi' : (radio || (primaryInterface ? '有线/其他' : '蜂窝网络'));
-  if (carrier && !ssid) accessType += ` · ${carrier}`;
-  const dnsStr = dnsServers.length ? dnsServers.join(' / ') : '';
-  const refreshedAt = formatTime(new Date());
+  const accessType = formatAccessType(ssid, radio, primaryInterface);
   const infoSection = [
-    `🧭 策略: ${policyStr}`,
-    `📡 接入: ${accessType}`
+    `🧭 策略：${policyStr}`,
+    `📡 接入：${accessType}`
   ];
-  if (primaryRouter) infoSection.push(`🏠 网关: ${maskIP(primaryRouter)}`);
-  if (dnsStr) infoSection.push(`🌐 DNS: ${dnsStr}`);
 
   if (showRTT) {
-    const baiduStr = baiduRTT !== null ? `${baiduRTT}ms` : '超时';
-    const nodeStr = nodeRTT !== null ? `${nodeRTT}ms` : '超时';
+    const baiduStr = baiduRTT !== null ? `${baiduRTT} 毫秒` : '超时';
+    const nodeStr = nodeRTT !== null ? `${nodeRTT} 毫秒` : '超时';
     const baiduDot = getHealthDot(baiduRTT);
     const nodeDot = getHealthDot(nodeRTT);
-    infoSection.push(`🐾 百度延迟: ${baiduStr} ${baiduDot}`);
-    infoSection.push(`☁️ 节点延迟: ${nodeStr} ${nodeDot}`);
+    infoSection.push(`🐾 国内延迟：${baiduStr} ${baiduDot}`);
+    infoSection.push(`☁️ 代理延迟：${nodeStr} ${nodeDot}`);
   }
-
-  if (showIPv6 && lanIPv6) {
-    infoSection.push(`🌐 IPv6: ${maskIP(lanIPv6)}`);
-  }
-  infoSection.push(`🕒 更新: ${refreshedAt}`);
 
   // 链路信息与策略测速之间空一行分隔
   const panelContent = [routeSection.join('\n'), infoSection.join('\n')].join('\n\n');
-  const networkName = ssid ? (isMask ? 'Wi-Fi 网络' : ssid) : (radio || '蜂窝移动网络');
-  const panelTitle = `📶 ${networkName}${lanIP ? ` (${maskIP(lanIP)})` : ''}`;
+  const panelTitle = `📶 ${accessType}`;
 
   // 6. 网络变动事件处理 (Event: network-changed)
   if (isEvent) {
@@ -562,20 +531,19 @@ function getRecentPolicy(probeToken) {
 
     $persistentStore.write(JSON.stringify(currentState), 'network_info_last_state');
     if (isChanged && arg.NOTIFY === '1') {
-        const notifyNetwork = ssid ? (isMask ? 'Wi‑Fi 网络' : `WiFi: ${ssid}`) : (radio || '蜂窝网络');
-        const subTitle = `${notifyNetwork} ｜ ${policyStr}`;
-        const notifyLines = [`直连: ${directIPStr}`];
+        const subTitle = `${accessType} ｜ ${policyStr}`;
+        const notifyLines = [`直连：${directSummary}`];
         if (isDirectMode) {
-          notifyLines.push(`代理: 全局直连`);
+          notifyLines.push('代理：未启用代理');
         } else {
-          notifyLines.push(`中转: ${relayIPStr}`);
-          if (showDetail && relayMeta) notifyLines.push(`  ${relayMeta}`);
-          notifyLines.push(`落地: ${landingIPStr}`);
-          if (showDetail && landingMeta) notifyLines.push(`  ${landingMeta}`);
+          notifyLines.push(`中转：${relaySummary}`);
+          if (relayProvider) notifyLines.push(`中转运营商：${relayProvider}`);
+          notifyLines.push(`落地：${landingSummary}`);
+          if (landingProvider) notifyLines.push(`落地运营商：${landingProvider}`);
         }
-        notifyLines.push(`策略: ${policyStr}`);
+        notifyLines.push(`策略：${policyStr}`);
         if (showRTT) {
-          notifyLines.push(`延迟: 🐾 ${baiduRTT !== null ? `${baiduRTT}ms` : '-'}  ☁️ ${nodeRTT !== null ? `${nodeRTT}ms` : '-'}`);
+          notifyLines.push(`延迟：国内 ${baiduRTT !== null ? `${baiduRTT} 毫秒` : '超时'}，代理 ${nodeRTT !== null ? `${nodeRTT} 毫秒` : '超时'}`);
         }
         $notification.post('网络环境已变动', subTitle, notifyLines.join('\n'));
     }
