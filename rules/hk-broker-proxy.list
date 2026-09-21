@@ -1,6 +1,7 @@
 # Surge 香港/美国券商代理规则集
 # 上游：https://github.com/LingJingMaster/Shadowrocket-Rules/blob/main/HK_Broker.list
-# 同步日期：2026-08-28
+# 补充：https://github.com/forecho/broker-rules（富途实测行情端点）
+# 同步日期：2026-09-21
 
 # NAME: HK_Broker
 # DESC: HK/US broker services for Futu, Moomoo, Longbridge, Tiger Brokers, Snowball X, Interactive Brokers, and Schwab
@@ -26,8 +27,10 @@ DOMAIN-SUFFIX,futu9.com
 # Futu - regional, business, trading, and static assets
 DOMAIN-SUFFIX,futuau.com
 DOMAIN-SUFFIX,futuapi.com
+DOMAIN-SUFFIX,futubos.com
 DOMAIN-SUFFIX,futuesop.com
 DOMAIN-SUFFIX,futufin.com
+DOMAIN-SUFFIX,futuhainan.com
 DOMAIN-SUFFIX,futuhk.com
 DOMAIN-SUFFIX,futuhk1.com
 DOMAIN-SUFFIX,futuhk2.com
@@ -35,9 +38,13 @@ DOMAIN-SUFFIX,futuhkapp.com
 DOMAIN-SUFFIX,futuhongkong.com
 DOMAIN-SUFFIX,futuhn.com
 DOMAIN-SUFFIX,futuholdings.com
+DOMAIN-SUFFIX,futu.hk
+DOMAIN-SUFFIX,futuie.com
 DOMAIN-SUFFIX,futuinc.com
 DOMAIN-SUFFIX,futuin.com
 DOMAIN-SUFFIX,futuniuniu.com
+DOMAIN-SUFFIX,futuoa.com
+DOMAIN-SUFFIX,futusg.com
 DOMAIN-SUFFIX,futubull.cn
 DOMAIN-SUFFIX,futuchain.com
 DOMAIN-SUFFIX,futustatic.com
@@ -48,9 +55,17 @@ DOMAIN-SUFFIX,qtlcdn.com
 
 # Moomoo - app and account services
 DOMAIN-SUFFIX,moomoo.com
+DOMAIN-SUFFIX,moomoo.com.hk
+DOMAIN-SUFFIX,moomoobull.com
 DOMAIN-SUFFIX,api.moomoobull.com
 DOMAIN-SUFFIX,moomooequity.com
 DOMAIN-SUFFIX,moomootrustee.com
+
+# 富途加密货币行情图表与静态资源
+DOMAIN-SUFFIX,tradingview.com
+DOMAIN-SUFFIX,tradingview-widget.com
+DOMAIN-SUFFIX,tradingviewstore.com
+DOMAIN,tradingview-user-uploads.b-cdn.net
 
 # Futu / Moomoo - attribution and push related endpoints
 DOMAIN-SUFFIX,9oju31.launches.appsflyersdk.com
