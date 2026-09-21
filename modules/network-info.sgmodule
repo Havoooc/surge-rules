@@ -1,10 +1,10 @@
 #!name=网络信息面板
-#!desc=简洁显示直连、中转、落地地区与实际策略；不展示任何 IP，并在网络状态切换时通知。
+#!desc=简洁显示直连地区与运营商、中转、落地及实际节点；不展示任何 IP，并在网络状态切换时通知。
 #!author=Havoooc；原作者 @xream @keywos
 #!category=工具
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Network.png
-#!date=2026-09-20
+#!date=2026-09-21
 #!arguments=NOTIFY:1,RTT:0,PROXY-POLICY:AUTO,UPDATE-INTERVAL:-1,ICON:globe.asia.australia,ICON-COLOR:#007AFF
 #!arguments-desc=- NOTIFY: 网络状态切换时是否发送通知 [1: 开启(默认), 0: 关闭]\n- RTT: 是否显示国内与代理延迟 [1: 开启, 0: 关闭(默认)]\n- PROXY-POLICY: 代理探测策略，AUTO 表示按现有规则分流，也可填写策略组名称\n- UPDATE-INTERVAL: 面板刷新间隔(秒)，默认 -1 表示点击或进入App时刷新\n- ICON: 面板图标 (SF Symbol)\n- ICON-COLOR: 面板图标颜色 (#007AFF 等)
 

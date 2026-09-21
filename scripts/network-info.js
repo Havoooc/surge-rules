@@ -140,7 +140,27 @@ function getFlag(countryCode) {
   }
 }
 
-// 获取国内直连出口信息（网易接口 + B站移动端接口容灾）
+// 国内直连运营商名称精简，仅用于直连行。
+function cleanDomesticISP(isp) {
+  if (!isp) return '';
+  const source = String(isp);
+  const mappings = [
+    [/China Telecom|中国电信|电信/i, '中国电信'],
+    [/China Mobile|中国移动|移动/i, '中国移动'],
+    [/China Unicom|中国联通|联通/i, '中国联通'],
+    [/China Broadnet|中国广电|广电/i, '中国广电'],
+    [/Tencent|腾讯/i, '腾讯云'],
+    [/Alibaba|Aliyun|阿里/i, '阿里云'],
+    [/Huawei|华为/i, '华为云'],
+    [/Baidu|百度/i, '百度云']
+  ];
+  const matched = mappings.find(([pattern]) => pattern.test(source));
+  if (matched) return matched[1];
+  const chinese = source.match(/[\u3400-\u9fff]+/g);
+  return chinese ? chinese.join('') : '';
+}
+
+// 获取国内直连出口信息（网易接口 + B站移动端接口容灾，包含运营商）
 async function getDomesticInfo() {
   try {
     const res = await httpGet({
@@ -156,7 +176,8 @@ async function getDomesticInfo() {
           ip: r.ip,
           country: r.country || '中国',
           province: (r.province || '').replace('省', ''),
-          city: (r.city || '').replace('市', '')
+          city: (r.city || '').replace('市', ''),
+          isp: cleanDomesticISP(r.isp || r.org || '')
         };
       }
     }
@@ -176,7 +197,8 @@ async function getDomesticInfo() {
           ip: d.addr,
           country: d.country || '中国',
           province: (d.province || '').replace('省', ''),
-          city: (d.city || '').replace('市', '')
+          city: (d.city || '').replace('市', ''),
+          isp: cleanDomesticISP(d.isp || d.operator || '')
         };
       }
     }
@@ -401,10 +423,10 @@ function getRecentPolicy(probeToken) {
   // 4. 组装格式化文本
   const flag = landing ? getFlag(landing.countryCode) : '🌐';
   
-  // 国内直连仅显示地区
+  // 国内直连显示地区与运营商；中转、落地继续保持简洁。
   const directLoc = direct ? formatLoc(direct.province, direct.city) : '';
   const directSummary = direct
-    ? (directLoc || '中国大陆')
+    ? `${directLoc || '中国大陆'}${direct.isp ? ' · ' + direct.isp : ''}`
     : '信息获取失败';
 
   // 中转入口仅保留中文地区
