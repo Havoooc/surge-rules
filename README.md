@@ -49,7 +49,7 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/youtub
 ### Ultra Mobile PayGo（美国紫卡）
 
 ```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/ultra-paygo-us.list,🇺🇸 📞紫卡通信
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/ultra-paygo-us.list,🏠家宽出口
 ```
 
 规则覆盖 Ultra Mobile 账户、MMS、T-Mobile/Ultra IMS、ePDG 与 Wi-Fi Calling。iPhone 还需单独安装下方的 Wi-Fi Calling 接管模块。
