@@ -1,0 +1,16 @@
+# PT / BT 索引与 Web 站点（境外 Cloudflare / 托管服务，国内被 SNI 阻断或易误判为国内直连，需走代理）
+DOMAIN-SUFFIX,m-team.cc
+DOMAIN-SUFFIX,m-team.io
+DOMAIN-SUFFIX,pterclub.com
+DOMAIN-SUFFIX,ourbits.club
+DOMAIN-SUFFIX,tjupt.org
+DOMAIN-SUFFIX,totheglory.im
+DOMAIN-SUFFIX,audiences.me
+DOMAIN-SUFFIX,hdsky.me
+DOMAIN-SUFFIX,chdbits.co
+DOMAIN-SUFFIX,springwood.me
+DOMAIN-SUFFIX,hdatmos.club
+DOMAIN-SUFFIX,greatposterwall.com
+DOMAIN-SUFFIX,keepfrds.com
+DOMAIN-SUFFIX,lemonhd.org
+DOMAIN-SUFFIX,ptsbao.club

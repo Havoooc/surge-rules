@@ -46,6 +46,15 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/youtub
 
 在 Surge 中指定 `▶️ YouTube` 策略组。
 
+### PT 站点分流
+
+```ini
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/pt-proxy.list,🗄️NAS
+```
+
+解决境外 PT / BT 索引与 Web 站点被国内规则集误判为直连导致 SNI 阻断的问题。
+
+
 ### Ultra Mobile PayGo（美国紫卡）
 
 ```ini
