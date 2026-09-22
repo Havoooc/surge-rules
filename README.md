@@ -46,6 +46,14 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/youtub
 
 在 Surge 中指定 `▶️ YouTube` 策略组。
 
+### Ultra Mobile PayGo（美国紫卡）
+
+```ini
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/ultra-paygo-us.list,🇺🇸 📞紫卡通信
+```
+
+规则覆盖 Ultra Mobile 账户、MMS、T-Mobile/Ultra IMS、ePDG 与 Wi-Fi Calling。iPhone 还需单独安装下方的 Wi-Fi Calling 接管模块。
+
 ## 模块安装
 
 在 Surge 的模块管理页面使用以下格式安装：
@@ -99,6 +107,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 ### 工具与面板
 
 - 网络信息面板：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/network-info.sgmodule>
+- 美国紫卡 Wi-Fi Calling（仅 iPhone）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ultra-paygo-wifi-calling.sgmodule>
 
 
 ## 注意事项
@@ -110,6 +119,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 模块启用前请检查其 MITM 主机范围；银行兼容模块本身不解密银行业务流量。
 - `Body Rewrite` 中的 JQ 规则需要较新的 Surge iOS/macOS 核心。
 - 模块启用状态不会在不同设备间自动同步。
+- 美国紫卡 Wi-Fi Calling 模块会启用 `include-all-networks` 与 `include-cellular-services`，只应安装在使用 Ultra Mobile SIM 的 iPhone。
 
 ## 转换说明
 

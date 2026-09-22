@@ -1,0 +1,24 @@
+# Ultra Mobile PayGo（美国紫卡）
+# 用途：将账户、MMS、IMS 与 T-Mobile Wi-Fi Calling 流量固定交给美国家宽策略。
+# 依据：Ultra Mobile 官方配置、T-Mobile Wi-Fi Calling 防火墙要求。
+# 更新日期：2026-09-22
+
+# Ultra Mobile 官网、账户和配置
+DOMAIN-SUFFIX,ultramobile.com
+DOMAIN-SUFFIX,ultra.me
+
+# Ultra Mobile MMS
+DOMAIN-SUFFIX,mmsmvno.com
+
+# T-Mobile / Ultra Mobile 服务
+DOMAIN-SUFFIX,t-mobile.com
+
+# Ultra/T-Mobile ePDG、IMS 与 Wi-Fi Calling
+# MNC 240 为 T-Mobile/Ultra 使用的标识之一，MNC 260 为 T-Mobile US 主网。
+DOMAIN-SUFFIX,mnc240.mcc310.pub.3gppnetwork.org
+DOMAIN-SUFFIX,mnc260.mcc310.pub.3gppnetwork.org
+
+# T-Mobile 官方 Wi-Fi Calling、认证及可视语音信箱地址段
+IP-CIDR,208.54.0.0/16,no-resolve
+IP-CIDR,66.94.0.0/19,no-resolve
+IP-CIDR,206.29.176.0/22,no-resolve
