@@ -1,10 +1,10 @@
-#!name=美国紫卡 Wi-Fi Calling
-#!desc=仅供 iPhone 安装：让 Surge 接管 Ultra Mobile/T-Mobile 的 IMS、Wi-Fi Calling、MMS 与可视语音信箱流量。需配合主配置中的紫卡通信规则使用。
+#!name=Red Pocket AT&T Wi-Fi Calling
+#!desc=仅供使用 Red Pocket GSMA（AT&T）的 iPhone 安装：接管运营商系统网络并为 AT&T Wi-Fi Calling 使用真实地址。需配合主配置中的 redpocket-att-wificalling.list 使用。
 #!author=Havoooc
 #!category=网络
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Phone.png
-#!date=2026-09-22
+#!date=2026-09-24
 
 [General]
 # Surge 官方要求：接管 Wi-Fi Calling/IMS 必须同时开启以下两项。
@@ -12,4 +12,4 @@ include-all-networks = true
 include-cellular-services = true
 
 # ePDG/IPsec 使用真实地址，避免 Fake-IP 干扰 IMS 注册。
-always-real-ip = %APPEND% *.3gppnetwork.org, *.t-mobile.com, *.ultramobile.com, *.ultra.me, *.mmsmvno.com
+always-real-ip = %APPEND% *.3gppnetwork.org, epdg.epc.att.net, entitlement2.mobile.att.net, vvm.mobile.att.net

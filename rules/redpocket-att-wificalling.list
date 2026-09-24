@@ -1,0 +1,6 @@
+# Red Pocket GSMA（AT&T）Wi-Fi Calling 相关域名
+# 配合 iPhone 专用 Wi-Fi Calling 模块；主配置将这些连接固定交给美国家宽。
+# AT&T 官方列出的 Wi-Fi Calling / 认证 / 可视语音信箱 FQDN。
+DOMAIN,epdg.epc.att.net
+DOMAIN,sentitlement2.mobile.att.net
+DOMAIN,vvm.mobile.att.net

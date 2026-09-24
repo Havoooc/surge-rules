@@ -55,13 +55,13 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/pt-pro
 解决境外 PT / BT 索引与 Web 站点被国内规则集误判为直连导致 SNI 阻断的问题。
 
 
-### Ultra Mobile PayGo（美国紫卡）
+### Red Pocket GSMA（AT&T）Wi-Fi Calling
 
 ```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/ultra-paygo-us.list,🏠家宽出口
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/redpocket-att-wificalling.list,🏠家宽出口
 ```
 
-规则覆盖 Ultra Mobile 账户、MMS、T-Mobile/Ultra IMS、ePDG 与 Wi-Fi Calling。iPhone 还需单独安装下方的 Wi-Fi Calling 接管模块。
+规则覆盖 AT&T 官方列出的 ePDG、认证与可视语音信箱域名。iPhone 还需单独安装下方的 Wi-Fi Calling 模块。规则只指定网络出口，不保证运营商会在所有国家允许注册；使用 Red Pocket MVNO 服务时以 Red Pocket 的线路政策和实测为准。
 
 ## 模块安装
 
@@ -116,7 +116,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 ### 工具与面板
 
 - 网络信息面板：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/network-info.sgmodule>
-- 美国紫卡 Wi-Fi Calling（仅 iPhone）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ultra-paygo-wifi-calling.sgmodule>
+- Red Pocket AT&T Wi-Fi Calling（仅 iPhone）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ultra-paygo-wifi-calling.sgmodule>
 
 
 ## 注意事项
@@ -128,7 +128,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 模块启用前请检查其 MITM 主机范围；银行兼容模块本身不解密银行业务流量。
 - `Body Rewrite` 中的 JQ 规则需要较新的 Surge iOS/macOS 核心。
 - 模块启用状态不会在不同设备间自动同步。
-- 美国紫卡 Wi-Fi Calling 模块会启用 `include-all-networks` 与 `include-cellular-services`，只应安装在使用 Ultra Mobile SIM 的 iPhone。
+- Red Pocket AT&T Wi-Fi Calling 模块会启用 `include-all-networks` 与 `include-cellular-services`，只应安装在使用 Red Pocket GSMA（AT&T）线路的 iPhone。
 
 ## 转换说明
 
