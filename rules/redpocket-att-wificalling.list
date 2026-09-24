@@ -4,5 +4,3 @@
 DOMAIN,epdg.epc.att.net
 DOMAIN,sentitlement2.mobile.att.net
 DOMAIN,vvm.mobile.att.net
-# iPhone IMS/ePDG 可能使用的运营商发现域名；覆盖中国直连规则。
-DOMAIN-SUFFIX,3gppnetwork.org
