@@ -14,7 +14,7 @@
 skip-proxy = %APPEND% *.bankcomm.com, *.boc.cn, *.ccb.com, login-service.mobile-bank.psbc.com, mbank.psbc.com, mobile-bank.psbc.com, www.abchina.com.cn, www.baidu.com, yunbusiness.ccb.com
 # 避免运营商登录及部分金融 App 域名受到 Fake-IP 影响
 # 平安和招商银行仅加入 always-real-ip，不跳过规则策略，也不拦截业务接口
-always-real-ip = %APPEND% *.cmbchina.com, *.pingan.com.cn, easy-login.10099.com.cn, id6.me, open.e.189.cn
+always-real-ip = %APPEND% *.cmbchina.com, *.kfc.com.cn, *.pingan.com.cn, easy-login.10099.com.cn, id6.me, open.e.189.cn
 
 [Rule]
 # > 12306去广告
@@ -98,10 +98,6 @@ DOMAIN,httpdns.calorietech.com,REJECT
 # 阻止 QUIC 避免穿透 MITM
 AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,jd.com)),REJECT-NO-DROP
 URL-REGEX,^http:\/\/\w{32}\.jddebug\.com\/diagnose\?,REJECT
-
-# > 肯德基去广告
-# 肯德基动态广告服务域名
-DOMAIN,dynamicad.kfc.com.cn,REJECT,extended-matching,pre-matching
 
 # > 美团去广告
 # 明确的美团广告投放域名；不拦截业务 API、定位、支付和配送域名。
@@ -372,9 +368,10 @@ DOMAIN-SUFFIX,xdcs-collector.ximalaya.com,REJECT,extended-matching,pre-matching
 ^https:\/\/jad-api\.jin10\.com\/mult\/list_unread\?(?:.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
 # > 肯德基去广告
-# 肯德基 App 与小程序开屏海报、首页全屏广告、广告资源与营销弹窗
+# 精准拦截开屏海报与明确广告资源，杜绝使用通配 .*\.json 避免误杀登录组件配置
 ^https?:\/\/res\.kfc\.com\.cn\/advertisement\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/(?:apphome\d*\/|custom_v\d*\/|.*\.json)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/custom_v\d*\/wxapp data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/apphome\d*\/apphome data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 # > 美团去广告
 # 美团外卖开屏与启动广告。
