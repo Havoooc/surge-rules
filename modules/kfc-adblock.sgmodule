@@ -4,10 +4,15 @@
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-20
+#!date=2026-09-29
+
+[Rule]
+# 肯德基动态广告服务域名
+DOMAIN,dynamicad.kfc.com.cn,REJECT,extended-matching,pre-matching
 
 [Map Local]
-# 肯德基 App 与小程序开屏海报、首页全屏广告与营销弹窗
+# 肯德基 App 与小程序开屏海报、首页全屏广告、广告资源与营销弹窗
+^https?:\/\/res\.kfc\.com\.cn\/advertisement\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/(?:apphome\d*\/|custom_v\d*\/|.*\.json)(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [MITM]

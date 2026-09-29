@@ -4,25 +4,27 @@
 #!category=去广告
 #!tag=QQ音乐,去广告
 #!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-29
 
 [Rule]
 # Tencent Music 专用广告服务
-DOMAIN,adstats.tencentmusic.com,REJECT
-DOMAIN,ad.tencentmusic.com,REJECT
-DOMAIN,adcdn.tencentmusic.com,REJECT
-DOMAIN,adcdn6.tencentmusic.com,REJECT
-DOMAIN,adexpo.tencentmusic.com,REJECT
-DOMAIN,adclick.tencentmusic.com,REJECT
-DOMAIN,mc.tencentmusic.com,REJECT
+DOMAIN,adstats.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,ad.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adcdn.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adcdn6.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adexpo.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adclick.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,mc.tencentmusic.com,REJECT,extended-matching,pre-matching
 
 # QQ 音乐 / 全民 K 歌广告分发与曝光上报
-DOMAIN,monitor.music.qq.com,REJECT
-DOMAIN,tmead.y.qq.com,REJECT
-DOMAIN,tmeadbak.y.qq.com,REJECT
-DOMAIN,tmeadquic.y.qq.com,REJECT
-DOMAIN,tmeadcomm.y.qq.com,REJECT
-DOMAIN,tmeadkg.y.qq.com,REJECT
-DOMAIN,tmeadkgquic.y.qq.com,REJECT
+DOMAIN,monitor.music.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmead.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadbak.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadquic.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadcomm.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadkg.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadkgquic.y.qq.com,REJECT,extended-matching,pre-matching
 
 # 不拦截 rmonitor.qq.com、stat.y.qq.com、stat6.y.qq.com 等腾讯通用服务，
 # 避免将 QQ、微信等其他应用的统计、稳定性和推送链路一并阻断。

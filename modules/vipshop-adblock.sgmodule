@@ -4,13 +4,14 @@
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-20
+#!date=2026-09-29
 
 [Rule]
 # 唯品会广告追踪与统计域名；不拦截业务 API 与支付域名
 DOMAIN-SUFFIX,ad.vip.com,REJECT,extended-matching,pre-matching
 DOMAIN-SUFFIX,mar.vip.com,REJECT,extended-matching,pre-matching
 DOMAIN-SUFFIX,union.vip.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,ms.vip.com,REJECT,extended-matching,pre-matching
 
 [Map Local]
 # 开屏与营销活动弹窗广告
