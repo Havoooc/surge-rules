@@ -1,9 +1,9 @@
 #!name=知乎去广告
-#!desc=过滤广告接口、首页广告卡片、回答列表广告及会员营销弹窗；保留普通回答、搜索、评论、通知和盐选内容。效果随 App 版本变化。
-#!author=Havoooc；参考 RuCu6、blackmatrix7、QingRex、yjqiang
+#!desc=过滤广告接口、首页广告卡片、回答列表广告、文章推荐及会员营销弹窗；保留普通回答、搜索、评论、通知和盐选内容。效果随 App 版本变化。
+#!author=Havoooc；参考 RuCu6、blackmatrix7、QingRex、yjqiang、app2smile
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
-#!date=2026-09-20
+#!date=2026-09-29
 # 参考 https://github.com/QingRex/LoonKissSurge 和 https://github.com/yjqiang/surge_scripts
 # 脚本限制 2 MiB；未知结构/解析失败/超长数字原样放行。
 
@@ -11,15 +11,18 @@
 # 广告投放、悬浮营销和启动弹窗
 ^https:\/\/api\.zhihu\.com\/commercial_api\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/api\.zhihu\.com\/(?:root\/window|bazaar\/float_window|market\/popovers_v2|ad-style-service\/request)(?:\/|\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/api\.zhihu\.com\/commercial_api\/app_float_layer(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/api\.zhihu\.com\/content-distribution-core\/bubble\/common\/settings(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/api\.zhihu\.com\/distribute\/rhea\/qa_ad_card\/h5\/recommendation(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/www\.zhihu\.com\/commercial_api\/banners_v3\/mobile_banner(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 # AI 直答推广与搜索营销底纹词
 ^https:\/\/zhida\.zhihu\.com\/ai_ingress\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 ^https:\/\/api\.zhihu\.com\/search\/preset_words(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 启动配置（appcloud2）
+^https:\/\/appcloud2\.zhihu\.com\/v3\/config(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [Script]
-知乎-信息流去广告 = type=http-response,pattern=^https:\/\/api\.zhihu\.com\/(?:moments\/recommend|moments_v3|topstory\/recommend|(?:v4\/)?questions\/\d+\/(?:answers|feeds)|bazaar\/vip_tab\/header)(?:\?|$),requires-body=1,max-size=2097152,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/zhihu-adblock.js
+知乎-信息流去广告 = type=http-response,pattern=^https:\/\/api\.zhihu\.com\/(?:moments\/recommend|moments_v3|topstory\/recommend|(?:v4\/)?questions\/\d+\/(?:answers|feeds)|bazaar\/vip_tab\/header|(?:v4\/)?answers\/\d+\/recommendations|articles\/\d+\/recommendation)(?:\?|$),requires-body=1,max-size=2097152,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/zhihu-adblock.js
 
 [MITM]
-hostname = %APPEND% api.zhihu.com, www.zhihu.com, zhida.zhihu.com
+hostname = %APPEND% api.zhihu.com, www.zhihu.com, zhida.zhihu.com, appcloud2.zhihu.com

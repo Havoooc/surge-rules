@@ -16,7 +16,8 @@ OUTPUT_FILE = os.path.join(MODULES_DIR, "all-in-one-adblock.sgmodule")
 EXCLUDE_MODULES = {
     "all-in-one-adblock.sgmodule",
     "youtube-feed-adblock.sgmodule",
-    "network-info.sgmodule"
+    "network-info.sgmodule",
+    "ultra-paygo-wifi-calling.sgmodule"
 }
 
 def clean_block(lines):

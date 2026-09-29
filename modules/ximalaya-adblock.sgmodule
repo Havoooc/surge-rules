@@ -1,0 +1,47 @@
+#!name=喜马拉雅去广告
+#!desc=移除喜马拉雅开屏广告、轮播推广、播放页弹窗、红包挂件、GIF营销广告及热搜推广；保留音频播放、搜索、订阅、历史记录及个人中心。
+#!author=Havoooc；参考 ddgksf2013 规则
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-29
+
+[Rule]
+# 喜马拉雅广告与追踪域名
+DOMAIN-SUFFIX,adse.wsa.ximalaya.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,adse.ximalaya.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,adbehavior.ximalaya.com,REJECT,extended-matching,pre-matching
+DOMAIN-SUFFIX,xdcs-collector.ximalaya.com,REJECT,extended-matching,pre-matching
+
+[URL Rewrite]
+# 开屏与明确广告接口
+^https?:\/\/.*\.ximalaya\.com\/discovery-feed\/focus\/queryF - reject
+^https?:\/\/.*\.ximalaya\.com\/mobile-playpage\/view\/ - reject
+^https?:\/\/.*\.ximalaya\.com\/chaos-notice-web\/v1\/message\/preview\/list - reject
+^https?:\/\/.*\.ximalaya\.com\/social-web\/bottomTabs\/dynamicEntrance\/status - reject
+^https?:\/\/.*\.xmcdn\.com\/\w{8}\/\w{4}-\w{16}\/.+gif$ - reject
+^https?:\/\/gslb.*\.ximalaya\.com\/ - reject
+^https?:\/\/.*\.ximalaya\.com\/(?:dog-portal\/checkOld|(?:child-mobile\/child|aged-mobile\/aged)\/mode\/query) - reject
+^https?:\/\/.*\.ximalaya\.com\/discovery-feed\/isShowUserGiftPendant - reject
+^https?:\/\/.*\.ximalaya\.com\/mobile-user\/unread - reject
+^https?:\/\/.*\.ximalaya\.com\/mobile-user\/minorProtection\/pop - reject
+^https?:\/\/.*\.ximalaya\.com\/collector\/xl\/v\d - reject
+^https?:\/\/.*\.ximalaya\.com\/butler-portal\/versionCheck - reject
+^https?:\/\/(?:adse\.wsa|adse|adbehavior|xdcs-collector)\.ximalaya\.com\/.* - reject
+^https?:\/\/.*\.ximalaya\.com\/mobile\/discovery\/v\d\/location - reject
+^https?:\/\/.*\.ximalaya\.com\/(?:hub\/)?hotWord - reject
+^https?:\/\/.*\.ximalaya\.com\/(?:hub\/)?hotWordBillboard - reject
+^https?:\/\/.*\.ximalaya\.com\/(?:hub)?guideWord - reject
+^https?:\/\/.*\.ximalaya\.com\/api\/v\d\/adRealTime - reject
+^https?:\/\/.*\.ximalaya\.com\/ting\/(?:loading|feed|home)? - reject
+
+[Script]
+# 首页与分类净化、横幅与动态净化
+喜马拉雅-分类净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-category\/customCategories,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
+喜马拉雅-横幅净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/focus-mobile\/focusPic,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
+喜马拉雅-动态净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-feed\/v\d\/mix,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
+喜马拉雅-Tab净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-category\/v\d\/category,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
+喜马拉雅-我的页面净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/mobile-user\/v\d\/homePage,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
+
+[MITM]
+hostname = %APPEND% *.ximalaya.com, *.xmcdn.com

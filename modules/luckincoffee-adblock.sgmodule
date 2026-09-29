@@ -1,0 +1,20 @@
+#!name=瑞幸咖啡去广告
+#!desc=移除瑞幸咖啡开屏广告、首页弹窗及横幅推广；保留点餐、门店选择、咖啡菜单、卡包优惠券及支付结算流程。
+#!author=Havoooc；参考 Sliverkiss、可莉🅥 规则
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-29
+
+[URL Rewrite]
+^https:\/\/capi\.lkcoffee\.com\/resource\/m\/growUp\/calendarList - reject
+^https:\/\/capi\.lkcoffee\.com\/resource\/m\/promotion\/giftCard\/topPage - reject
+^https:\/\/capi\.lkcoffee\.com\/resource\/m\/sys\/base\/myLittleLuck - reject
+^https:\/\/capi\.lkcoffee\.com\/resource\/core\/v2\/menu\/ordinaryUserLayeredArea - reject
+^https:\/\/capi\.lkcoffee\.com\/resource\/m\/sys\/common\/modules - reject
+^https:\/\/capi\.lkcoffee\.com\/resource\/core\/v2\/homepage\/homePageCoffeeList - reject
+^https:\/\/capi\.lkcoffee\.com\/resource\/m\/eorder\/product\/popAppTagProductList - reject
+^https:\/\/capi\.lkcoffee\.com\/resource\/m\/sys\/app\/adposNew - reject
+
+[MITM]
+hostname = %APPEND% capi.lkcoffee.com

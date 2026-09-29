@@ -1,0 +1,19 @@
+#!name=12306去广告
+#!desc=移除铁路12306开屏广告及应用内营销推广；保留车票查询、购票、订单、改签、退票、会员及行程核心功能。
+#!author=Havoooc；参考 RuCu6、可莉🅥 规则
+#!category=去广告
+#!homepage=https://github.com/Havoooc/surge-rules
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+#!date=2026-09-29
+
+[Rule]
+DOMAIN,ad.12306.cn,DIRECT,extended-matching
+
+[Body Rewrite]
+http-response-jq ^https:\/\/ad\.12306\.cn\/ad\/ser\/getAdList$ 'delpaths([["materialsList"],["advertParam"]])'
+
+[Script]
+12306-应用内去广告 = type=http-request,pattern=^https:\/\/mobile\.12306\.cn\/otsmobile\/app\/mgs\/mgw\.htm$,script-path=https://kelee.one/Resource/JavaScript/12306/12306_remove_ads.js
+
+[MITM]
+hostname = %APPEND% ad.12306.cn, mobile.12306.cn
