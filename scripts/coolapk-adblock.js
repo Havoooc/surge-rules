@@ -41,11 +41,6 @@ if (!body) {
       payload.data = data.filter((item) => item && item.id);
     } else if (/\/(?:main\/)?dataList(?:\?|$)/.test(url) && Array.isArray(data)) {
       payload.data = data.filter((item) => !isSponsoredCard(item));
-    } else if (/\/main\/indexV\d*(?:\?|$)/.test(url) && Array.isArray(data)) {
-      const promotedEntityIds = new Set([8639, 29349, 32557, 33006]);
-      payload.data = data.filter(
-        (item) => !isSponsoredCard(item) && !promotedEntityIds.has(Number(item && item.entityId))
-      );
     } else if (/\/main\/init(?:\?|$)/.test(url) && Array.isArray(data)) {
       payload.data = data
         .filter((item) => ![944, 945].includes(Number(item && item.entityId)))
