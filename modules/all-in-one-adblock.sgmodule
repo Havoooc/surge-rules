@@ -464,7 +464,7 @@ DOMAIN-SUFFIX,xdcs-collector.ximalaya.com,REJECT,extended-matching,pre-matching
 
 # > 航旅纵横去广告
 # 独立的开屏广告素材接口；仅匹配 advert 路径，不影响普通首页横幅
-^https?:\/\/oss\.umetrip\.com\/fs\/advert\/polite(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https?:\/\/oss\.umetrip\.com\/fs\/advert\/polite(?:\/[^?]*)?(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
 # > 唯品会去广告
 # 开屏与营销活动弹窗广告

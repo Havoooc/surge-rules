@@ -4,7 +4,7 @@
 #!homepage=https://github.com/Havoooc/surge-rules
 #!openUrl=https://apps.apple.com/app/id480161784
 #!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Umetrip.png
-#!date=2026-08-28
+#!date=2026-09-30
 
 [Rule]
 
@@ -24,7 +24,7 @@ DOMAIN,sensors.umetrip.com.cn,REJECT
 [Map Local]
 
 # 独立的开屏广告素材接口；仅匹配 advert 路径，不影响普通首页横幅
-^https?:\/\/oss\.umetrip\.com\/fs\/advert\/polite(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https?:\/\/oss\.umetrip\.com\/fs\/advert\/polite(?:\/[^?]*)?(?:\?.*)?$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 
 [MITM]
 
