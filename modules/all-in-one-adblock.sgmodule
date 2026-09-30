@@ -134,6 +134,10 @@ DOMAIN,adexpo.tencentmusic.com,REJECT,extended-matching,pre-matching
 DOMAIN,adclick.tencentmusic.com,REJECT,extended-matching,pre-matching
 DOMAIN,mc.tencentmusic.com,REJECT,extended-matching,pre-matching
 
+# 本次启动捕获到的广告创意配置/素材域名；按精确主机名拦截。
+DOMAIN,adsmind.gdtimg.com,REJECT,extended-matching,pre-matching
+DOMAIN,pgdt.gtimg.cn,REJECT,extended-matching,pre-matching
+
 # QQ 音乐 / 全民 K 歌广告分发与曝光上报
 DOMAIN,monitor.music.qq.com,REJECT,extended-matching,pre-matching
 DOMAIN,tmead.y.qq.com,REJECT,extended-matching,pre-matching

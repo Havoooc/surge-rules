@@ -5,7 +5,7 @@
 #!tag=QQ音乐,去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-29
+#!date=2026-09-30
 
 [Rule]
 # Tencent Music 专用广告服务
@@ -16,6 +16,10 @@ DOMAIN,adcdn6.tencentmusic.com,REJECT,extended-matching,pre-matching
 DOMAIN,adexpo.tencentmusic.com,REJECT,extended-matching,pre-matching
 DOMAIN,adclick.tencentmusic.com,REJECT,extended-matching,pre-matching
 DOMAIN,mc.tencentmusic.com,REJECT,extended-matching,pre-matching
+
+# 本次启动捕获到的广告创意配置/素材域名；按精确主机名拦截。
+DOMAIN,adsmind.gdtimg.com,REJECT,extended-matching,pre-matching
+DOMAIN,pgdt.gtimg.cn,REJECT,extended-matching,pre-matching
 
 # QQ 音乐 / 全民 K 歌广告分发与曝光上报
 DOMAIN,monitor.music.qq.com,REJECT,extended-matching,pre-matching
