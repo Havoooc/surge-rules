@@ -1,0 +1,5 @@
+# 自定义直连规则集
+# Surge 主配置通过 RULE-SET 引用并指定 DIRECT。
+
+# 金十数据：行情、消息、API 与静态资源
+DOMAIN-SUFFIX,jin10.com
