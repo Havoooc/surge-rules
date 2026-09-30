@@ -4,7 +4,7 @@
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-29
+#!date=2026-09-30
 #!arguments=贴吧隐藏推荐页视频帖子:false
 #!arguments-desc=- 贴吧隐藏推荐页视频帖子：[true, false]，默认关闭。
 
@@ -743,8 +743,8 @@ http-response-jq ^https:\/\/app\.zhuanzhuan\.com\/zz\/transfer\/getmyprofilev3$ 
 # > 哔哩哔哩去广告
 # 开屏与推荐流 JSON 净化
 bilibili-json = type=http-response,pattern=^https:\/\/app\.bilibili\.com\/x\/(v2\/(splash\/(list|show)|feed\/index\?)|resource\/show\/tab\/v2),requires-body=1,max-size=5242880,timeout=10,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/bilibili-json.js
-# 动态与播放页 Protobuf 净化
-bilibili-proto = type=http-response,pattern=^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.(viewunite\.v1\.View\/View|dynamic\.v2\.Dynamic\/DynAll)$,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/bilibili-proto.js
+# 仅净化动态 Protobuf；播放页 View/View 涉及相关推荐数据，跳过完整响应脚本处理
+bilibili-proto = type=http-response,pattern=^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.dynamic\.v2\.Dynamic\/DynAll$,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/bilibili-proto.js
 
 # > 酷安去广告
 # 开屏配置、首页信息流及推广卡片。
