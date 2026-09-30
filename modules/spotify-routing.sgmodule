@@ -1,9 +1,0 @@
-#!name=Spotify 分流（免费账户）
-#!desc=将 Spotify 服务与音频资源路由到「🚀默认代理」，用于官方免费账户连接；不修改账户权益、不拦截广告或歌曲流量。
-#!author=Havoooc
-#!category=分流
-#!homepage=https://github.com/Havoooc/surge-rules
-#!date=2026-09-30
-
-[Rule]
-RULE-SET,https://raw.githubusercontent.com/Rabbit-Spec/Surge/Master/Rules/Spotify.list,🚀默认代理,update-interval=86400
