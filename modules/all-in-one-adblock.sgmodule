@@ -4,7 +4,7 @@
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-09-30
+#!date=2026-10-01
 #!arguments=贴吧隐藏推荐页视频帖子:false
 #!arguments-desc=- 贴吧隐藏推荐页视频帖子：[true, false]，默认关闭。
 
@@ -97,6 +97,9 @@ DOMAIN,httpdns.calorietech.com,REJECT
 # > 京东去广告
 # 阻止 QUIC 避免穿透 MITM
 AND,((PROTOCOL,UDP),(DEST-PORT,443),(DOMAIN-SUFFIX,jd.com)),REJECT-NO-DROP
+# 京东广告专用投放及素材域名；不依赖 api.m.jd.com 的 HTTPS 响应解密。
+DOMAIN,ads-img-x.jd.com,REJECT,extended-matching,pre-matching
+DOMAIN,ads-video-x.jd.com,REJECT,extended-matching,pre-matching
 URL-REGEX,^http:\/\/\w{32}\.jddebug\.com\/diagnose\?,REJECT
 
 # > 美团去广告
@@ -354,7 +357,7 @@ DOMAIN-SUFFIX,xdcs-collector.ximalaya.com,REJECT,extended-matching,pre-matching
 
 # > 京东去广告
 # 热词、站点拉取、首页推荐、开屏和运营广告位。
-^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(searchBoxWord|stationPullService|uniformRecommend[06]|homeAreaPop|home_launchConfig|lite_advertising|queryMaterialAdverts|smart_delivery_strategy)(?:&.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(searchBoxWord|stationPullService|uniformRecommend[06]|homeAreaPop|home_launchConfig|lite_advertising|queryMaterialAdverts|smart_delivery_strategy|start|getSplash)(?:&.*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 # > 金十数据去广告
 # 开屏广告及应用内广告卡片
