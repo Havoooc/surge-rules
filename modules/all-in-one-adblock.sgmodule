@@ -1,5 +1,5 @@
 #!name=Havoc全能去广告合集
-#!desc=版本 v2026.10.02.1｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
+#!desc=版本 v2026.10.02.2｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
 #!author=Havoooc
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
@@ -724,10 +724,7 @@ bilibili-proto = type=http-response,pattern=^https:\/\/(grpc\.biliapi\.net|app\.
 
 # > 酷安去广告
 # 启动配置与分页信息流净化；首页 main/indexV* 推荐大响应不经脚本处理，避免拖慢内容展示。
-酷安-首页净化 = type=http-response,pattern=^https?:\/\/api\.coolapk\.com\/v\d+\/(?:main\/(?:init|dataList)|dataList)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/coolapk-adblock.js
-
-# 帖子详情、评论列表和酷品页面推广。
-酷安-内容净化 = type=http-response,pattern=^https?:\/\/api\.coolapk\.com\/v\d+\/(?:feed\/(?:detail|replyList)|page\/dataList)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/coolapk-adblock.js
+酷安-首页净化 = type=http-response,pattern=^https?:\/\/api\.coolapk\.com\/v\d+\/(?:main\/(?:init|dataList)|dataList)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/coolapk-adblock.js
 
 # > 京东去广告
 # 仅处理已知广告/运营接口；响应非 JSON 或字段结构变化时原样放行。
