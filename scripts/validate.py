@@ -32,8 +32,11 @@ def validate_rule(line, policy=False):
         raise ValueError('missing rule arguments')
     kind = parts[0]
     base_count = 3 if policy else 2
-    options = parts[base_count:]
     allowed_options = {'no-resolve', 'extended-matching', 'pre-matching'}
+    # Rule lists may carry an explicit policy (e.g. the NAS DIRECT rules).
+    if not policy and len(parts) > 2 and parts[2] not in allowed_options:
+        base_count = 3
+    options = parts[base_count:]
     if any(option not in allowed_options for option in options): raise ValueError('unknown rule option or extra argument')
     if kind not in ALLOWED: raise ValueError('unknown rule type')
     if kind in {'IP-CIDR', 'IP-CIDR6', 'SRC-IP'}:
