@@ -77,6 +77,11 @@ def parse_module(filepath, collection=False):
 
 def build(check=False):
     manifest = json.loads(Path(MODULES_DIR, "collection.json").read_text())
+    version = manifest["version"]
+    if not isinstance(version, str) or not re.fullmatch(r"[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[1-9][0-9]*", version):
+        raise ValueError("Invalid collection version; expected YYYY.MM.DD.N")
+    if version.rsplit(".", 1)[0].replace(".", "-") != manifest["date"]:
+        raise ValueError("Collection version date must match manifest date")
     module_files = [os.path.join(MODULES_DIR, name) for name in manifest["modules"]]
     if len(module_files) != len(set(module_files)):
         raise ValueError("Duplicate collection entries")
@@ -164,7 +169,7 @@ def build(check=False):
     out = []
     today = manifest["date"]
     out.append("#!name=Havoc全能去广告合集")
-    out.append("#!desc=整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。")
+    out.append(f"#!desc=版本 v{version}｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。")
     out.append("#!author=Havoooc")
     out.append("#!category=去广告")
     out.append("#!homepage=https://github.com/Havoooc/surge-rules")
