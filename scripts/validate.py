@@ -16,9 +16,12 @@ def split_rule(line):
     parts, start, depth = [], 0, 0
     for index, char in enumerate(line):
         if char == '(': depth += 1
-        elif char == ')': depth -= 1
+        elif char == ')':
+            depth -= 1
+            if depth < 0: raise ValueError('unbalanced parentheses')
         elif char == ',' and depth == 0:
             parts.append(line[start:index].strip()); start = index + 1
+    if depth: raise ValueError('unbalanced parentheses')
     parts.append(line[start:].strip())
     return parts
 
@@ -28,13 +31,19 @@ def validate_rule(line, policy=False):
     if len(parts) < (3 if policy else 2) or any(not part for part in parts):
         raise ValueError('missing rule arguments')
     kind = parts[0]
+    base_count = 3 if policy else 2
+    options = parts[base_count:]
+    allowed_options = {'no-resolve', 'extended-matching', 'pre-matching'}
+    if any(option not in allowed_options for option in options): raise ValueError('unknown rule option or extra argument')
     if kind not in ALLOWED: raise ValueError('unknown rule type')
     if kind in {'IP-CIDR', 'IP-CIDR6', 'SRC-IP'}:
         network = ipaddress.ip_network(parts[1], strict=False)
         if kind == 'IP-CIDR6' and network.version != 6: raise ValueError('expected IPv6')
         if kind == 'IP-CIDR' and network.version != 4: raise ValueError('expected IPv4')
     if kind == 'DEST-PORT':
-        for port in parts[1].split('-'):
+        ports = parts[1].split('-')
+        if len(ports) > 2 or (len(ports) == 2 and int(ports[0]) > int(ports[1])): raise ValueError('invalid port range')
+        for port in ports:
             if not 1 <= int(port) <= 65535: raise ValueError('invalid port')
     if kind == 'IP-ASN' and (not parts[1].isdigit() or int(parts[1]) <= 0): raise ValueError('invalid ASN')
     if kind in {'AND', 'OR', 'NOT'}:

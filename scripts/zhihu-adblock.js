@@ -5,45 +5,15 @@
     const raw = $response.body;
     if (typeof raw !== "string" || raw.length > 2097152) return $done({});
 
-    // Preserve numeric precision for 64-bit IDs without precision loss.
-    // Wrap raw integers >= 16 digits into sentinel strings before parsing.
-    function safeWrapBigInt(str) {
-      let inString = false;
-      let result = "";
-      let i = 0;
-      const len = str.length;
-      while (i < len) {
-        const ch = str[i];
-        if (ch === "\"" && (i === 0 || str[i - 1] !== "\\")) {
-          inString = !inString;
-          result += ch;
-          i++;
-        } else if (!inString && (ch === ":" || ch === "," || ch === "[")) {
-          result += ch;
-          i++;
-          while (i < len && (str[i] === " " || str[i] === "\t" || str[i] === "\n" || str[i] === "\r")) {
-            result += str[i];
-            i++;
-          }
-          const m = str.slice(i).match(/^(-?\d{16,})\b/);
-          if (m) {
-            result += "\"__BIGINT__" + m[1] + "\"";
-            i += m[1].length;
-          }
-        } else {
-          result += ch;
-          i++;
-        }
-      }
-      return result;
+    // Never round large integer IDs or reinterpret user strings as number tokens.
+    // Scan JSON string/number tokens, consuming complete escaped strings.
+    const tokens = raw.match(/"(?:[^"\\]|\\[\s\S])*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g) || [];
+    for (const token of tokens) {
+      if (token[0] === '"') continue;
+      const value = Number(token);
+      if (!Number.isFinite(value) || (Number.isInteger(value) && !Number.isSafeInteger(value))) return $done({});
     }
-
-    function safeUnwrapBigInt(str) {
-      return str.replace(/"__BIGINT__(-?\d{16,})"/g, "$1");
-    }
-
-    const wrapped = safeWrapBigInt(raw);
-    const obj = JSON.parse(wrapped);
+    const obj = JSON.parse(raw);
     if (!obj || Array.isArray(obj) || typeof obj !== "object") return $done({});
 
     const url = $request.url;
@@ -74,7 +44,8 @@
       }
     }
 
-    const output = safeUnwrapBigInt(JSON.stringify(obj));
+    const output = JSON.stringify(obj);
+    if (output === JSON.stringify(JSON.parse(raw))) return $done({});
     $done({ body: output });
   } catch (_) {
     $done({});
