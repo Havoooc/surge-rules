@@ -1,0 +1,83 @@
+name: Validate rules and modules
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.x"
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+
+      - name: Check Python syntax
+        run: |
+          find . -type f -name '*.py' -not -path './.git/*' -print0 |
+            xargs -0 -r -n1 python -m py_compile
+
+      - name: Check JavaScript syntax
+        run: |
+          find scripts -type f -name '*.js' -print0 |
+            xargs -0 -r -n1 node --check
+
+      - name: Validate rule files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          allowed = {
+              "DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD", "DOMAIN-SET",
+              "IP-CIDR", "IP-CIDR6", "IP-ASN", "GEOIP", "USER-AGENT",
+              "URL-REGEX", "PROCESS-NAME", "DEST-PORT", "SRC-IP",
+              "PROTOCOL", "AND", "OR", "NOT",
+          }
+          errors = []
+          for path in Path("rules").glob("*.list"):
+              for lineno, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                  line = raw.strip()
+                  if not line or line.startswith(("#", ";", "//")):
+                      continue
+                  kind = line.split(",", 1)[0].strip()
+                  if kind not in allowed:
+                      errors.append(f"{path}:{lineno}: unknown rule type {kind!r}")
+          if errors:
+              raise SystemExit("\n".join(errors))
+          PY
+
+      - name: Validate module structure
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          header = re.compile(r"^\[[A-Za-z][^\]]*\]$")
+          errors = []
+          for path in Path("modules").glob("*.sgmodule"):
+              text = path.read_text(encoding="utf-8")
+              if not any(header.match(line.strip()) for line in text.splitlines()):
+                  errors.append(f"{path}: no section header found")
+          if errors:
+              raise SystemExit("\n".join(errors))
+          PY
+
+      - name: Verify generated all-in-one module is current
+        run: |
+          python3 scripts/build-all-in-one.py --check
+
+      - name: Validate semantics and response behavior
+        run: |
+          python3 scripts/validate.py
+          node scripts/test-responses.cjs

@@ -1,7 +1,9 @@
+(function main() {
+try {
 // 2026-07-21 17:50
 
 const url = $request.url;
-if (!$response.body) $done({});
+if (!$response.body) return $done({});
 let obj = JSON.parse($response.body);
 
 if (url.includes("/aos/perception/publicTravel/beforeNavi")) {
@@ -661,6 +663,7 @@ if (url.includes("/aos/perception/publicTravel/beforeNavi")) {
   // 开屏广告
   if (obj?.data?.ad?.length > 0) {
     for (let item of obj.data.ad) {
+      if (!item?.set?.setting || !Array.isArray(item.creative) || !item.creative[0]) continue;
       item.set.setting.display_time = 0;
       item.creative[0].start_time = 3818332800; // Unix 时间戳 2090-12-31 00:00:00
       item.creative[0].end_time = 3818419199; // Unix 时间戳 2090-12-31 23:59:59
@@ -669,3 +672,6 @@ if (url.includes("/aos/perception/publicTravel/beforeNavi")) {
 }
 
 $done({ body: JSON.stringify(obj) });
+
+} catch (_) { $done({}); }
+})();

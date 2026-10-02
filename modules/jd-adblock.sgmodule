@@ -25,7 +25,7 @@ http-response-jq ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=basicCon
 
 [Script]
 # 仅处理已知广告/运营接口；响应非 JSON 或字段结构变化时原样放行。
-jd-adblock = type=http-response,pattern=^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(deliverLayer|getTabHomeInfo|myOrderInfo|orderTrackBusiness|personinfoBusiness|start|welcomeHome)(?:&.*)?$,requires-body=1,max-size=3145728,timeout=20,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/jd-adblock.js
+jd-adblock = type=http-response,pattern=^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(deliverLayer|getTabHomeInfo|start|welcomeHome)(?:&.*)?$,requires-body=1,max-size=3145728,timeout=20,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/jd-adblock.js
 
 [MITM]
 hostname = %APPEND% api.m.jd.com

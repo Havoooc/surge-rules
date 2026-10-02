@@ -1,0 +1,65 @@
+[
+  {
+    "module": "tieba-adblock.sgmodule",
+    "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/tieba-json.js",
+    "sha256": "91040c0d5bf906357829d8df344a3bdce00b59e6c24f255e54a2ef7a46d04c69",
+    "pinned": true
+  },
+  {
+    "module": "tieba-adblock.sgmodule",
+    "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/tieba-proto.js",
+    "sha256": "6015d737870b6d89c38a0181479ed715e07d11b5a2c3746f96f95e25835e8610",
+    "pinned": true
+  },
+  {
+    "module": "netease-music-adblock.sgmodule",
+    "url": "https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/dbbc85975ab0e2d4b7494b594fa0d85e69709248/netease.adblock.js",
+    "sha256": "6ba468eb994e3843d69563f8f3b31c2d63a62a68d60fc3a1fd61947c1546936f",
+    "pinned": true
+  },
+  {
+    "module": "youtube-feed-adblock.sgmodule",
+    "url": "https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.request.js",
+    "sha256": "3ecca15e06e76a31720092c581180f648ef2c45e494644941ba985c878efbb26",
+    "pinned": true
+  },
+  {
+    "module": "youtube-feed-adblock.sgmodule",
+    "url": "https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.response.js",
+    "sha256": "f98483d5f5017514f82502253c0db5ce2d4ffb7839887aa2cadc22666f5a7f12",
+    "pinned": true
+  },
+  {
+    "module": "bilibili-adblock.sgmodule",
+    "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/bilibili-json.js",
+    "sha256": "748ad16a92532bde2c439a8b9975f465381d20e24328cf2a58ff3a2a27328d84",
+    "pinned": true
+  },
+  {
+    "module": "bilibili-adblock.sgmodule",
+    "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/bilibili-proto.js",
+    "sha256": "70fa7cf0e3390da24db93bcfbf0c81c2af17b16f99012b483783f046f62c476e",
+    "pinned": true
+  },
+  {
+    "module": "12306-adblock.sgmodule",
+    "url": "https://kelee.one/Resource/JavaScript/12306/12306_remove_ads.js",
+    "sha256": null,
+    "pinned": false,
+    "verification_error": "HTTPError",
+    "exception_reason": "Upstream site returns HTTP 403; no verified immutable source available. Retained for compatibility; requires upstream versioned source before removal of exception."
+  },
+  {
+    "module": "ximalaya-adblock.sgmodule",
+    "url": "https://raw.githubusercontent.com/ddgksf2013/Scripts/314f61060a4c72c8a8b9f6b2ff457c8d35abbdac/ximalaya_json.js",
+    "sha256": "2b0cb0abf3cf9eaf16e45591c947d2ab1905c2fa5aa8c1ca56ac1f3b4cf19533",
+    "pinned": true
+  },
+  {
+    "module": "tieba-adblock.sgmodule",
+    "kind": "rule-set",
+    "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/rule/tieba-ad.list",
+    "sha256": "93599502d9498d4977f007d89511b2918afc6398dad5b8cece25057b2fbff7a3",
+    "pinned": true
+  }
+]
