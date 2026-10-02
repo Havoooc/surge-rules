@@ -1,5 +1,5 @@
 #!name=Havoc全能去广告合集
-#!desc=整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
+#!desc=版本 v2026.10.02.1｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
 #!author=Havoooc
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
