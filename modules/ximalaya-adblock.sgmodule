@@ -37,11 +37,11 @@ DOMAIN-SUFFIX,xdcs-collector.ximalaya.com,REJECT,extended-matching,pre-matching
 
 [Script]
 # 首页与分类净化、横幅与动态净化
-喜马拉雅-分类净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-category\/customCategories,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
-喜马拉雅-横幅净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/focus-mobile\/focusPic,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
-喜马拉雅-动态净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-feed\/v\d\/mix,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
-喜马拉雅-Tab净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-category\/v\d\/category,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
-喜马拉雅-我的页面净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/mobile-user\/v\d\/homePage,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/ximalaya_json.js
+喜马拉雅-分类净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-category\/customCategories,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/314f61060a4c72c8a8b9f6b2ff457c8d35abbdac/ximalaya_json.js
+喜马拉雅-横幅净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/focus-mobile\/focusPic,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/314f61060a4c72c8a8b9f6b2ff457c8d35abbdac/ximalaya_json.js
+喜马拉雅-动态净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-feed\/v\d\/mix,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/314f61060a4c72c8a8b9f6b2ff457c8d35abbdac/ximalaya_json.js
+喜马拉雅-Tab净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/discovery-category\/v\d\/category,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/314f61060a4c72c8a8b9f6b2ff457c8d35abbdac/ximalaya_json.js
+喜马拉雅-我的页面净化 = type=http-response,pattern=^https?:\/\/.*\.ximalaya\.com\/mobile-user\/v\d\/homePage,requires-body=1,max-size=0,timeout=10,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/314f61060a4c72c8a8b9f6b2ff457c8d35abbdac/ximalaya_json.js
 
 [MITM]
 hostname = %APPEND% *.ximalaya.com, *.xmcdn.com

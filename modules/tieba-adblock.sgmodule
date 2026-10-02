@@ -11,14 +11,14 @@
 
 [Rule]
 # 阻断贴吧广告专用地址；规则由上游维护，可随接口变化更新。
-RULE-SET,https://raw.githubusercontent.com/app2smile/rules/master/rule/tieba-ad.list,REJECT-DROP
+RULE-SET,https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/rule/tieba-ad.list,REJECT-DROP
 
 [Script]
 # JSON：开屏、看图广告、悬浮广告、商品卡片及广告平台初始化配置。
-贴吧-JSON净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/(?:c\/(?:s\/sync|f\/(?:ad\/getSplashAd|frs\/(?:page|threadlist|generalTabList)|pb\/(?:pic)?page|excellent\/personalized))$|tiebaads\/commonbatch\?),requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-json.js
+贴吧-JSON净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/(?:c\/(?:s\/sync|f\/(?:ad\/getSplashAd|frs\/(?:page|threadlist|generalTabList)|pb\/(?:pic)?page|excellent\/personalized))$|tiebaads\/commonbatch\?),requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/tieba-json.js
 
 # Protobuf：新版信息流、帖子详情、直播和原生广告卡片。
-贴吧-Protobuf净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/c\/(?:b\/ad\/adBid|f\/(?:frs\/(?:page|threadlist|generalTabList)|ad\/getFeedAd|pb\/page|excellent\/personalized))\?cmd,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js,argument=per_filter_video_thread={{{隐藏推荐页视频帖子}}}
+贴吧-Protobuf净化 = type=http-response,pattern=^https?:\/\/(?:tiebac|c\.tieba)\.baidu\.com\/c\/(?:b\/ad\/adBid|f\/(?:frs\/(?:page|threadlist|generalTabList)|ad\/getFeedAd|pb\/page|excellent\/personalized))\?cmd,requires-body=1,binary-body-mode=1,max-size=-1,timeout=20,script-path=https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/tieba-proto.js,argument=per_filter_video_thread={{{隐藏推荐页视频帖子}}}
 
 [MITM]
 hostname = %APPEND% tiebac.baidu.com, c.tieba.baidu.com

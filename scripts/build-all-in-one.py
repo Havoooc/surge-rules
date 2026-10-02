@@ -6,7 +6,9 @@
 import os
 import re
 import glob
-from datetime import datetime
+import argparse
+import json
+from pathlib import Path
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(SCRIPT_DIR)
@@ -28,7 +30,7 @@ def clean_block(lines):
         lines.pop()
     return lines
 
-def parse_module(filepath):
+def parse_module(filepath, collection=False):
     with open(filepath, "r", encoding="utf-8") as f:
         content = f.read()
 
@@ -50,6 +52,8 @@ def parse_module(filepath):
             if current_section:
                 sections[current_section] = clean_block(cur_lines)
             current_section = sec_match.group(1).strip()
+            if current_section in sections:
+                raise ValueError(f"{filepath}: duplicate section {current_section}")
             cur_lines = []
             continue
 
@@ -59,17 +63,34 @@ def parse_module(filepath):
     if current_section:
         sections[current_section] = clean_block(cur_lines)
 
+    supported = {"General", "Rule", "URL Rewrite", "Map Local", "Body Rewrite", "Script", "MITM", "Panel"}
+    if set(sections) - supported:
+        raise ValueError(f"{filepath}: unsupported sections {set(sections) - supported}")
+    if collection and "Panel" in sections:
+        raise ValueError(f"{filepath}: Panel is unsupported in collection")
+    for section, keys in [("General", {"skip-proxy", "always-real-ip"}), ("MITM", {"hostname"})]:
+        if not collection: continue
+        for line in sections.get(section, []):
+            if line.strip() and not line.lstrip().startswith("#") and line.split("=", 1)[0].strip() not in keys:
+                raise ValueError(f"{filepath}: unsupported {section} key")
     return meta, sections
 
-def build():
-    module_files = sorted(glob.glob(os.path.join(MODULES_DIR, "*.sgmodule")))
+def build(check=False):
+    manifest = json.loads(Path(MODULES_DIR, "collection.json").read_text())
+    module_files = [os.path.join(MODULES_DIR, name) for name in manifest["modules"]]
+    if len(module_files) != len(set(module_files)):
+        raise ValueError("Duplicate collection entries")
+    if any(Path(name).name != name or not name.endswith(".sgmodule") for name in manifest["modules"]):
+        raise ValueError("Invalid collection filename")
     parsed = []
 
     for path in module_files:
         fname = os.path.basename(path)
         if fname in EXCLUDE_MODULES:
             continue
-        meta, sections = parse_module(path)
+        meta, sections = parse_module(path, collection=True)
+        if meta.get("arguments") and fname != "tieba-adblock.sgmodule":
+            raise ValueError(f"{fname}: collection arguments require explicit mapping")
         name = meta.get("name", fname)
         parsed.append((fname, name, meta, sections))
 
@@ -141,7 +162,7 @@ def build():
                             mitm_hosts.append(p)
 
     out = []
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = manifest["date"]
     out.append("#!name=Havoc全能去广告合集")
     out.append("#!desc=整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。")
     out.append("#!author=Havoooc")
@@ -209,8 +230,12 @@ def build():
     out.append(f"hostname = %APPEND% {', '.join(mitm_hosts)}")
     out.append("")
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write("\n".join(out))
+    rendered = "\n".join(out)
+    if check:
+        if Path(OUTPUT_FILE).read_text() != rendered:
+            raise SystemExit("Collection is stale; run scripts/build-all-in-one.py")
+    else:
+        Path(OUTPUT_FILE).write_text(rendered, encoding="utf-8")
 
     print(f"✅ Successfully compiled {OUTPUT_FILE}")
     print(f"   Modules included: {len(parsed)}")
@@ -218,4 +243,6 @@ def build():
     print(f"   MITM hostnames: {len(mitm_hosts)}")
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true")
+    build(parser.parse_args().check)

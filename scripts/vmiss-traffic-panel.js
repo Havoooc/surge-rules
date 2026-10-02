@@ -1,3 +1,5 @@
+(function main() {
+try {
 const params = Object.fromEntries(
   String($argument || "").split("&").filter(Boolean).map((item) => {
     const index = item.indexOf("=");
@@ -13,6 +15,8 @@ const url = params.url;
 const resetDay = Number(params.reset_day || 22);
 const resetHour = Number(params.reset_hour || 15);
 const resetMinute = Number(params.reset_minute || 35);
+if (![resetDay, resetHour, resetMinute].every(Number.isInteger) || resetDay < 1 || resetDay > 31 || resetHour < 0 || resetHour > 23 || resetMinute < 0 || resetMinute > 59) throw new Error("Invalid reset parameters");
+if (url && !/^https:\/\//i.test(url)) throw new Error("HTTPS required");
 
 function header(headers, expected) {
   const key = Object.keys(headers || {}).find((name) => name.toLowerCase() === expected.toLowerCase());
@@ -39,11 +43,12 @@ function nextReset(now) {
   }).formatToParts(new Date(now * 1000)).map((part) => [part.type, part.value]));
   let year = Number(values.year);
   let month = Number(values.month);
-  let target = Date.UTC(year, month - 1, resetDay, resetHour - 8, resetMinute) / 1000;
+  const resetAt = (y, m) => Date.UTC(y, m - 1, Math.min(resetDay, new Date(Date.UTC(y, m, 0)).getUTCDate()), resetHour - 8, resetMinute) / 1000;
+  let target = resetAt(year, month);
   if (now >= target) {
     month += 1;
     if (month === 13) { year += 1; month = 1; }
-    target = Date.UTC(year, month - 1, resetDay, resetHour - 8, resetMinute) / 1000;
+    target = resetAt(year, month);
   }
   return target;
 }
@@ -56,7 +61,7 @@ if (!url) {
   fail("未配置数据地址");
 } else {
   $httpClient.get({ url, timeout: 10 }, (error, response) => {
-    if (error || !response) return fail(error || "无响应");
+    if (error || !response) return fail("网络连接错误");
     if (response.status < 200 || response.status >= 300) return fail(`HTTP ${response.status}`);
     const data = Object.fromEntries(header(response.headers, "subscription-userinfo").split(";").map((item) => item.trim().split("=")).filter((item) => item.length === 2));
     const upload = Number(data.upload);
@@ -64,7 +69,7 @@ if (!url) {
     const total = Number(data.total);
     const updatedAt = Number(header(response.headers, "x-traffic-updated-at"));
     const expire = Number(data.expire);
-    if (![upload, download, total, updatedAt].every(Number.isFinite) || total <= 0) return fail("数据不完整");
+    if (![upload, download, total, updatedAt].every(Number.isFinite) || total <= 0 || upload < 0 || download < 0 || updatedAt <= 0) return fail("数据不完整");
     const used = upload + download;
     const remaining = Math.max(total - used, 0);
     const percentage = Math.min(100, used / total * 100);
@@ -81,3 +86,6 @@ if (!url) {
     });
   });
 }
+
+} catch (_) { $done({title:"套餐流量", content:"更新失败：参数或数据无效", icon:"exclamationmark.triangle.fill"}); }
+})();

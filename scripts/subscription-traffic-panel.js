@@ -1,3 +1,5 @@
+(function main() {
+try {
 const params = Object.fromEntries(
   String($argument || "")
     .split("&")
@@ -15,6 +17,8 @@ const url = params.url;
 const resetDay = Number(params.reset_day || 25);
 const resetHour = Number(params.reset_hour || 0);
 const resetMinute = Number(params.reset_minute || 0);
+if (![resetDay, resetHour, resetMinute].every(Number.isInteger) || resetDay < 1 || resetDay > 31 || resetHour < 0 || resetHour > 23 || resetMinute < 0 || resetMinute > 59) throw new Error("Invalid reset parameters");
+if (url && !/^https:\/\//i.test(url)) throw new Error("HTTPS required");
 
 function formatSize(bytes) {
   if (!Number.isFinite(bytes)) return "未知";
@@ -85,7 +89,7 @@ if (!url) {
 } else {
   $httpClient.get({ url, timeout: 10 }, (error, response) => {
     if (error || !response) {
-      finishError(`更新失败：${error || "无响应"}`);
+      finishError("更新失败：网络连接错误");
       return;
     }
 
@@ -116,7 +120,7 @@ if (!url) {
       : Math.floor(Date.now() / 1000);
     const expire = Number(values.expire);
 
-    if (![upload, download, total].every(Number.isFinite)) {
+    if (![upload, download, total].every(Number.isFinite) || upload < 0 || download < 0 || total <= 0) {
       finishError("订阅未返回流量信息");
       return;
     }
@@ -134,3 +138,6 @@ if (!url) {
     });
   });
 }
+
+} catch (_) { $done({title:"套餐流量", content:"更新失败：参数或数据无效", icon:"exclamationmark.triangle.fill"}); }
+})();
