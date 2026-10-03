@@ -47,8 +47,6 @@ if (!body) {
           }
         }
       }
-    } else if (/\/homefeed(?:\?|$)/.test(url) && Array.isArray(data)) {
-      payload.data = data.filter((item) => !isAdvertisement(item));
     } else if (/\/search\/notes(?:\?|$)/.test(url) && Array.isArray(data?.items)) {
       data.items = data.items.filter((item) => !isAdvertisement(item) && (!item.model_type || item.model_type === "note"));
     }

@@ -1,10 +1,10 @@
 #!name=Havoc全能去广告合集
-#!desc=版本 v2026.10.02.2｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
+#!desc=版本 v2026.10.03.1｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
 #!author=Havoooc
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-10-02
+#!date=2026-10-03
 #!arguments=贴吧隐藏推荐页视频帖子:false
 #!arguments-desc=- 贴吧隐藏推荐页视频帖子：[true, false]，默认关闭。
 
@@ -768,8 +768,8 @@ jd-adblock = type=http-response,pattern=^https:\/\/api\.m\.jd\.com\/client\.acti
 微博-时间线净化 = type=http-response,pattern=^https?:\/\/api\.weibo\.cn\/2\/(?:statuses\/(?:unread_hot_timeline|friends_timeline|unread_friends_timeline)|groups\/timeline)(?:\?.*)?$,requires-body=1,max-size=3145728,timeout=10,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/weibo-adblock.js
 
 # > 小红书去广告
-# 开屏配置、首页信息流和搜索结果中的明确广告对象。
-小红书-广告净化 = type=http-response,pattern=^https?:\/\/(?:edith|rec|www)\.xiaohongshu\.com\/api\/sns\/v\d+\/(?:system_service\/(?:config|splash_config)|homefeed|search\/(?:notes|banner_list|hot_list|hint|trending))(?:\?.*)?$,requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/xiaohongshu-adblock.js
+# 开屏配置和搜索结果中的明确广告对象；绕过首页推荐流响应，避免等待、解析和重写整份推荐内容。
+小红书-广告净化 = type=http-response,pattern=^https?:\/\/(?:edith|rec|www)\.xiaohongshu\.com\/api\/sns\/v\d+\/(?:system_service\/(?:config|splash_config)|search\/(?:notes|banner_list|hot_list|hint|trending))(?:\?.*)?$,requires-body=1,max-size=5242880,timeout=15,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/xiaohongshu-adblock.js
 
 # > 喜马拉雅去广告
 # 首页与分类净化、横幅与动态净化

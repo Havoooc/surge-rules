@@ -1,6 +1,6 @@
 {
-  "version": "2026.10.02.2",
-  "date": "2026-10-02",
+  "version": "2026.10.03.1",
+  "date": "2026-10-03",
   "modules": [
     "12306-adblock.sgmodule",
     "amap-adblock.sgmodule",
