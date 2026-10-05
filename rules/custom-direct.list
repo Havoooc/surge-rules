@@ -3,3 +3,6 @@
 
 # 金十数据：行情、消息、API 与静态资源
 DOMAIN-SUFFIX,jin10.com
+
+# Wise 金融服务
+DOMAIN-SUFFIX,wise.com
