@@ -1,67 +1,33 @@
 # surge-rules
 
-从 [Havoooc/loon-rules](https://github.com/Havoooc/loon-rules) 转换并维护的 Surge 规则集与模块。
+自用 Surge 模块、去广告合集及配套分流规则。Loon 内容已独立迁移至 [loon-rule](https://github.com/Havoooc/loon-rule)。
 
 ## 目录
 
-- `rules/`：可通过 Surge `RULE-SET` 引用的远程规则集。
+- `rules/`：远程规则集的旧链接兼容副本。
 - `modules/`：Surge 模块（`.sgmodule`）。
-- `scripts/`：模块使用的 Surge JavaScript。
+- `scripts/`：模块与面板脚本、合集构建及维护检查工具。
+- `server/`：VMISS 流量上报的服务端配套程序。
+- `docs/`：版本发布、安全与维护说明。
 
-## 规则集
+## 仓库入口
 
-### 中银香港直连
+| 内容 | 维护位置 |
+| --- | --- |
+| Surge 模块与合集 | 本仓库 `main` 分支 |
+| 独立分流规则 | [rule 分支](https://github.com/Havoooc/surge-rules/tree/rule) |
+| Loon 插件及所选规则 | [Havoooc/loon-rule](https://github.com/Havoooc/loon-rule) |
 
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/bochk-direct.list,DIRECT
-```
+`main/rules/` 保留旧链接兼容；新增引用优先使用 `rule` 分支。两个分支的规则文件不会自动同步，修改共用规则时需同步更新兼容副本。
 
-该规则应置于其他香港金融、代理及 `FINAL` 规则之前。
-
-### 富途代理
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/futu-proxy.list,你的代理策略
-```
-
-### 1Password 代理
+规则链接格式：
 
 ```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/1password-proxy.list,你的代理策略
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/rule/custom-direct.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/rule/ai-proxy.list,你的AI策略
 ```
 
-### NAS 分流
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/nas-jp-direct.list,DIRECT
-```
-
-中国大陆直连，其余固定走日本直连节点。
-
-### YouTube 分流
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/youtube-proxy.list,▶️ YouTube
-```
-
-在 Surge 中指定 `▶️ YouTube` 策略组。
-
-### PT 站点分流
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/pt-proxy.list,🗄️NAS
-```
-
-解决境外 PT / BT 索引与 Web 站点被国内规则集误判为直连导致 SNI 阻断的问题。
-
-
-### Red Pocket GSMA（AT&T）Wi-Fi Calling
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/redpocket-att-wificalling.list,🏠家宽出口
-```
-
-规则覆盖 AT&T 官方列出的 ePDG、认证与可视语音信箱域名。iPhone 还需单独安装下方的 Wi-Fi Calling 模块。规则只指定网络出口，不保证运营商会在所有国家允许注册；使用 Red Pocket MVNO 服务时以 Red Pocket 的线路政策和实测为准。
+NAS 规则含源 IP 与嵌套规则集，为 Surge 专用；具体用途及全部规则链接见 [规则目录](https://github.com/Havoooc/surge-rules/tree/rule#readme)。
 
 ## 模块安装
 
@@ -72,6 +38,8 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 ```
 
 ### 全能合集（推荐）
+
+当前版本：`2026.10.19.1`，包含 35 个模块；范围以 `modules/collection.json` 为准。
 
 - Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>
 
@@ -112,7 +80,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 喜马拉雅去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ximalaya-adblock.sgmodule>
 - 闲鱼去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
 - 携程旅行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ctrip-adblock.sgmodule>
-- 雪球去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
+- 雪球去广告（激进版，独立可选）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
 - 知乎去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhihu-adblock.sgmodule>
 - 转转去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhuanzhuan-adblock.sgmodule>
 - YouTube 增强：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
