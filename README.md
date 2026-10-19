@@ -84,7 +84,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 百度贴吧去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/tieba-adblock.sgmodule>
 - 哔哩哔哩去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bilibili-adblock.sgmodule>
 - 大众点评去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/dianping-adblock.sgmodule>
-- 滴滴出行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/didi-adblock.sgmodule>
+- 滴滴出行去广告（仅开屏）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/didi-adblock.sgmodule>
 - 东方财富去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/eastmoney-adblock.sgmodule>
 - 抖音去开屏广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/douyin-splash-adblock.sgmodule>
 - 高德地图去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/amap-adblock.sgmodule>
