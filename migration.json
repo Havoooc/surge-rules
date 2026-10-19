@@ -1,0 +1,60 @@
+{
+  "source_commit": "03683bf361c565f8c3a7593e06afc6e83e42b7ba",
+  "files": [
+    {
+      "file": "1password-proxy.list",
+      "sha256": "d54d494b4095442d74ae9dedeba384a7a61435942754a9c7e6f7a9736f4c18f0",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/1password-proxy.list"
+    },
+    {
+      "file": "ai-proxy.list",
+      "sha256": "cbc40c40258ddac0d99ae1f93365d0a4614f9f831b4c2bb2970920029ac9c80b",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/ai-proxy.list"
+    },
+    {
+      "file": "bochk-direct.list",
+      "sha256": "72241d56cc5d524d8d549fdc3b19af32ef92a414369e3ebae6375f918f08f8bc",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/bochk-direct.list"
+    },
+    {
+      "file": "custom-direct.list",
+      "sha256": "eea3fa3006c433d51e8927f2d54c33ee7b58d5f9343ab7d9d5209ed7fb53b5da",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/custom-direct.list"
+    },
+    {
+      "file": "futu-proxy.list",
+      "sha256": "8672f6cbab43083ae484f12cea6fdf68e3ff16b524808558a5c7b92335bba90e",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/futu-proxy.list"
+    },
+    {
+      "file": "hk-broker-proxy.list",
+      "sha256": "b8fd0ab6921e9f9913bc2f592964dbad01c85096ff39dd161620c58239dab226",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/hk-broker-proxy.list"
+    },
+    {
+      "file": "nas-jp-direct.list",
+      "sha256": "ff9b53cddd94ac21a5f80511d121cf803b4a49fb06eed88429b9446b7065c5e8",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/nas-jp-direct.list"
+    },
+    {
+      "file": "pt-proxy.list",
+      "sha256": "97778db87dc4ea40ecfc866dd0be2e14409ce2a20f662a663acbbb6fc1ba8fc0",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/pt-proxy.list"
+    },
+    {
+      "file": "redpocket-att-wificalling.list",
+      "sha256": "0685ad4110f29af3dc7ffdd82c434ac2c836fc2f115af8399839bddd36ab2d49",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/redpocket-att-wificalling.list"
+    },
+    {
+      "file": "tiktok-proxy.list",
+      "sha256": "16321798bfda778e3924cbdc5af6926b3006a483bfceed610aa2bd2c97f01aa2",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/tiktok-proxy.list"
+    },
+    {
+      "file": "youtube-proxy.list",
+      "sha256": "d9edf3af76d1856cb23011dbe1cec2e546633b8c5e89920df047770ef3b6878d",
+      "source": "https://github.com/Havoooc/surge-rules/blob/03683bf361c565f8c3a7593e06afc6e83e42b7ba/rules/youtube-proxy.list"
+    }
+  ]
+}
