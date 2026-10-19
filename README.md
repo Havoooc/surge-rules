@@ -1,144 +1,28 @@
-# surge-rules
+# Havoooc Loon 独立插件
 
-从 [Havoooc/loon-rules](https://github.com/Havoooc/loon-rules) 转换并维护的 Surge 规则集与模块。
+本分支为 `loon`，目前按需转换以下三个插件。Surge 原版继续在 [`main` 分支](https://github.com/Havoooc/surge-rules/tree/main)维护。
 
-## 目录
+适用于 **Loon 3.5.1（Build 978）及以上版本**。每个插件可以单独安装，无需安装其他插件或合集。
 
-- `rules/`：可通过 Surge `RULE-SET` 引用的远程规则集。
-- `modules/`：Surge 模块（`.sgmodule`）。
-- `scripts/`：模块使用的 Surge JavaScript。
+| 插件 | 功能 | 插件文件 | 一键安装 |
+| --- | --- | --- | --- |
+| 国内银行 VPN 兼容 | 网络兼容与真实 IP；无需 MitM | [原始链接](https://raw.githubusercontent.com/Havoooc/surge-rules/loon/plugins/bank-vpn-compat.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Fbank-vpn-compat.lpx) |
+| 东方财富去广告 | 开屏、活动素材、广告与追踪域名 | [原始链接](https://raw.githubusercontent.com/Havoooc/surge-rules/loon/plugins/eastmoney-adblock.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Feastmoney-adblock.lpx) |
+| 米家去广告 | 开屏、首页轮播、“我的”推广 | [原始链接](https://raw.githubusercontent.com/Havoooc/surge-rules/loon/plugins/mijia.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Fmijia.lpx) |
 
-## 规则集
+也可以复制“原始链接”，在 Loon → 插件 → 添加插件中导入。三个链接均指向 `loon` 分支，不依赖个人订阅或 VPS。
 
-### 中银香港直连
+## 使用说明
 
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/bochk-direct.list,DIRECT
-```
+- **银行兼容插件**不包含 MitM、不解密银行流量。部分银行直接读取系统 VPN 状态，插件不能保证绕过此类检测。
+- **东方财富和米家**需要开启 Loon 的 MitM 与 Rewrite，并在系统中安装、信任自己的 Loon CA 证书。插件只声明需要解密的域名，不包含证书或私钥。
+- 已安装同一 App 的其他去广告插件时，先停用对应旧插件，避免重复处理。
+- 东方财富启用后如仍显示历史广告，可清理广告缓存并冷启动 App。
 
-该规则应置于其他香港金融、代理及 `FINAL` 规则之前。
+## 转换与验证
 
-### 富途代理
+转换来源为 Surge 合集中的三个独立模块，基准提交 [`03683bf`](https://github.com/Havoooc/surge-rules/commit/03683bf)。实现均为 Loon 原生规则，无远程 JavaScript 依赖。
 
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/futu-proxy.list,你的代理策略
-```
+转换说明及验证边界见 [转换记录](docs/loon-conversion.md)。现阶段完成静态语法与规则对应检查，尚未在 iOS Loon 和相关 App 中完成实际使用验证。
 
-### 1Password 代理
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/1password-proxy.list,你的代理策略
-```
-
-### NAS 分流
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/nas-jp-direct.list,DIRECT
-```
-
-中国大陆直连，其余固定走日本直连节点。
-
-### YouTube 分流
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/youtube-proxy.list,▶️ YouTube
-```
-
-在 Surge 中指定 `▶️ YouTube` 策略组。
-
-### PT 站点分流
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/pt-proxy.list,🗄️NAS
-```
-
-解决境外 PT / BT 索引与 Web 站点被国内规则集误判为直连导致 SNI 阻断的问题。
-
-
-### Red Pocket GSMA（AT&T）Wi-Fi Calling
-
-```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/redpocket-att-wificalling.list,🏠家宽出口
-```
-
-规则覆盖 AT&T 官方列出的 ePDG、认证与可视语音信箱域名。iPhone 还需单独安装下方的 Wi-Fi Calling 模块。规则只指定网络出口，不保证运营商会在所有国家允许注册；使用 Red Pocket MVNO 服务时以 Red Pocket 的线路政策和实测为准。
-
-## 模块安装
-
-在 Surge 的模块管理页面使用以下格式安装：
-
-```text
-https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件名>.sgmodule
-```
-
-### 全能合集（推荐）
-
-- Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>
-
-### 独立模块
-
-如仅需对特定 App 生效，可单独安装对应模块（请勿与全能合集同时启用相同模块）：
-
-- 12306去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/12306-adblock.sgmodule>
-- 百度网盘去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/baidunetdisk-adblock.sgmodule>
-- 百度贴吧去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/tieba-adblock.sgmodule>
-- 哔哩哔哩去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bilibili-adblock.sgmodule>
-- 大众点评去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/dianping-adblock.sgmodule>
-- 滴滴出行去广告（仅开屏）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/didi-adblock.sgmodule>
-- 东方财富去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/eastmoney-adblock.sgmodule>
-- 抖音去开屏广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/douyin-splash-adblock.sgmodule>
-- 高德地图去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/amap-adblock.sgmodule>
-- 国内银行 VPN 兼容：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/bank-vpn-compat.sgmodule>
-- 航旅纵横去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/umetrip.sgmodule>
-- 盒马去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/hema-adblock.sgmodule>
-- HTTPDNS 拦截：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/httpdns-block-safe.sgmodule>
-- 京东去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jd-adblock.sgmodule>
-- 金十数据去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/jin10.sgmodule>
-- 肯德基去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/kfc-adblock.sgmodule>
-- 酷安去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/coolapk-adblock.sgmodule>
-- 美团去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/meituan-adblock.sgmodule>
-- 米家去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/mijia.sgmodule>
-- 拼多多去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/pinduoduo-adblock.sgmodule>
-- QQ 音乐去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/qqmusic-adblock.sgmodule>
-- 瑞幸咖啡去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/luckincoffee-adblock.sgmodule>
-- 什么值得买去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/smzdm-adblock.sgmodule>
-- 淘宝去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-adblock.sgmodule>
-- 淘宝闪购去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/taobao-instant-adblock.sgmodule>
-- 唯品会去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/vipshop-adblock.sgmodule>
-- 网易云音乐去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/netease-music-adblock.sgmodule>
-- 微信公众号去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-mp-adblock.sgmodule>
-- 微信小程序去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/wechat-miniprograms-ads-stable.sgmodule>
-- 微博去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/weibo-adblock.sgmodule>
-- 喜马拉雅去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ximalaya-adblock.sgmodule>
-- 闲鱼去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
-- 携程旅行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ctrip-adblock.sgmodule>
-- 雪球去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
-- 知乎去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhihu-adblock.sgmodule>
-- 转转去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhuanzhuan-adblock.sgmodule>
-- YouTube 增强：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
-
-### 工具与面板
-
-- 网络信息面板：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/network-info.sgmodule>
-- Red Pocket AT&T Wi-Fi Calling（仅 iPhone）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ultra-paygo-wifi-calling.sgmodule>
-
-
-## 注意事项
-
-- 运行 `python3 scripts/build-all-in-one.py` 即可一键将所有独立模块自动解析合并并更新 `all-in-one-adblock.sgmodule`，避免人工同步排版错误。
-- YouTube 增强模块包含 `*.googlevideo.com` 解密，为避免影响 Apple TV 及海外流媒体 CDN 视频缓冲，保持为独立可选模块，不强行并入全能合集。
-- 合集与独立模块同步范围包括 `[General]` 段（skip-proxy、always-real-ip）；银行 VPN 兼容依赖这些设置生效，仅在独立模块启用时二者不可叠加产生冲突。
-- Rewrite、Map Local、Body Rewrite 和脚本模块需要开启 MITM，并在设备上安装及信任 Surge CA。
-- 模块启用前请检查其 MITM 主机范围；银行兼容模块本身不解密银行业务流量。
-- `Body Rewrite` 中的 JQ 规则需要较新的 Surge iOS/macOS 核心。
-- 模块启用状态不会在不同设备间自动同步。
-- Red Pocket AT&T Wi-Fi Calling 模块会启用 `include-all-networks` 与 `include-cellular-services`，只应安装在使用 Red Pocket GSMA（AT&T）线路的 iPhone。
-
-## 转换说明
-
-- Loon `real-ip` 已转换为 Surge `always-real-ip`。
-- Loon `mock-response-body` / `reject-dict` / `reject-img` 已转换为 Surge `Map Local`。
-- Loon JSON 删除与 JQ 重写已转换为 Surge `Body Rewrite`。
-- Loon 脚本声明已转换为 Surge `[Script]` 语法；航旅纵横脚本改为请求阶段返回本地响应。
-
-使用前请自行验证规则是否仍与目标 App 的当前版本兼容。
+依据：[Loon 插件](https://nsloon.app/docs/Plugin/)、[原生 Rewrite](https://nsloon.app/docs/Rewrite/rewrite_v2/)、[安装 URL Scheme](https://nsloon.app/docs/Scheme/)。
