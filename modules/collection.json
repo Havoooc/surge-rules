@@ -1,6 +1,6 @@
 {
-  "version": "2026.10.03.1",
-  "date": "2026-10-03",
+  "version": "2026.10.19.1",
+  "date": "2026-10-19",
   "modules": [
     "12306-adblock.sgmodule",
     "amap-adblock.sgmodule",
@@ -34,7 +34,6 @@
     "wechat-mp-adblock.sgmodule",
     "weibo-adblock.sgmodule",
     "xianyu-adblock.sgmodule",
-    "xiaohongshu-adblock.sgmodule",
     "ximalaya-adblock.sgmodule",
     "zhihu-adblock.sgmodule",
     "zhuanzhuan-adblock.sgmodule"
