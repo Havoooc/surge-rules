@@ -1,3 +1,5 @@
+> Loon 插件已迁移至 https://github.com/Havoooc/loon-rule ，本分支不再提供插件文件。
+
 # Havoooc Loon 独立插件
 
 本分支为 `loon`，目前按需转换以下三个插件。Surge 原版继续在 [`main` 分支](https://github.com/Havoooc/surge-rules/tree/main)维护。
@@ -6,9 +8,9 @@
 
 | 插件 | 功能 | 插件文件 | 一键安装 |
 | --- | --- | --- | --- |
-| 国内银行 VPN 兼容 | 网络兼容与真实 IP；无需 MitM | [原始链接](https://raw.githubusercontent.com/Havoooc/surge-rules/loon/plugins/bank-vpn-compat.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Fbank-vpn-compat.lpx) |
-| 东方财富去广告 | 开屏、活动素材、广告与追踪域名 | [原始链接](https://raw.githubusercontent.com/Havoooc/surge-rules/loon/plugins/eastmoney-adblock.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Feastmoney-adblock.lpx) |
-| 米家去广告 | 开屏、首页轮播、“我的”推广 | [原始链接](https://raw.githubusercontent.com/Havoooc/surge-rules/loon/plugins/mijia.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Fmijia.lpx) |
+| 国内银行 VPN 兼容 | 网络兼容与真实 IP；无需 MitM | [原始链接](https://raw.githubusercontent.com/Havoooc/loon-rule/main/plugins/bank-vpn-compat.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Fbank-vpn-compat.lpx) |
+| 东方财富去广告 | 开屏、活动素材、广告与追踪域名 | [原始链接](https://raw.githubusercontent.com/Havoooc/loon-rule/main/plugins/eastmoney-adblock.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Feastmoney-adblock.lpx) |
+| 米家去广告 | 开屏、首页轮播、“我的”推广 | [原始链接](https://raw.githubusercontent.com/Havoooc/loon-rule/main/plugins/mijia.lpx) | [安装到 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2FHavoooc%2Fsurge-rules%2Floon%2Fplugins%2Fmijia.lpx) |
 
 也可以复制“原始链接”，在 Loon → 插件 → 添加插件中导入。三个链接均指向 `loon` 分支，不依赖个人订阅或 VPS。
 

@@ -1,3 +1,5 @@
+> Loon 插件已迁移至 https://github.com/Havoooc/loon-rule ，本分支不再提供插件文件。
+
 # Loon 转换记录
 
 日期：2026-10-20。分支：`loon`。仅转换用户选择的银行兼容、东方财富、米家，其他 Surge 模块不生成 Loon 插件。
