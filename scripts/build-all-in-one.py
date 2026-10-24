@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 自动根据 modules/ 下的独立模块生成 all-in-one-adblock.sgmodule 合集。
-排除 all-in-one-adblock.sgmodule 本身及独立的 youtube-feed-adblock.sgmodule。
+排除合集自身及独立的网络面板、Wi-Fi Calling 模块。
 """
 import os
 import re
@@ -16,7 +16,6 @@ OUTPUT_FILE = os.path.join(MODULES_DIR, "all-in-one-adblock.sgmodule")
 
 EXCLUDE_MODULES = {
     "all-in-one-adblock.sgmodule",
-    "youtube-feed-adblock.sgmodule",
     "network-info.sgmodule",
     "ultra-paygo-wifi-calling.sgmodule"
 }
