@@ -27,7 +27,7 @@ RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/rule/custom-direc
 RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/rule/ai-proxy.list,你的AI策略
 ```
 
-NAS 规则含源 IP 与嵌套规则集，为 Surge 专用；具体用途及全部规则链接见 [规则目录](https://github.com/Havoooc/surge-rules/tree/rule#readme)。
+具体用途及全部规则链接见 [规则目录](https://github.com/Havoooc/surge-rules/tree/rule#readme)。
 
 ## 模块安装
 
@@ -80,10 +80,8 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 - 喜马拉雅去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ximalaya-adblock.sgmodule>
 - 闲鱼去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xianyu-adblock.sgmodule>
 - 携程旅行去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/ctrip-adblock.sgmodule>
-- 雪球去广告（激进版，独立可选）：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/xueqiu-adblock-aggressive.sgmodule>
 - 知乎去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhihu-adblock.sgmodule>
 - 转转去广告：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/zhuanzhuan-adblock.sgmodule>
-- YouTube 增强：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/youtube-feed-adblock.sgmodule>
 
 ### 工具与面板
 
@@ -94,7 +92,6 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 ## 注意事项
 
 - 运行 `python3 scripts/build-all-in-one.py` 即可一键将所有独立模块自动解析合并并更新 `all-in-one-adblock.sgmodule`，避免人工同步排版错误。
-- YouTube 增强模块包含 `*.googlevideo.com` 解密，为避免影响 Apple TV 及海外流媒体 CDN 视频缓冲，保持为独立可选模块，不强行并入全能合集。
 - 合集与独立模块同步范围包括 `[General]` 段（skip-proxy、always-real-ip）；银行 VPN 兼容依赖这些设置生效，仅在独立模块启用时二者不可叠加产生冲突。
 - Rewrite、Map Local、Body Rewrite 和脚本模块需要开启 MITM，并在设备上安装及信任 Surge CA。
 - 模块启用前请检查其 MITM 主机范围；银行兼容模块本身不解密银行业务流量。

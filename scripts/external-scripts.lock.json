@@ -18,18 +18,6 @@
     "pinned": true
   },
   {
-    "module": "youtube-feed-adblock.sgmodule",
-    "url": "https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.request.js",
-    "sha256": "3ecca15e06e76a31720092c581180f648ef2c45e494644941ba985c878efbb26",
-    "pinned": true
-  },
-  {
-    "module": "youtube-feed-adblock.sgmodule",
-    "url": "https://raw.githubusercontent.com/Maasea/sgmodule/65075cdb388fc5e3094afd7e7314c67b243f3525/Script/Youtube/youtube.response.js",
-    "sha256": "f98483d5f5017514f82502253c0db5ce2d4ffb7839887aa2cadc22666f5a7f12",
-    "pinned": true
-  },
-  {
     "module": "bilibili-adblock.sgmodule",
     "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/bilibili-json.js",
     "sha256": "748ad16a92532bde2c439a8b9975f465381d20e24328cf2a58ff3a2a27328d84",
