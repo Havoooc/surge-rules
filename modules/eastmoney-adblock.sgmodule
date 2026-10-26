@@ -1,15 +1,13 @@
 #!name=东方财富去广告
-#!desc=强制拦截东方财富 App 开屏、信息流、活动图片及广告追踪；更新后请清缓存并冷启动
+#!desc=精确处理东方财富广告配置接口，拦截明确广告素材与追踪；保留共享图片目录，更新后请冷启动 App
 #!author=Havoc
 #!homepage=https://github.com/Havoooc/surge-rules
-#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/80/c7/51/80c75169-8b9d-602a-7c4d-c356bf456282/AppIcon-0-0-1x_U007ephone-0-11-0-0-sRGB-85-220.png/512x512bb.jpg?v=eastmoney-20260807
-#!date=2026-08-07
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/80/c7/51/80c75169-8b9d-602a-7c4d-c356bf456282/AppIcon-0-0-1x_U007ephone-0-11-0-0-sRGB-85-220.png/512x512bb.jpg?v=eastmoney-20261026
+#!date=2026-10-26
 
 [Rule]
 
-# 广告配置服务器：直接拒绝，避免不同 App 版本 JSON 字段变化导致替换失效
-DOMAIN,emdcadvertise.eastmoney.com,REJECT
-DOMAIN,emdcadvertisepj.eastmoney.com,REJECT
+# 保留既有独立广告域拦截；两个 infoService 域名改由下方精确 Map Local 处理。
 DOMAIN,emdcadvise.eastmoney.com,REJECT
 
 # 已被多套公开规则收录的广告、推广和统计域名
@@ -20,7 +18,11 @@ DOMAIN,cp2.eastmoney.com,REJECT
 
 [Map Local]
 
-# 主广告素材目录返回空对象，避免 App 因连接失败重复请求
+# 已有上游规则覆盖的广告配置接口；返回有效空 JSON，其余路径不拦截。
+# 来源：FFDNS eastmoney_splash_ad_block.plugin、fmz200 DongFangCaiFu.snippet。
+^https?:\/\/emdcadvertise(?:pj)?\.eastmoney\.com\/infoService\/v[0-9]+(?:[/?]|$) data-type=text data="{}" status-code=200
+
+# 明确广告素材目录返回空对象；是否减少重试需实际 App 验证
 ^https?:\/\/swdlcdn\.eastmoney\.com\/app\/adimg\/ data-type=text data="{}" status-code=200
 
 # 常见活动广告素材目录
@@ -29,9 +31,7 @@ DOMAIN,cp2.eastmoney.com,REJECT
 # Choice 组件启动广告
 ^https?:\/\/choicegw2\.eastmoney\.com\/ads\/userauth\/api\/Ad\/GetLaunchAd(?:\?.*)?$ data-type=text data="{}" status-code=200
 
-# 客户端下发的启动页及活动图片
-^https?:\/\/j5\.dfcfw\.com\/WG\/(?:appconf|conf)\/202[0-9]{5}\/.*\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
 
 [MITM]
 
-hostname = %APPEND% swdlcdn.eastmoney.com, choicegw2.eastmoney.com, j5.dfcfw.com
+hostname = %APPEND% emdcadvertise.eastmoney.com, emdcadvertisepj.eastmoney.com, swdlcdn.eastmoney.com, choicegw2.eastmoney.com

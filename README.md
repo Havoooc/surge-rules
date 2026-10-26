@@ -39,7 +39,7 @@ https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/<模块文件
 
 ### 全能合集（推荐）
 
-当前版本：`2026.10.19.1`，包含 35 个模块；范围以 `modules/collection.json` 为准。
+当前版本：`2026.10.26.1`，包含 35 个模块；范围以 `modules/collection.json` 为准。
 
 - Havoc全能去广告合集：<https://raw.githubusercontent.com/Havoooc/surge-rules/main/modules/all-in-one-adblock.sgmodule>
 

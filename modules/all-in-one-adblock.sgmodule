@@ -1,10 +1,10 @@
 #!name=Havoc全能去广告合集
-#!desc=版本 v2026.10.19.1｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
+#!desc=版本 v2026.10.26.1｜整合仓库内去广告模块、HTTPDNS 稳妥拦截与国内银行 VPN 兼容；保留独立模块以便排错和回退。
 #!author=Havoooc
 #!category=去广告
 #!homepage=https://github.com/Havoooc/surge-rules
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date=2026-10-19
+#!date=2026-10-26
 #!arguments=贴吧隐藏推荐页视频帖子:false
 #!arguments-desc=- 贴吧隐藏推荐页视频帖子：[true, false]，默认关闭。
 
@@ -60,9 +60,7 @@ DOMAIN-SUFFIX,byteadverts.com,REJECT,extended-matching,pre-matching
 AND,((DOMAIN-KEYWORD,-ad-),(DOMAIN-SUFFIX,byteimg.com)),REJECT,extended-matching,pre-matching
 
 # > 东方财富去广告
-# 广告配置服务器：直接拒绝，避免不同 App 版本 JSON 字段变化导致替换失效
-DOMAIN,emdcadvertise.eastmoney.com,REJECT
-DOMAIN,emdcadvertisepj.eastmoney.com,REJECT
+# 保留既有独立广告域拦截；两个 infoService 域名改由下方精确 Map Local 处理。
 DOMAIN,emdcadvise.eastmoney.com,REJECT
 
 # 已被多套公开规则收录的广告、推广和统计域名
@@ -306,7 +304,11 @@ DOMAIN-SUFFIX,xdcs-collector.ximalaya.com,REJECT,extended-matching,pre-matching
 ^https:\/\/zlink\.ugsdk\.cn\/ad\/(?:\?.*)?$ data-type=text data="{\"data\":[]}" status-code=200 header="Content-Type:application/json"
 
 # > 东方财富去广告
-# 主广告素材目录返回空对象，避免 App 因连接失败重复请求
+# 已有上游规则覆盖的广告配置接口；返回有效空 JSON，其余路径不拦截。
+# 来源：FFDNS eastmoney_splash_ad_block.plugin、fmz200 DongFangCaiFu.snippet。
+^https?:\/\/emdcadvertise(?:pj)?\.eastmoney\.com\/infoService\/v[0-9]+(?:[/?]|$) data-type=text data="{}" status-code=200
+
+# 明确广告素材目录返回空对象；是否减少重试需实际 App 验证
 ^https?:\/\/swdlcdn\.eastmoney\.com\/app\/adimg\/ data-type=text data="{}" status-code=200
 
 # 常见活动广告素材目录
@@ -314,9 +316,6 @@ DOMAIN-SUFFIX,xdcs-collector.ximalaya.com,REJECT,extended-matching,pre-matching
 
 # Choice 组件启动广告
 ^https?:\/\/choicegw2\.eastmoney\.com\/ads\/userauth\/api\/Ad\/GetLaunchAd(?:\?.*)?$ data-type=text data="{}" status-code=200
-
-# 客户端下发的启动页及活动图片
-^https?:\/\/j5\.dfcfw\.com\/WG\/(?:appconf|conf)\/202[0-9]{5}\/.*\.(?:png|jpe?g|gif|webp)(?:\?.*)?$ data-type=tiny-gif status-code=200
 
 # > 盒马去广告
 # 弹窗广告、悬浮挂件与猜你喜欢推荐（排除门店获取与搜索页面，保障核心购物）
@@ -721,4 +720,4 @@ jd-adblock = type=http-response,pattern=^https:\/\/api\.m\.jd\.com\/client\.acti
 知乎-信息流去广告 = type=http-response,pattern=^https:\/\/api\.zhihu\.com\/(?:moments\/recommend|moments_v3|topstory\/recommend|(?:v4\/)?questions\/\d+\/(?:answers|feeds)|bazaar\/vip_tab\/header|(?:v4\/)?answers\/\d+\/recommendations|articles\/\d+\/recommendation)(?:\?|$),requires-body=1,max-size=2097152,timeout=5,script-path=https://raw.githubusercontent.com/Havoooc/surge-rules/main/scripts/zhihu-adblock.js
 
 [MITM]
-hostname = %APPEND% ad.12306.cn, mobile.12306.cn, amap-aos-info-nogw.amap.com, m5.amap.com, m5-x.amap.com, m5-zb.amap.com, oss.amap.com, pan.baidu.com, app.bilibili.com, grpc.biliapi.net, api.coolapk.com, m.ctrip.com, mbd.baidu.com, mapi.dianping.com, www.dpfile.com, res.xiaojukeji.com, aweme.snssdk.com, api5-normal-lq.amemv.com, api5-normal-m.amemv.com, zlink.ugsdk.cn, swdlcdn.eastmoney.com, choicegw2.eastmoney.com, j5.dfcfw.com, acs-m.freshippo.com, api.m.jd.com, jad-api.jin10.com, common-open-api.jin10.com, search-open-api.jin10.com, cdn.jin10.com, *.z3c.jin10.com, res.kfc.com.cn, capi.lkcoffee.com, apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com, home.mi.com, interface.music.163.com, interface3.music.163.com, api.pinduoduo.com, api.yangkeduo.com, images.pinduoduo.com, t-dsp.pinduoduo.com, haojia-api.smzdm.com, app-api.smzdm.com, homepage-api.smzdm.com, s-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, post.m.smzdm.com, www.smzdm.com, haojia.m.smzdm.com, acs.m.taobao.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com, nr-op.elemecdn.com, g.alicdn.com, tiebac.baidu.com, c.tieba.baidu.com, 114.115.217.129, home.umetrip.com, umerp.umetrip.com, umerp.umetrip.com.cn, bkclient.umetrip.com, bkclient.umetrip.com.cn, oss.umetrip.com, mapi.appvipshop.com, mcsp.cloudpnr.com, saas-ad.cloudpnr.com, rms.meituan.com, webapi.qmai.cn, dsp.fcbox.com, webchatapp.fcbox.com, app.95504.net, minipro.95504.net, ne.gdsz.sinopec.com, flow.dmall.com, api.yonghuivip.com, activity.yonghuivip.com, 3pp.starbucks.com.cn, api.mcd.cn, mxsa.mxbc.net, tm-api.pin-dao.cn, ads.ishansong.com, ump.ems.com.cn, minicap.caocaokeji.cn, r2.gzyct.com, api.kuaidihelp.com, supplier-api.imdada.cn, hdgateway.zto.com, qapi.huolala.cn, gw-passenger-wap.01zhuanche.com, passengerapi.saicmobility.com, passenger.t3go.cn, as.xiaojukeji.com, wxs-weixin.sd.zhumanggroup.com, s.jiediankeji.com, aag.enmonster.com, ad.xiaotucc.com, api-marketing.zhinengxiyifang.cn, api-fouth-mem.huazhu.com, wxapp.bestwehotel.com, wx.bthhotels.com, ad.maoyan.com, wx.maoyan.com, api.hengdianfilm.com, mkt-gateway.tuhu.cn, mp.weixin.qq.com, api.weibo.cn, sdkapp.uve.weibo.com, wbapp.uve.weibo.com, acs.m.goofish.com, g-acs.m.goofish.com, *.ximalaya.com, *.xmcdn.com, api.zhihu.com, www.zhihu.com, zhida.zhihu.com, appcloud2.zhihu.com, app.zhuanzhuan.com
+hostname = %APPEND% ad.12306.cn, mobile.12306.cn, amap-aos-info-nogw.amap.com, m5.amap.com, m5-x.amap.com, m5-zb.amap.com, oss.amap.com, pan.baidu.com, app.bilibili.com, grpc.biliapi.net, api.coolapk.com, m.ctrip.com, mbd.baidu.com, mapi.dianping.com, www.dpfile.com, res.xiaojukeji.com, aweme.snssdk.com, api5-normal-lq.amemv.com, api5-normal-m.amemv.com, zlink.ugsdk.cn, emdcadvertise.eastmoney.com, emdcadvertisepj.eastmoney.com, swdlcdn.eastmoney.com, choicegw2.eastmoney.com, acs-m.freshippo.com, api.m.jd.com, jad-api.jin10.com, common-open-api.jin10.com, search-open-api.jin10.com, cdn.jin10.com, *.z3c.jin10.com, res.kfc.com.cn, capi.lkcoffee.com, apimobile.meituan.com, cdb.meituan.com, flowplus.meituan.net, img.meituan.net, mall.meituan.com, p*.meituan.net, portal-portm.meituan.com, s3plus.meituan.net, sqt.meituan.com, wmapi.meituan.com, home.mi.com, interface.music.163.com, interface3.music.163.com, api.pinduoduo.com, api.yangkeduo.com, images.pinduoduo.com, t-dsp.pinduoduo.com, haojia-api.smzdm.com, app-api.smzdm.com, homepage-api.smzdm.com, s-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, post.m.smzdm.com, www.smzdm.com, haojia.m.smzdm.com, acs.m.taobao.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com, nr-op.elemecdn.com, g.alicdn.com, tiebac.baidu.com, c.tieba.baidu.com, 114.115.217.129, home.umetrip.com, umerp.umetrip.com, umerp.umetrip.com.cn, bkclient.umetrip.com, bkclient.umetrip.com.cn, oss.umetrip.com, mapi.appvipshop.com, mcsp.cloudpnr.com, saas-ad.cloudpnr.com, rms.meituan.com, webapi.qmai.cn, dsp.fcbox.com, webchatapp.fcbox.com, app.95504.net, minipro.95504.net, ne.gdsz.sinopec.com, flow.dmall.com, api.yonghuivip.com, activity.yonghuivip.com, 3pp.starbucks.com.cn, api.mcd.cn, mxsa.mxbc.net, tm-api.pin-dao.cn, ads.ishansong.com, ump.ems.com.cn, minicap.caocaokeji.cn, r2.gzyct.com, api.kuaidihelp.com, supplier-api.imdada.cn, hdgateway.zto.com, qapi.huolala.cn, gw-passenger-wap.01zhuanche.com, passengerapi.saicmobility.com, passenger.t3go.cn, as.xiaojukeji.com, wxs-weixin.sd.zhumanggroup.com, s.jiediankeji.com, aag.enmonster.com, ad.xiaotucc.com, api-marketing.zhinengxiyifang.cn, api-fouth-mem.huazhu.com, wxapp.bestwehotel.com, wx.bthhotels.com, ad.maoyan.com, wx.maoyan.com, api.hengdianfilm.com, mkt-gateway.tuhu.cn, mp.weixin.qq.com, api.weibo.cn, sdkapp.uve.weibo.com, wbapp.uve.weibo.com, acs.m.goofish.com, g-acs.m.goofish.com, *.ximalaya.com, *.xmcdn.com, api.zhihu.com, www.zhihu.com, zhida.zhihu.com, appcloud2.zhihu.com, app.zhuanzhuan.com
