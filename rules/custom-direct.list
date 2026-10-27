@@ -9,8 +9,3 @@ DOMAIN-SUFFIX,wise.com
 
 # 学科网组卷
 DOMAIN-SUFFIX,zujuan.xkw.com
-
-# Cloudflare 官方站点、控制台、API、文档与验证服务（包含子域名）
-DOMAIN-SUFFIX,cloudflare.com
-# Cloudflare 服务状态页
-DOMAIN-SUFFIX,cloudflarestatus.com
