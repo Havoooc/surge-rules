@@ -9,3 +9,6 @@ DOMAIN-SUFFIX,wise.com
 
 # 学科网组卷
 DOMAIN-SUFFIX,zujuan.xkw.com
+
+# 自有域名
+DOMAIN-SUFFIX,havoczhang.cn
