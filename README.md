@@ -4,30 +4,31 @@
 
 ## 目录
 
-- `rules/`：远程规则集的旧链接兼容副本。
+- `rules/`：三端配置使用的远程规则集。
 - `modules/`：Surge 模块（`.sgmodule`）。
 - `scripts/`：模块与面板脚本、合集构建及维护检查工具。
-- `server/`：VMISS 流量上报的服务端配套程序。
 - `docs/`：版本发布、安全与维护说明。
+
+发布路径、设备依赖和验证步骤见 [发布资源与维护依赖](docs/release-layout.md)。
 
 ## 仓库入口
 
 | 内容 | 维护位置 |
 | --- | --- |
 | Surge 模块与合集 | 本仓库 `main` 分支 |
-| 独立分流规则 | [rule 分支](https://github.com/Havoooc/surge-rules/tree/rule) |
+| 分流规则 | 本仓库 `main` 分支的 [`rules/`](rules/) |
 | Loon 插件及所选规则 | [Havoooc/loon-rule](https://github.com/Havoooc/loon-rule) |
 
-`main/rules/` 保留旧链接兼容；新增引用优先使用 `rule` 分支。两个分支的规则文件不会自动同步，修改共用规则时需同步更新兼容副本。
+分流规则以 `main/rules/` 为准，三端使用同一份发布内容。
 
 规则链接格式：
 
 ```ini
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/rule/custom-direct.list,DIRECT
-RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/rule/ai-proxy.list,你的AI策略
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/custom-direct.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/Havoooc/surge-rules/main/rules/ai-proxy.list,你的AI策略
 ```
 
-具体用途及全部规则链接见 [规则目录](https://github.com/Havoooc/surge-rules/tree/rule#readme)。
+规则文件按功能命名；策略由各设备配置指定。
 
 ## 模块安装
 
