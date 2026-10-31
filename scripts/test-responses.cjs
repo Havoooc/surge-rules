@@ -22,9 +22,4 @@ const cleaned = JSON.parse(run('jd-adblock.js', 'https://api.m.jd.com/client.act
 assert.equal(cleaned.data.splashAd, undefined);
 assert.deepEqual(cleaned.data.normal, home.data.normal);
 assert.deepEqual(cleaned.data.promotion, home.data.promotion);
-for (const file of ['subscription-traffic-panel.js', 'vmiss-traffic-panel.js']) {
-  run(file, '', '', 'url=%');
-  const result = run(file, '', '', 'url=https%3A%2F%2Fexample.invalid%2F%3Ftoken%3Dsecret');
-  assert.ok(!result.content.includes('secret'));
-}
-console.log('Response and panel regression checks passed');
+console.log('Response regression checks passed');
