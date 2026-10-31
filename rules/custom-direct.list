@@ -12,3 +12,6 @@ DOMAIN-SUFFIX,zujuan.xkw.com
 
 # 自有域名
 DOMAIN-SUFFIX,havoczhang.cn
+
+# 豆包输入法网关
+DOMAIN,ime-igw.doubao.com
