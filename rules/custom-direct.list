@@ -15,3 +15,7 @@ DOMAIN-SUFFIX,havoczhang.cn
 
 # 豆包输入法网关
 DOMAIN,ime-igw.doubao.com
+
+# 群晖 QuickConnect 连接服务
+DOMAIN-SUFFIX,quickconnect.to
+DOMAIN-SUFFIX,quickconnect.cn
