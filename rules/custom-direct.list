@@ -7,6 +7,10 @@ DOMAIN-SUFFIX,jin10.com
 # Wise 金融服务
 DOMAIN-SUFFIX,wise.com
 
+# 东方财富：行情、消息、配置与推送服务
+DOMAIN-SUFFIX,eastmoney.com
+DOMAIN-SUFFIX,eastmoneyfutures.com
+
 # 学科网组卷
 DOMAIN-SUFFIX,zujuan.xkw.com
 
