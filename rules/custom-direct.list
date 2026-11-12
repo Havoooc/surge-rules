@@ -24,6 +24,14 @@ DOMAIN,ime-igw.doubao.com
 DOMAIN-SUFFIX,quickconnect.to
 DOMAIN-SUFFIX,quickconnect.cn
 
+# 自建节点、线路机与家宽落地：防止管理连接被代理后形成回环（IPv4/IPv6）
+IP-CIDR,23.236.72.44/32,no-resolve
+IP-CIDR,24.249.30.16/32,no-resolve
+IP-CIDR,45.142.125.101/32,no-resolve
+IP-CIDR6,2a12:a301:2001::10dd/128,no-resolve
+IP-CIDR6,2602:f656:5::2a3/128,no-resolve
+IP-CIDR6,2001:57a:f200:b920::18f/128,no-resolve
+
 # Nosla 管理入口：避免 SSH 被 FINAL 代理后回连节点自身
 DOMAIN,us-nosla-1.havooc.cc
 IP-CIDR,154.26.242.74/32,no-resolve
