@@ -23,3 +23,7 @@ DOMAIN,ime-igw.doubao.com
 # 群晖 QuickConnect 连接服务
 DOMAIN-SUFFIX,quickconnect.to
 DOMAIN-SUFFIX,quickconnect.cn
+
+# Nosla 管理入口：避免 SSH 被 FINAL 代理后回连节点自身
+DOMAIN,us-nosla-1.havooc.cc
+IP-CIDR,154.26.242.74/32,no-resolve
