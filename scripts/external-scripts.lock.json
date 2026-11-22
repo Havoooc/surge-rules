@@ -18,18 +18,6 @@
     "pinned": true
   },
   {
-    "module": "bilibili-adblock.sgmodule",
-    "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/bilibili-json.js",
-    "sha256": "748ad16a92532bde2c439a8b9975f465381d20e24328cf2a58ff3a2a27328d84",
-    "pinned": true
-  },
-  {
-    "module": "bilibili-adblock.sgmodule",
-    "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/bilibili-proto.js",
-    "sha256": "70fa7cf0e3390da24db93bcfbf0c81c2af17b16f99012b483783f046f62c476e",
-    "pinned": true
-  },
-  {
     "module": "12306-adblock.sgmodule",
     "url": "https://kelee.one/Resource/JavaScript/12306/12306_remove_ads.js",
     "sha256": null,
@@ -49,5 +37,19 @@
     "url": "https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/rule/tieba-ad.list",
     "sha256": "93599502d9498d4977f007d89511b2918afc6398dad5b8cece25057b2fbff7a3",
     "pinned": true
+  },
+  {
+    "module": "bilibili-adblock.sgmodule",
+    "url": "https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/request.bundle.js",
+    "sha256": "47d002c07da40357110c8ae5406f117bc608812d075eb54a54b2cbd768ea5b1a",
+    "pinned": false,
+    "exception_reason": "Versioned Biliverse v0.7.5 release asset with published SHA-256"
+  },
+  {
+    "module": "bilibili-adblock.sgmodule",
+    "url": "https://github.com/Biliverse/ADBlock/releases/download/v0.7.5/response.bundle.js",
+    "sha256": "e8768eb5c75bbfaea78f5798ac7827c431f81a61416a7877753f36dd36b9cb60",
+    "pinned": false,
+    "exception_reason": "Versioned Biliverse v0.7.5 release asset with published SHA-256"
   }
 ]
